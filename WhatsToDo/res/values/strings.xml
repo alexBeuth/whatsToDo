@@ -4,5 +4,7 @@
     <string name="app_name">WhatsToDo</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
+    <string name="bu_newList">Neu</string>
+    <string name="tf_newList">Neue Liste</string>
 
 </resources>

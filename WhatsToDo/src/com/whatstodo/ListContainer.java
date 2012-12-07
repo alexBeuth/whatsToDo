@@ -6,7 +6,7 @@ import android.app.Application;
 
 import com.whatstodo.list.List;
 
-public class ListContainer extends Application {
+public class ListContainer {
 	
 	private ArrayList<List> lists = new ArrayList<List>();
 	

@@ -22,6 +22,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.whatstodo.TaskActivity"
+            android:label="@string/title_activity_task" >
+        </activity>
+        <activity
+            android:name="com.whatstodo.ListActivity"
+            android:label="@string/title_activity_list" >
+        </activity>
     </application>
 
 </manifest>

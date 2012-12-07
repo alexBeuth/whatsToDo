@@ -7,4 +7,8 @@ public class List{
 	public List(String string) {
 		this.name = string;
 	}
+	
+	public String getName() {
+		return this.name;
+	}
 }

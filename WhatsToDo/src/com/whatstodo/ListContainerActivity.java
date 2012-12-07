@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-public class ListActivity extends Activity implements OnClickListener {
+public class ListContainerActivity extends Activity implements OnClickListener {
 	
 	java.util.List<List> lists = new LinkedList<List>();
 	int count = 0;

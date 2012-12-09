@@ -2,13 +2,14 @@ package com.whatstodo;
 
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OptionalDataException;
 import java.util.Arrays;
+import java.util.LinkedList;
 
-import android.app.Application;
 import android.content.Context;
 
 import com.whatstodo.list.List;
@@ -16,12 +17,8 @@ import com.whatstodo.list.List;
 public class ListContainerPersistence {
 
 	private final String FILENAME = "all_lists";
-	
-	Context context;
-	
-	public ListContainerPersistence(Context context) {
-		this.context = context;
-	}
+
+	Context context = WhatsToDo.getContext();
 
 	public void saveLists(Iterable<List> lists) {
 
@@ -32,8 +29,8 @@ public class ListContainerPersistence {
 
 		BufferedOutputStream listsStream = null;
 		try {
-			listsStream = new BufferedOutputStream(context.openFileOutput(FILENAME,
-					Context.MODE_PRIVATE));
+			listsStream = new BufferedOutputStream(context.openFileOutput(
+					FILENAME, Context.MODE_PRIVATE));
 			listsStream.write(names.toString().getBytes());
 
 		} catch (FileNotFoundException e) {
@@ -49,25 +46,40 @@ public class ListContainerPersistence {
 		}
 	}
 
-	public Iterable<String> loadLists(String listName) {
+	public Iterable<List> loadLists() {
 
 		FileInputStream listsStream = null;
 
 		try {
-			listsStream = context.openFileInput(listName);
-			byte[] buffer = new byte[100];
+			File file = context.getFileStreamPath(FILENAME);
+			//file.delete();
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+
+			listsStream = context.openFileInput(FILENAME);
+
+			byte[] buffer = new byte[1024];
 
 			StringBuilder names = new StringBuilder();
-			int byteOffset = 0;
 			int byteCount = 0;
 			while (byteCount != -1) {
-				byteOffset += byteCount;
-				byteCount = listsStream.read(buffer, byteOffset, 100);
-				names.append(buffer.toString());
+				byteCount = listsStream.read(buffer, 0, 1024);
+				if (byteCount > 0) {
+					names.append(new String(buffer, 0, byteCount));
+				}
 			}
-			
-			return Arrays.asList(names.toString().split(","));
-			
+
+			LinkedList<List> lists = new LinkedList<List>();
+			if (names.length() != 0) {
+				for (String listName : Arrays.asList(names.toString()
+						.split(","))) {
+					// TODO Load lists with content...
+					lists.add(new List(listName));
+				}
+			}
+			return lists;
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

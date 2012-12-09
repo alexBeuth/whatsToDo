@@ -1,10 +1,10 @@
 package com.whatstodo.task;
 
-import com.whatstodo.R;
-
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Menu;
+
+import com.whatstodo.R;
 
 public class TaskActivity extends Activity {
 

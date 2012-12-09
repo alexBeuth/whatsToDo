@@ -1,11 +1,10 @@
 package com.whatstodo;
 
-import java.text.NumberFormat.Field;
+import java.lang.reflect.Field;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,7 +14,6 @@ import android.widget.LinearLayout;
 
 import com.whatstodo.list.List;
 import com.whatstodo.list.ListActivity;
-import com.whatstodo.task.TaskActivity;
 
 public class ListContainerActivity extends Activity implements OnClickListener{
 	
@@ -24,13 +22,14 @@ public class ListContainerActivity extends Activity implements OnClickListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
-		container = ListContainer.getInstance();
-		
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_list);
+		setContentView(R.layout.activity_listcontainer);
 		
 		Button createList = (Button) findViewById(R.id.newList);
 		createList.setOnClickListener(this);
+		
+		container = ListContainer.getInstance();
+		showLists();
 	}
 
 	@Override
@@ -43,14 +42,14 @@ public class ListContainerActivity extends Activity implements OnClickListener{
 	// @Override
 	public void onClick(View view) {
 		
-		if(view.getId() == R.id.list) {
+		if(view.getId() == R.id.newList) {
 			EditText editText = (EditText) findViewById(R.id.list);
 			container.addList(editText.getText().toString());
 			showLists();
 		}
-		else{
+		else if (view instanceof Button){
 			
-		    String viewName = getResourceNameFromClassByID(R.id.class, view.getId());
+		    String viewName = ((Button)view).getText().toString();
 		    			
 			for(List list : container.getLists()){
 				
@@ -60,7 +59,7 @@ public class ListContainerActivity extends Activity implements OnClickListener{
 					bundle.putString("ListName", viewName); //List Name
 					intent.putExtras(bundle); //Put your id to your next Intent
 					startActivity(intent);
-					finish();					
+					//finish();					
 				}
 			}
 		}
@@ -69,20 +68,15 @@ public class ListContainerActivity extends Activity implements OnClickListener{
 	private void showLists() {
 		
 		LinearLayout listList = (LinearLayout) findViewById(R.id.listLayout);
-		
-		int showListWidth = 300;
-		int showListHeight = 60;
-		
-		//int count = -0;
-		
+		listList.removeAllViewsInLayout();
 		for(List list : container.getLists()) {
 			//count++;
 			Button listButton = new Button(this);
 			listButton.setText(list.getName());
-			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(showListWidth, showListHeight);
-			//params.topMargin = count * showListHeight;
-			//params.gravity = Gravity.TOP + Gravity.LEFT;
-			listList.addView(listButton,params);
+			listButton.setOnClickListener(this);
+
+			listList.addView(listButton);
+			
 		}
 	}
 
@@ -101,10 +95,10 @@ public class ListContainerActivity extends Activity implements OnClickListener{
     public String getResourceNameFromClassByID(Class<?> aClass, int resourceID)
                                             throws IllegalArgumentException{
             /* Get all Fields from the class passed. */
-            java.lang.reflect.Field[] drawableFields = aClass.getFields();
+            Field[] drawableFields = aClass.getFields();
            
             /* Loop through all Fields. */
-            for(java.lang.reflect.Field f : drawableFields){
+            for(Field f : drawableFields){
                     try {
                             /* All fields within the subclasses of R
                              * are Integers, so we need no type-check here. */

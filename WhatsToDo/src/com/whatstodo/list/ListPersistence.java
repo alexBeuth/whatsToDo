@@ -7,9 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OptionalDataException;
 
-import android.app.Application;
 import android.content.Context;
-import android.os.Environment;
 
 public class ListPersistence {
 

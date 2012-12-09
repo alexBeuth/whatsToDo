@@ -6,7 +6,7 @@ import com.whatstodo.list.List;
 
 public class ListContainer {
 	
-	private ArrayList<List> lists = new ArrayList<List>();
+	private static ArrayList<List> lists = new ArrayList<List>();
 	
     private static ListContainer container = null;
  
@@ -21,6 +21,9 @@ public class ListContainer {
      * Klasse zurück
      */
     public static ListContainer getInstance() {
+    	for(List list : new ListContainerPersistence().loadLists()) {
+    		lists.add(list);
+    	}
         if (container == null) {
             container = new ListContainer();
         }
@@ -30,6 +33,7 @@ public class ListContainer {
     public void addList(String name){
 
     	lists.add(new List(name));
+    	new ListContainerPersistence().saveLists(lists);
     }
 
 	public Iterable<List> getLists() {
@@ -37,7 +41,7 @@ public class ListContainer {
 	}
 
 	public void setLists(ArrayList<List> lists) {
-		this.lists = lists;
+		ListContainer.lists = lists;
 	}
     
 

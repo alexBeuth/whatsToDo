@@ -1,50 +1,97 @@
 package com.whatstodo;
 
+import java.io.BufferedOutputStream;
+import java.io.Closeable;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OptionalDataException;
+import java.util.Arrays;
+
+import android.app.Application;
+import android.content.Context;
+
+import com.whatstodo.list.List;
+
 public class ListContainerPersistence {
+
+	private final String FILENAME = "all_lists";
 	
-//	private void saveList(List list) {
-//	String FILENAME = list.getName();
-//	
-//	FileOutputStream fos;
-//	try {
-//		fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-//		ObjectOutputStream object = new ObjectOutputStream(fos);
-//		object.writeObject(list);
-//		object.close();
-//		
-//	} catch (FileNotFoundException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	} catch (IOException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
-//}
-//
-//private List loadList(String fileName){
-//	
-//	FileInputStream fis;
-//	
-//	try {
-//		fis = openFileInput(fileName);
-//		ObjectInputStream ois = new ObjectInputStream(fis);
-//		List list = (List) ois.readObject();
-//		return list;
-//	} catch (FileNotFoundException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	} catch (OptionalDataException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	} catch (ClassNotFoundException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	} catch (IOException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
-//	
-//	return null;
-//}
+	Context context;
+	
+	public ListContainerPersistence(Context context) {
+		this.context = context;
+	}
+
+	public void saveLists(Iterable<List> lists) {
+
+		StringBuilder names = new StringBuilder();
+		for (List list : lists) {
+			names.append(list.getName()).append(",");
+		}
+
+		BufferedOutputStream listsStream = null;
+		try {
+			listsStream = new BufferedOutputStream(context.openFileOutput(FILENAME,
+					Context.MODE_PRIVATE));
+			listsStream.write(names.toString().getBytes());
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (listsStream != null) {
+				closeQuietly(listsStream);
+			}
+		}
+	}
+
+	public Iterable<String> loadLists(String listName) {
+
+		FileInputStream listsStream = null;
+
+		try {
+			listsStream = context.openFileInput(listName);
+			byte[] buffer = new byte[100];
+
+			StringBuilder names = new StringBuilder();
+			int byteOffset = 0;
+			int byteCount = 0;
+			while (byteCount != -1) {
+				byteOffset += byteCount;
+				byteCount = listsStream.read(buffer, byteOffset, 100);
+				names.append(buffer.toString());
+			}
+			
+			return Arrays.asList(names.toString().split(","));
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (OptionalDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (listsStream != null) {
+				closeQuietly(listsStream);
+			}
+		}
+
+		return null;
+	}
+
+	private void closeQuietly(Closeable out) {
+		try {
+			out.close();
+		} catch (Exception e) {
+			// Empty
+		}
+	}
 
 }

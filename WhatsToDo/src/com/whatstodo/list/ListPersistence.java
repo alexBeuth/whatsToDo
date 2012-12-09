@@ -9,15 +9,22 @@ import java.io.OptionalDataException;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Environment;
 
-public class ListPersistence extends Application {
+public class ListPersistence {
+
+	Context context;
+
+	public ListPersistence(Context context) {
+		this.context = context;
+	}
 
 	public void saveList(List list) {
 		String fileName = list.getName();
 
 		ObjectOutputStream listStream = null;
 		try {
-			listStream = new ObjectOutputStream(openFileOutput(fileName,
+			listStream = new ObjectOutputStream(context.openFileOutput(fileName,
 					Context.MODE_PRIVATE));
 			listStream.writeObject(list);
 
@@ -39,7 +46,7 @@ public class ListPersistence extends Application {
 		ObjectInputStream listStream = null;
 
 		try {
-			listStream = new ObjectInputStream(openFileInput(listName));
+			listStream = new ObjectInputStream(context.openFileInput(listName));
 			List list = (List) listStream.readObject();
 			return list;
 		} catch (FileNotFoundException e) {

@@ -31,10 +31,10 @@ public class ListContainer {
     
     public void addList(String name){
 
-    	getLists().add(new List(name));
+    	lists.add(new List(name));
     }
 
-	public ArrayList<List> getLists() {
+	public Iterable<List> getLists() {
 		return lists;
 	}
 

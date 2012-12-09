@@ -5,20 +5,23 @@ import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.OptionalDataException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.StringTokenizer;
 
 import android.app.Application;
 import android.content.Context;
 
 import com.whatstodo.list.List;
 
-public class ListContainerPersistence extends Application {
+public class ListContainerPersistence {
 
 	private final String FILENAME = "all_lists";
+	
+	Context context;
+	
+	public ListContainerPersistence(Context context) {
+		this.context = context;
+	}
 
 	public void saveLists(Iterable<List> lists) {
 
@@ -29,7 +32,7 @@ public class ListContainerPersistence extends Application {
 
 		BufferedOutputStream listsStream = null;
 		try {
-			listsStream = new BufferedOutputStream(openFileOutput(FILENAME,
+			listsStream = new BufferedOutputStream(context.openFileOutput(FILENAME,
 					Context.MODE_PRIVATE));
 			listsStream.write(names.toString().getBytes());
 
@@ -46,12 +49,12 @@ public class ListContainerPersistence extends Application {
 		}
 	}
 
-	public Iterable<String> loadList(String listName) {
+	public Iterable<String> loadLists(String listName) {
 
 		FileInputStream listsStream = null;
 
 		try {
-			listsStream = openFileInput(listName);
+			listsStream = context.openFileInput(listName);
 			byte[] buffer = new byte[100];
 
 			StringBuilder names = new StringBuilder();

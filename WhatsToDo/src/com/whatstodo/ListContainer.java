@@ -2,8 +2,6 @@ package com.whatstodo;
 
 import java.util.ArrayList;
 
-import android.app.Application;
-
 import com.whatstodo.list.List;
 
 public class ListContainer {

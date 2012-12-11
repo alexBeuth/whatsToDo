@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.whatstodo.ListContainer;
 import com.whatstodo.task.Task;
 
 /**
@@ -23,7 +24,7 @@ public class List implements Serializable, Iterable<Task> {
 	
 	transient private int size;
 	transient private Node first;
-
+	
 	private class Node {
 
 		Node next;
@@ -34,11 +35,12 @@ public class List implements Serializable, Iterable<Task> {
 		}
 	}
 
-	private int id;
+	private long id;
 	private String name;
 
 	public List(String name) {
 		this.name = name;
+		this.id = ListContainer.getNextListId();
 		first = null;
 		size = 0;
 	}
@@ -122,7 +124,7 @@ public class List implements Serializable, Iterable<Task> {
 		this.name = name;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -169,4 +171,9 @@ public class List implements Serializable, Iterable<Task> {
 		while (--i >= 0)
 			push(((Task) s.readObject()));
 	}
+
+	public void addTask(String name) {
+		push(new Task(name));
+	}
+	
 }

@@ -16,7 +16,8 @@ import com.whatstodo.list.List;
 
 public class ListContainerPersistence {
 
-	private final String FILENAME = "all_lists";
+	private final String FILENAME_LISTS = "listIds";
+	private final String FILENAME_IDS = "freeIds";
 
 	Context context = WhatsToDo.getContext();
 
@@ -24,14 +25,19 @@ public class ListContainerPersistence {
 
 		StringBuilder names = new StringBuilder();
 		for (List list : lists) {
-			names.append(list.getName()).append(",");
+			names.append(list.getId()).append(",");
 		}
 
+		saveStringToFile(names.toString(), FILENAME_LISTS);
+
+	}
+
+	private void saveStringToFile(String toSave, String filename) {
 		BufferedOutputStream listsStream = null;
 		try {
 			listsStream = new BufferedOutputStream(context.openFileOutput(
-					FILENAME, Context.MODE_PRIVATE));
-			listsStream.write(names.toString().getBytes());
+					filename, Context.MODE_PRIVATE));
+			listsStream.write(toSave.getBytes());
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -43,21 +49,36 @@ public class ListContainerPersistence {
 			if (listsStream != null) {
 				closeQuietly(listsStream);
 			}
-		}
+		}		
 	}
 
 	public Iterable<List> loadLists() {
 
+		String names = getFileAsString(FILENAME_LISTS);
+
+		LinkedList<List> lists = new LinkedList<List>();
+		if (names.length() != 0) {
+			for (String listName : Arrays.asList(names.split(","))) {
+				// TODO Load lists with content...
+				lists.add(new List(listName));
+			}
+		}
+		return lists;
+
+	}
+
+	private String getFileAsString(String filename) {
+
 		FileInputStream listsStream = null;
 
 		try {
-			File file = context.getFileStreamPath(FILENAME);
-			//file.delete();
+			File file = context.getFileStreamPath(filename);
+			// file.delete();
 			if (!file.exists()) {
 				file.createNewFile();
 			}
 
-			listsStream = context.openFileInput(FILENAME);
+			listsStream = context.openFileInput(filename);
 
 			byte[] buffer = new byte[1024];
 
@@ -70,15 +91,7 @@ public class ListContainerPersistence {
 				}
 			}
 
-			LinkedList<List> lists = new LinkedList<List>();
-			if (names.length() != 0) {
-				for (String listName : Arrays.asList(names.toString()
-						.split(","))) {
-					// TODO Load lists with content...
-					lists.add(new List(listName));
-				}
-			}
-			return lists;
+			return names.toString();
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -94,8 +107,38 @@ public class ListContainerPersistence {
 				closeQuietly(listsStream);
 			}
 		}
+		return "";
 
-		return null;
+	}
+
+	public long loadListId() {
+		
+		String idString = getFileAsString(FILENAME_IDS);
+		if (idString == ""){
+			return 0;
+		}
+		String listId = idString.split(",")[0];
+		return Long.valueOf(listId);				
+	}
+	
+	public long loadTaskId() {
+		
+		String idString = getFileAsString(FILENAME_IDS);
+		if(idString == ""){
+			return 0;
+		}
+		String taskId = idString.split(",")[1];
+		return Long.valueOf(taskId);				
+	}
+	
+	public void saveContainerIds() {
+		long listId = ListContainer.getNextListId(true);
+		long taskId = ListContainer.getNextTaskId(true);
+		
+		String toSave = listId + "," + taskId;
+		saveStringToFile(toSave, FILENAME_IDS);
+		
+		//TODO wird bisher nicht aufgerufen
 	}
 
 	private void closeQuietly(Closeable out) {
@@ -105,5 +148,4 @@ public class ListContainerPersistence {
 			// Empty
 		}
 	}
-
 }

@@ -54,7 +54,7 @@ public class ListContainerActivity extends Activity implements OnClickListener{
 				if(viewName == list.getName()){
 					Intent intent = new Intent(this, ListActivity.class);
 					Bundle bundle = new Bundle();
-					bundle.putString("ListName", viewName); //List Name
+					bundle.putLong("ListId", list.getId()); //List ID
 					intent.putExtras(bundle); //Put your id to your next Intent
 					startActivity(intent);
 					//finish();					
@@ -68,7 +68,6 @@ public class ListContainerActivity extends Activity implements OnClickListener{
 		LinearLayout listList = (LinearLayout) findViewById(R.id.listLayout);
 		listList.removeAllViewsInLayout();
 		for(List list : container.getLists()) {
-			//count++;
 			Button listButton = new Button(this);
 			listButton.setText(list.getName());
 			listButton.setOnClickListener(this);

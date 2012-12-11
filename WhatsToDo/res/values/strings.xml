@@ -7,5 +7,6 @@
     <string name="listName">Neue Liste</string>
     <string name="title_activity_task">TaskActivity</string>
     <string name="title_activity_list">ListActivity</string>
+    <string name="newTask">Neue Aufgabe</string>
 
 </resources>

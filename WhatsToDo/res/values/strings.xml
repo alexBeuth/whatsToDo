@@ -8,5 +8,14 @@
     <string name="title_activity_task">TaskActivity</string>
     <string name="title_activity_list">ListActivity</string>
     <string name="newTask">Neue Aufgabe</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_options_test">OptionsTest</string>
+
+    <string-array name="menu">
+        <item>Edit</item>
+        <item>Delete</item>
+        <item>Send</item>
+    </string-array>
+        <string name="footer">Fusszeile</string>
 
 </resources>

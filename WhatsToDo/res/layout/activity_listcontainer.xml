@@ -25,16 +25,24 @@
         android:layout_alignParentTop="true"
         android:text="@string/newList" />
 
-    <LinearLayout
-        android:id="@+id/listLayout"
-        android:layout_width="wrap_content"
+    <ListView
+        android:id="@+id/list1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/footer"
+        android:layout_below="@+id/list" >
+
+    </ListView>
+
+    <TextView
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/list"
-        android:orientation="vertical" >
-
-    </LinearLayout>
+        android:background="#88888888"
+        android:height="40dp"
+        android:text="@string/footer" />
 
 </RelativeLayout>

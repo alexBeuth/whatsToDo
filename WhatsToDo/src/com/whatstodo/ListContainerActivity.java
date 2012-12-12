@@ -1,14 +1,22 @@
 package com.whatstodo;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.whatstodo.list.List;
 import com.whatstodo.list.ListActivity;
@@ -54,7 +62,7 @@ public class ListContainerActivity extends Activity implements OnClickListener{
 				if(viewName == list.getName()){
 					Intent intent = new Intent(this, ListActivity.class);
 					Bundle bundle = new Bundle();
-					bundle.putString("ListName", viewName); //List Name
+					bundle.putLong("ListId", list.getId()); //List ID
 					intent.putExtras(bundle); //Put your id to your next Intent
 					startActivity(intent);
 					//finish();					
@@ -63,18 +71,49 @@ public class ListContainerActivity extends Activity implements OnClickListener{
 		}
 	}
 	
+	
+	/**
+	 * Shows all existing lists in a linear layout.
+	 * The method gets the lists from the class List Container.
+	 */
+	
 	private void showLists() {
 		
-		LinearLayout listList = (LinearLayout) findViewById(R.id.listLayout);
-		listList.removeAllViewsInLayout();
-		for(List list : container.getLists()) {
-			//count++;
-			Button listButton = new Button(this);
-			listButton.setText(list.getName());
-			listButton.setOnClickListener(this);
+		ArrayList<String> listNames = new ArrayList<String>();
+		
+		for (List list : container.getLists()){
+			listNames.add(list.getName());
+		}			
+	    ListView listList1 = (ListView)findViewById(R.id.list1);
+	    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.listitem, listNames);
+	    listList1.setAdapter(adapter);
+	    registerForContextMenu(listList1);
+	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+	    ContextMenuInfo menuInfo) {
+	  if (v.getId()==R.id.list1) {
+	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+	    List list = container.getList(info.id);
+	    menu.setHeaderTitle(list.getName());
+	    String[] menuItems = getResources().getStringArray(R.array.menu);
+	    for (int i = 0; i<menuItems.length; i++) {
+	      menu.add(Menu.NONE, i, i, menuItems[i]);
+	    }
+	  }
+	}
 
-			listList.addView(listButton);
-			
-		}
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+	  AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+	  String[] menuItems = getResources().getStringArray(R.array.menu);
+	  String menuItemName = menuItems[item.getItemId()];
+	  List list = container.getList(info.id);
+	  String listItemName = list.getName();
+
+	  TextView text = (TextView)findViewById(R.id.footer);
+	  text.setText(String.format("Selected %s for item %s", menuItemName, listItemName));
+	  return true;
 	}
 }

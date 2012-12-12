@@ -31,6 +31,10 @@
             android:name="com.whatstodo.list.ListActivity"
             android:label="@string/title_activity_list" >
         </activity>
+        <activity
+            android:name="com.whatstodo.OptionsTest"
+            android:label="@string/title_activity_options_test" >
+        </activity>
     </application>
 
 </manifest>

@@ -6,19 +6,18 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OptionalDataException;
+import java.util.NoSuchElementException;
+
+import com.whatstodo.WhatsToDo;
 
 import android.content.Context;
 
 public class ListPersistence {
 
-	Context context;
-
-	public ListPersistence(Context context) {
-		this.context = context;
-	}
+	Context context = WhatsToDo.getContext();
 
 	public void saveList(List list) {
-		String fileName = list.getName();
+		String fileName = "list_" + list.getId();
 
 		ObjectOutputStream listStream = null;
 		try {
@@ -39,12 +38,14 @@ public class ListPersistence {
 		}
 	}
 
-	public List loadList(String listName) {
+	public List loadList(long listId) {
 
 		ObjectInputStream listStream = null;
+		
+		String filename = "list_" + listId;
 
 		try {
-			listStream = new ObjectInputStream(context.openFileInput(listName));
+			listStream = new ObjectInputStream(context.openFileInput(filename));
 			List list = (List) listStream.readObject();
 			return list;
 		} catch (FileNotFoundException e) {
@@ -65,7 +66,7 @@ public class ListPersistence {
 			}
 		}
 
-		return null;
+		throw new NoSuchElementException("Cannot find list with ID: " + listId);
 	}
 
 	private void closeQuietly(Closeable out) {

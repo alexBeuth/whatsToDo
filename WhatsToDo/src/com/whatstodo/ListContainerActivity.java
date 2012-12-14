@@ -12,11 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.whatstodo.list.List;
 import com.whatstodo.list.ListActivity;
@@ -53,22 +55,25 @@ public class ListContainerActivity extends Activity implements OnClickListener{
 			container.addList(editText.getText().toString());
 			showLists();
 		}
-		else if (view instanceof Button){
-			
-		    String viewName = ((Button)view).getText().toString();
-		    			
-			for(List list : container.getLists()){
-				
-				if(viewName == list.getName()){
-					Intent intent = new Intent(this, ListActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putLong("ListId", list.getId()); //List ID
-					intent.putExtras(bundle); //Put your id to your next Intent
-					startActivity(intent);
-					//finish();					
-				}
-			}
-		}
+//		else if (view.getId() == R.id.list1){
+//			
+//			List list = container.getList((long) view.getId());
+//			
+//			
+//		    String viewName = ((Button)view).getText().toString();
+//		    			
+//			for(List list : container.getLists()){
+//				
+//				if(viewName == list.getName()){
+//					Intent intent = new Intent(this, ListActivity.class);
+//					Bundle bundle = new Bundle();
+//					bundle.putLong("ListId", list.getId()); //List ID
+//					intent.putExtras(bundle); //Put your id to your next Intent
+//					startActivity(intent);
+//					//finish();					
+//				}
+//			}
+//		}
 	}
 	
 	
@@ -84,16 +89,34 @@ public class ListContainerActivity extends Activity implements OnClickListener{
 		for (List list : container.getLists()){
 			listNames.add(list.getName());
 		}			
-	    ListView listList1 = (ListView)findViewById(R.id.list1);
+	    ListView listList = (ListView)findViewById(R.id.list1);
 	    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.listitem, listNames);
-	    listList1.setAdapter(adapter);
-	    registerForContextMenu(listList1);
+	    listList.setAdapter(adapter);
+	    listList.setOnItemClickListener(new OnItemClickListener() {
+	    	
+	    	@Override
+	    	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	    		String item = ((TextView)view).getText().toString();
+	    		
+	    		List list = container.getList(item);				
+	    		if(item == list.getName()){
+					Intent intent = new Intent(view.getContext(), ListActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putLong("ListId", list.getId()); //List ID
+					intent.putExtras(bundle); //Put your id to your next Intent
+					startActivity(intent);
+	    		}
+	    		Toast.makeText(getBaseContext(), item, Toast.LENGTH_LONG).show();
+	    	}
+		});
+	    
+	    registerForContextMenu(listList);
 	}
 	
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
+	public void onCreateContextMenu(ContextMenu menu, View view,
 	    ContextMenuInfo menuInfo) {
-	  if (v.getId()==R.id.list1) {
+	  if (view.getId()==R.id.list1) {
 	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
 	    List list = container.getList(info.id);
 	    menu.setHeaderTitle(list.getName());
@@ -110,10 +133,17 @@ public class ListContainerActivity extends Activity implements OnClickListener{
 	  String[] menuItems = getResources().getStringArray(R.array.menu);
 	  String menuItemName = menuItems[item.getItemId()];
 	  List list = container.getList(info.id);
-	  String listItemName = list.getName();
-
+	  	  
+	  if(menuItemName == menuItems[0]){			//Delete the chosen list
+		  container.deleteList(list.getId());
+	  }else if (menuItemName == menuItems[1]){	//Edit the chosen list
+		  //TODO
+	  }else if (menuItemName == menuItems[2]);{	//Copy the name of the list
+		  //TODO
+	  }
+	  
 	  TextView text = (TextView)findViewById(R.id.footer);
-	  text.setText(String.format("Selected %s for item %s", menuItemName, listItemName));
+	  text.setText(String.format("Selected %s for item %s", menuItemName, list.getName()));
 	  return true;
 	}
 }

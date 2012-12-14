@@ -94,5 +94,20 @@ public class ListContainer {
 		}
 		throw new NoSuchElementException("Cannot find list with ID: " + listId);
 	}
+	
+	public List getList(String listName) {
+		
+		for(List list : lists) {
+			if(list.getName() == listName) {
+				return list;
+			}
+		}
+		throw new NoSuchElementException("Cannot find list with Name: " + listName);
+	}
+
+	public void deleteList(long id) {
+		// TODO delete the list with the id
+		
+	}
 }
 

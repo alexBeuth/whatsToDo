@@ -39,8 +39,9 @@ public class List implements Serializable, Iterable<Task> {
 	private String name;
 
 	public List(String name) {
-		this.name = name;
-		this.id = ListContainer.getNextListId();
+		
+		id = ListContainer.getNextListId();
+		this.name = name + " (" + id + ")";
 		first = null;
 		size = 0;
 	}
@@ -127,10 +128,12 @@ public class List implements Serializable, Iterable<Task> {
 	public long getId() {
 		return id;
 	}
-
+	
 	public void setId(long id) {
 		this.id = id;
 	}
+
+
 
 	/**
 	 * Serializes this object to the given stream.
@@ -171,7 +174,7 @@ public class List implements Serializable, Iterable<Task> {
 		while (--i >= 0)
 			push(((Task) s.readObject()));
 	}
-
+	
 	public void addTask(String name) {
 		push(new Task(name));
 	}

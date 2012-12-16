@@ -47,7 +47,7 @@ public class ListContainer {
     	new ListContainerPersistence().saveLists(lists);
     }
 
-	public Iterable<List> getLists() {
+	public java.util.List<List> getLists() {
 		return lists;
 	}
 

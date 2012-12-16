@@ -1,10 +1,9 @@
 package com.whatstodo;
 
-import java.util.ArrayList;
-import com.whatstodo.list.List;
-
 import android.content.Context;
 import android.widget.ArrayAdapter;
+
+import com.whatstodo.list.List;
 
 public class ListAdapter extends ArrayAdapter<List>{
 	

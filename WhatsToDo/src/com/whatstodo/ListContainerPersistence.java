@@ -4,15 +4,15 @@ import java.io.BufferedOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OptionalDataException;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import android.content.Context;
 
 import com.whatstodo.list.List;
+import com.whatstodo.list.ListPersistence;
 
 public class ListContainerPersistence {
 
@@ -23,12 +23,16 @@ public class ListContainerPersistence {
 
 	public void saveLists(Iterable<List> lists) {
 
-		StringBuilder names = new StringBuilder();
+		saveContainerIds();
+		ListPersistence listPersistence = new ListPersistence();
+
+		StringBuilder ids = new StringBuilder();
 		for (List list : lists) {
-			names.append(list.getId()).append(",");
+			ids.append(list.getId()).append(",");
+			listPersistence.saveList(list);
 		}
 
-		saveStringToFile(names.toString(), FILENAME_LISTS);
+		saveStringToFile(ids.toString(), FILENAME_LISTS);
 
 	}
 
@@ -39,28 +43,25 @@ public class ListContainerPersistence {
 					filename, Context.MODE_PRIVATE));
 			listsStream.write(toSave.getBytes());
 
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//TODO
+			throw new NoSuchElementException();
 		} finally {
 			if (listsStream != null) {
 				closeQuietly(listsStream);
 			}
-		}		
+		}
 	}
 
 	public Iterable<List> loadLists() {
 
-		String names = getFileAsString(FILENAME_LISTS);
+		String ids = getFileAsString(FILENAME_LISTS);
+		ListPersistence listPersistence = new ListPersistence();
 
 		LinkedList<List> lists = new LinkedList<List>();
-		if (names.length() != 0) {
-			for (String listName : Arrays.asList(names.split(","))) {
-				// TODO Load lists with content...
-				lists.add(new List(listName));
+		if (ids.length() != 0) {
+			for (String listId : Arrays.asList(ids.split(","))) {
+				lists.add(listPersistence.loadList(Long.valueOf(listId)));
 			}
 		}
 		return lists;
@@ -93,52 +94,41 @@ public class ListContainerPersistence {
 
 			return names.toString();
 
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (OptionalDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new NoSuchElementException("Cannot find file: " + filename);
 		} finally {
 			if (listsStream != null) {
 				closeQuietly(listsStream);
 			}
 		}
-		return "";
-
 	}
 
 	public long loadListId() {
-		
+
 		String idString = getFileAsString(FILENAME_IDS);
-		if (idString == ""){
+		if (idString == "") {
 			return 0;
 		}
 		String listId = idString.split(",")[0];
-		return Long.valueOf(listId);				
+		return Long.valueOf(listId);
 	}
-	
+
 	public long loadTaskId() {
-		
+
 		String idString = getFileAsString(FILENAME_IDS);
-		if(idString == ""){
+		if (idString == "") {
 			return 0;
 		}
 		String taskId = idString.split(",")[1];
-		return Long.valueOf(taskId);				
+		return Long.valueOf(taskId);
 	}
-	
+
 	public void saveContainerIds() {
 		long listId = ListContainer.getNextListId(true);
 		long taskId = ListContainer.getNextTaskId(true);
-		
+
 		String toSave = listId + "," + taskId;
 		saveStringToFile(toSave, FILENAME_IDS);
-		
-		//TODO wird bisher nicht aufgerufen
 	}
 
 	private void closeQuietly(Closeable out) {

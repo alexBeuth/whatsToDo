@@ -24,7 +24,6 @@ public class ListPersistence {
 			listStream = new ObjectOutputStream(context.openFileOutput(fileName,
 					Context.MODE_PRIVATE));
 			listStream.writeObject(list);
-
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -48,25 +47,15 @@ public class ListPersistence {
 			listStream = new ObjectInputStream(context.openFileInput(filename));
 			List list = (List) listStream.readObject();
 			return list;
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (OptionalDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new NoSuchElementException("Cannot find list with ID: " + listId);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("Corrupted list with ID: " + listId);
 		} finally {
 			if (listStream != null) {
 				closeQuietly(listStream);
 			}
 		}
-
-		throw new NoSuchElementException("Cannot find list with ID: " + listId);
 	}
 
 	private void closeQuietly(Closeable out) {

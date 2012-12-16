@@ -55,25 +55,6 @@ public class ListContainerActivity extends Activity implements OnClickListener{
 			container.addList(editText.getText().toString());
 			showLists();
 		}
-//		else if (view.getId() == R.id.list1){
-//			
-//			List list = container.getList((long) view.getId());
-//			
-//			
-//		    String viewName = ((Button)view).getText().toString();
-//		    			
-//			for(List list : container.getLists()){
-//				
-//				if(viewName == list.getName()){
-//					Intent intent = new Intent(this, ListActivity.class);
-//					Bundle bundle = new Bundle();
-//					bundle.putLong("ListId", list.getId()); //List ID
-//					intent.putExtras(bundle); //Put your id to your next Intent
-//					startActivity(intent);
-//					//finish();					
-//				}
-//			}
-//		}
 	}
 	
 	

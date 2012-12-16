@@ -39,8 +39,9 @@ public class List implements Serializable, Iterable<Task> {
 	private String name;
 
 	public List(String name) {
-		this.name = name;
-		this.id = ListContainer.getNextListId();
+		
+		id = ListContainer.getNextListId();
+		this.name = name + " (" + id + ")";
 		first = null;
 		size = 0;
 	}

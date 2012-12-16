@@ -10,6 +10,6 @@ public class ListAdapter extends ArrayAdapter<List>{
 	
 	public ListAdapter(Context ctx, int textViewResourceId,
 			ListContainer container) {
-		super(context, textViewResourceId, objects);
+		super(ctx, textViewResourceId);
 	}
 }

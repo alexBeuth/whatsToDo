@@ -105,9 +105,16 @@ public class ListContainer {
 		throw new NoSuchElementException("Cannot find list with Name: " + listName);
 	}
 
-	public void deleteList(long id) {
-		// TODO delete the list with the id
+	public void deleteList(long listId) {
 		
+		for(List list : lists){
+			if(list.getId() == listId){
+				lists.remove(list);
+				new ListContainerPersistence().saveLists(lists);
+				return;
+			}
+		}
+		throw new NoSuchElementException("Cannot find the right list");
 	}
 }
 

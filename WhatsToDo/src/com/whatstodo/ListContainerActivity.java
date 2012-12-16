@@ -116,9 +116,10 @@ public class ListContainerActivity extends Activity implements OnClickListener{
 	  List list = container.getList(info.id);
 	  	  
 	  if(menuItemName == menuItems[0]){			//Delete the chosen list
-		  container.deleteList(list.getId());
-	  }else if (menuItemName == menuItems[1]){	//Edit the chosen list
 		  //TODO
+	  }else if (menuItemName == menuItems[1]){	//Edit the chosen list
+		  container.deleteList(list.getId());
+		  showLists();
 	  }else if (menuItemName == menuItems[2]);{	//Copy the name of the list
 		  //TODO
 	  }

@@ -129,8 +129,8 @@ public class List implements Serializable, Iterable<Task> {
 		return id;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+public void addTask(String name) {
+		push(new Task(name));
 	}
 
 	/**
@@ -172,9 +172,4 @@ public class List implements Serializable, Iterable<Task> {
 		while (--i >= 0)
 			push(((Task) s.readObject()));
 	}
-
-	public void addTask(String name) {
-		push(new Task(name));
-	}
-	
 }

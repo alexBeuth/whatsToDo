@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OptionalDataException;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import android.content.Context;
 
@@ -23,7 +24,7 @@ public class ListContainerPersistence {
 	Context context = WhatsToDo.getContext();
 
 	public void saveLists(Iterable<List> lists) {
-		
+
 		saveContainerIds();
 		ListPersistence listPersistence = new ListPersistence();
 
@@ -44,12 +45,9 @@ public class ListContainerPersistence {
 					filename, Context.MODE_PRIVATE));
 			listsStream.write(toSave.getBytes());
 
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//TODO
+			throw new NoSuchElementException();
 		} finally {
 			if (listsStream != null) {
 				closeQuietly(listsStream);
@@ -98,22 +96,13 @@ public class ListContainerPersistence {
 
 			return names.toString();
 
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (OptionalDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new NoSuchElementException("Cannot find file: " + filename);
 		} finally {
 			if (listsStream != null) {
 				closeQuietly(listsStream);
 			}
 		}
-		return "";
-
 	}
 
 	public long loadListId() {

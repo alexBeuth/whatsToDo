@@ -7,6 +7,7 @@ import com.whatstodo.utility.Priority;
 
 public class Task implements Serializable {
 
+	private static final long serialVersionUID = 0;
 	private long id;
 	private String name;
 	private Priority priority;
@@ -14,6 +15,7 @@ public class Task implements Serializable {
 	public Task(String name) {
 		this.setName(name);
 		this.id = ListContainer.getNextTaskId();
+		priority = Priority.NORMAL;
 	}
 
 	public String getName() {

@@ -21,6 +21,8 @@ public class ListContainerPersistence {
 
 	Context context = WhatsToDo.getContext();
 
+	
+	//TODO We really need to think about when to save and when to load.
 	public void saveLists(Iterable<List> lists) {
 
 		saveContainerIds();

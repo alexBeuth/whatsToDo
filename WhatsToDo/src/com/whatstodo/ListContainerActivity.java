@@ -97,7 +97,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			ContextMenuInfo menuInfo) {
 		if (view.getId() == R.id.list1) {
 			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-			List list = container.getList(info.id);
+			List list = container.getLists().get(info.position);
 			menu.setHeaderTitle(list.getName());
 			String[] menuItems = getResources().getStringArray(R.array.menu);
 			for (int i = 0; i < menuItems.length; i++) {

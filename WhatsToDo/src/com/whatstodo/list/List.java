@@ -20,7 +20,7 @@ import com.whatstodo.task.Task;
 public class List implements Serializable, Iterable<Task> {
 
 
-	private static final long serialVersionUID = -2889639373188534039L;
+	private static final long serialVersionUID = 0;
 	
 	transient private int size;
 	transient private Node first;

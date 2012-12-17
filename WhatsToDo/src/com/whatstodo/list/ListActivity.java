@@ -51,11 +51,8 @@ public class ListActivity extends Activity implements OnClickListener{
 			list.addTask(editText.getText().toString());
 			showTasks();
 		} else {
-			
-			
+			// TODO Button nicht gefunden			
 		}
-		// TODO Auto-generated method stub
-		
 	}
 
 	private void showTasks() {
@@ -68,11 +65,6 @@ public class ListActivity extends Activity implements OnClickListener{
 			taskButton.setOnClickListener(this);
 
 			taskList.addView(taskButton);
-			
 		}
-		
 	}
-	
-	
-
 }

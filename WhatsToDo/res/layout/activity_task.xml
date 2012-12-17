@@ -4,4 +4,218 @@
     android:layout_height="match_parent"
     tools:context=".TaskActivity" >
 
+    <TextView
+        android:id="@+id/Aufgabe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/Gray"
+        android:gravity="center_vertical"
+        android:height="20dp"
+        android:text="@string/task"
+        android:textColor="@color/White" />
+
+    <FrameLayout
+        android:id="@+id/frameLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/Aufgabe"
+        android:minHeight="60dp" >
+
+        <EditText
+            android:id="@+id/task"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginTop="2dp"
+            android:ems="10"
+            android:inputType="text" >
+
+            <requestFocus />
+        </EditText>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/Details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/frameLayout1"
+        android:background="@color/Gray"
+        android:gravity="center_vertical"
+        android:height="20dp"
+        android:text="@string/details"
+        android:textColor="@color/White" />
+
+    <FrameLayout
+        android:id="@+id/Buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/Edit" >
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="170dp"
+            android:text="@string/cancel"
+            android:width="140dp" />
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="@string/save"
+            android:width="140dp" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/Edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/Details"
+        android:orientation="vertical" >
+
+        <FrameLayout
+            android:id="@+id/taskNotice"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="@string/notice"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textViewNotice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:textSize="15sp"
+                tools:ignore="HardcodedText" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/taskDate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" >
+
+            <TextView
+                android:id="@+id/TextView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="@string/date"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textViewDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:textSize="15sp"
+                tools:ignore="HardcodedText" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/taskMemory"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" >
+
+            <TextView
+                android:id="@+id/TextView03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="@string/memory"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textViewMemory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:textSize="15sp"
+                tools:ignore="HardcodedText" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/taskList"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" >
+
+            <TextView
+                android:id="@+id/TextView04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="@string/list"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textViewList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:textSize="15sp"
+                tools:ignore="HardcodedText" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/taskPriority"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" >
+
+            <TextView
+                android:id="@+id/TextView05"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="@string/priority"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textViewPriority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:textSize="15sp"
+                tools:ignore="HardcodedText" />
+
+        </FrameLayout>
+    </LinearLayout>
+
 </RelativeLayout>

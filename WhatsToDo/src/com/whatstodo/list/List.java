@@ -178,5 +178,10 @@ public class List implements Serializable, Iterable<Task> {
 	public void addTask(String name) {
 		push(new Task(name));
 	}
+
+	public Task getTask(long taskId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

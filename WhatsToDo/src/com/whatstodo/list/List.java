@@ -180,8 +180,13 @@ public class List implements Serializable, Iterable<Task> {
 	}
 
 	public Task getTask(long taskId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		for (Task task : this) {
+			if ( task.getId() == taskId) {
+				return task;
+			}
+		}
+		throw new NoSuchElementException("Cannot find task with ID: " + taskId);
 	}
 	
 }

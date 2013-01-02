@@ -5,7 +5,7 @@
     tools:context=".TaskActivity" >
 
     <TextView
-        android:id="@+id/Aufgabe"
+        android:id="@+id/taskAufgabe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -21,11 +21,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/Aufgabe"
+        android:layout_below="@+id/taskAufgabe"
         android:minHeight="60dp" >
 
         <EditText
-            android:id="@+id/task"
+            android:id="@+id/taskName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -40,7 +40,7 @@
     </FrameLayout>
 
     <TextView
-        android:id="@+id/Details"
+        android:id="@+id/taskDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -52,16 +52,16 @@
         android:textColor="@color/White" />
 
     <FrameLayout
-        android:id="@+id/Buttons"
+        android:id="@+id/taskButtons"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/Edit" >
+        android:layout_below="@+id/taskEdit" >
 
         <Button
-            android:id="@+id/cancel"
+            android:id="@+id/taskCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -70,7 +70,7 @@
             android:width="140dp" />
 
         <Button
-            android:id="@+id/save"
+            android:id="@+id/taskSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -80,11 +80,11 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/Edit"
+        android:id="@+id/taskEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/Details"
+        android:layout_below="@+id/taskDetails"
         android:orientation="vertical" >
 
         <FrameLayout
@@ -140,7 +140,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/taskMemory"
+            android:id="@+id/taskReminder"
             android:layout_width="match_parent"
             android:layout_height="50dp" >
 
@@ -154,7 +154,7 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/textViewMemory"
+                android:id="@+id/textViewReminder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"

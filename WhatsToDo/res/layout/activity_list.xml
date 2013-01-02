@@ -4,16 +4,6 @@
     android:layout_height="match_parent"
     tools:context=".ListActivity" >
 
-    <LinearLayout
-        android:id="@+id/taskLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/task"
-        android:orientation="vertical" >
-
-    </LinearLayout>
-
     <EditText
         android:id="@+id/task"
         android:layout_width="match_parent"
@@ -33,5 +23,12 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:text="@string/newList" />
+
+    <ListView
+        android:id="@+id/taskList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/task" >
+    </ListView>
 
 </RelativeLayout>

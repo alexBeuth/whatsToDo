@@ -8,15 +8,18 @@ import com.whatstodo.utility.Priority;
 
 public class Task implements Serializable {
 
+	private static final long serialVersionUID = 0;
 	private long id;
 	private String name;
-	private Priority priority;
-	private Date date;
 	private String notice;
+	private Date date;
+	private Date reminder;
+	private Priority priority;
 	
 	public Task(String name) {
 		this.setName(name);
 		this.id = ListContainer.getNextTaskId();
+		priority = Priority.NORMAL;
 	}
 
 	public String getName() {
@@ -48,9 +51,18 @@ public class Task implements Serializable {
 	}
 
 	public CharSequence getNotice() {
-		// TODO Auto-generated method stub
 		return notice;
 	}
 	
+	public void setNotice(String notice) {
+		this.notice = notice;
+	}
+	
+	public Date getReminder() {
+		return reminder;
+	}
 
+	public void setReminder(Date reminder) {
+		this.reminder = reminder;
+	}
 }

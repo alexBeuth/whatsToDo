@@ -47,7 +47,7 @@ public class ListPersistence {
 			List list = (List) listStream.readObject();
 			return list;
 		} catch (IOException e) {
-			throw new NoSuchElementException("Cannot find list with ID: " + listId);
+			throw new NoSuchElementException("Cannot load list with ID: " + listId);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Corrupted list with ID: " + listId);
 		} finally {

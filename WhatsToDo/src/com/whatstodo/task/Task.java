@@ -50,21 +50,6 @@ public class Task implements Serializable, Comparable<Task> {
 		this.date = date;
 	}
 
-	@Override
-	public int compareTo(Task another) {
-		
-		if(date == null && another.date == null)
-			return 0;
-		
-		if(date != null) {
-			if(another.date != null)
-				return date.compareTo(another.date);
-			else
-				return 1;
-		}
-		return -1;
-	}
-
 	public String getNotice() {
 		return notice;
 	}
@@ -81,4 +66,18 @@ public class Task implements Serializable, Comparable<Task> {
 		this.reminder = reminder;
 	}
 
+	@Override
+	public int compareTo(Task another) {
+		
+		if(date == null && another.date == null)
+			return 0;
+		
+		if(date != null) {
+			if(another.date != null)
+				return date.compareTo(another.date);
+			else
+				return 1;
+		}
+		return -1;
+	}
 }

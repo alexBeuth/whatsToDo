@@ -21,7 +21,7 @@ import com.whatstodo.task.Task;
  */
 public class List implements Serializable, java.util.List<Task> {
 
-	private static final long serialVersionUID = 0;
+	private static final long serialVersionUID = -2889639373188534039L;
 
 	transient private int size;
 	transient private Task[] orderedTasks; 
@@ -330,6 +330,17 @@ public class List implements Serializable, java.util.List<Task> {
 
 	public void addTask(String name) {
 		add(new Task(name));
+	}
+
+
+	public Task getTask(long taskId) {
+
+		for (Task task : this) {
+			if ( task.getId() == taskId) {
+				return task;
+			}
+		}
+		throw new NoSuchElementException("Cannot find task with ID: " + taskId);
 	}
 
 }

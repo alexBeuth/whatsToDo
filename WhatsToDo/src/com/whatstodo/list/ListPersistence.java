@@ -5,12 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
 import java.util.NoSuchElementException;
 
-import com.whatstodo.WhatsToDo;
-
 import android.content.Context;
+
+import com.whatstodo.WhatsToDo;
 
 public class ListPersistence {
 

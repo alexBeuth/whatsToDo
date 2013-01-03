@@ -1,7 +1,6 @@
 package com.whatstodo.list;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,7 +21,6 @@ import com.whatstodo.ListContainer;
 import com.whatstodo.R;
 import com.whatstodo.task.Task;
 import com.whatstodo.task.TaskActivity;
-import com.whatstodo.utility.ListAdapter;
 import com.whatstodo.utility.TaskAdapter;
 
 public class ListActivity extends Activity implements OnClickListener {
@@ -64,10 +61,8 @@ public class ListActivity extends Activity implements OnClickListener {
 			list.addTask(editText.getText().toString());
 			showTasks();
 		} else {
-
+			// TODO Button nicht gefunden			
 		}
-		// TODO Auto-generated method stub
-
 	}
 
 	private void showTasks() {
@@ -79,7 +74,7 @@ public class ListActivity extends Activity implements OnClickListener {
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		for(Task task : list) {
 			tasks.add(task);
-		}
+
 
 		TaskAdapter adapter = new TaskAdapter(this, R.layout.taskitem, tasks);
 
@@ -99,19 +94,17 @@ public class ListActivity extends Activity implements OnClickListener {
 								TaskActivity.class);
 						Bundle bundle = new Bundle();
 						bundle.putLong("TaskId", task.getId());
+						bundle.putLong("ListId", list.getId());
 						intent.putExtras(bundle);
 						startActivity(intent);
 					}
-
 				}
-
 				Toast.makeText(getBaseContext(), item, Toast.LENGTH_LONG)
 						.show();
 			}
 		});
 
 		registerForContextMenu(listList);
-
+		}
 	}
-
 }

@@ -11,8 +11,10 @@ public class Task implements Serializable, Comparable<Task> {
 	private static final long serialVersionUID = 0;
 	private long id;
 	private String name;
-	private Priority priority;
+	private String notice;
 	private Date date;
+	private Date reminder;
+	private Priority priority;
 	
 	public Task(String name) {
 		this.setName(name);
@@ -61,6 +63,22 @@ public class Task implements Serializable, Comparable<Task> {
 				return 1;
 		}
 		return -1;
+	}
+
+	public String getNotice() {
+		return notice;
+	}
+	
+	public void setNotice(String notice) {
+		this.notice = notice;
+	}
+	
+	public Date getReminder() {
+		return reminder;
+	}
+
+	public void setReminder(Date reminder) {
+		this.reminder = reminder;
 	}
 
 }

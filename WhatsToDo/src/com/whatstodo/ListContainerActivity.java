@@ -111,7 +111,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 	  AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
 	  String[] menuItems = getResources().getStringArray(R.array.menu);
 	  String menuItemName = menuItems[item.getItemId()];
-	  List list = container.getList(info.id);
+	  List list = container.getLists().get(info.position);
 	  	  
 	  if(menuItemName == menuItems[0]){			//Delete the chosen list
 		  //TODO

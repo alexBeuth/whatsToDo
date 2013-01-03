@@ -1,4 +1,4 @@
-package com.whatstodo;
+package com.whatstodo.persistence;
 
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
@@ -11,8 +11,9 @@ import java.util.NoSuchElementException;
 
 import android.content.Context;
 
+import com.whatstodo.ListContainer;
+import com.whatstodo.WhatsToDo;
 import com.whatstodo.list.List;
-import com.whatstodo.list.ListPersistence;
 
 public class ListContainerPersistence {
 
@@ -21,9 +22,7 @@ public class ListContainerPersistence {
 
 	Context context = WhatsToDo.getContext();
 
-	
-	//TODO We really need to think about when to save and when to load.
-	public void saveLists(Iterable<List> lists) {
+	protected void saveLists(Iterable<List> lists) {
 
 		saveContainerIds();
 		ListPersistence listPersistence = new ListPersistence();
@@ -46,7 +45,7 @@ public class ListContainerPersistence {
 			listsStream.write(toSave.getBytes());
 
 		} catch (IOException e) {
-			//TODO
+			// TODO
 			throw new NoSuchElementException();
 		} finally {
 			if (listsStream != null) {
@@ -125,7 +124,7 @@ public class ListContainerPersistence {
 		return Long.valueOf(taskId);
 	}
 
-	public void saveContainerIds() {
+	void saveContainerIds() {
 		long listId = ListContainer.getNextListId(true);
 		long taskId = ListContainer.getNextTaskId(true);
 

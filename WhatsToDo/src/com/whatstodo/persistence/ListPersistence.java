@@ -1,4 +1,4 @@
-package com.whatstodo.list;
+package com.whatstodo.persistence;
 
 import java.io.Closeable;
 import java.io.FileNotFoundException;
@@ -10,12 +10,13 @@ import java.util.NoSuchElementException;
 import android.content.Context;
 
 import com.whatstodo.WhatsToDo;
+import com.whatstodo.list.List;
 
 public class ListPersistence {
 
 	Context context = WhatsToDo.getContext();
 
-	public void saveList(List list) {
+	protected void saveList(List list) {
 		String fileName = "list_" + list.getId();
 
 		ObjectOutputStream listStream = null;

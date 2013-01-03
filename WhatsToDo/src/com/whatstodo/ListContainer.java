@@ -4,48 +4,51 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 import com.whatstodo.list.List;
+import com.whatstodo.persistence.ChangeListener;
+import com.whatstodo.persistence.ListContainerPersistence;
 
 public class ListContainer {
-	
+
 	private static ArrayList<List> lists = new ArrayList<List>();
-	
-    private static ListContainer container = null;
-    
-    private static long nextAvailableListId;
+
+	private static ListContainer container = null;
+
+	private static long nextAvailableListId;
 
 	private static long nextAvailableTaskId;
- 
-    /**
-     * Default-Konstruktor, der nicht außerhalb dieser Klasse
-     * aufgerufen werden kann
-     */
-    private ListContainer() {}
- 
-    /**
-     * Statische Methode, liefert die einzige Instanz dieser
-     * Klasse zurück
-     */
-    public static ListContainer getInstance() {
 
-        if (container == null) {
-            container = new ListContainer();
-            
-        	ListContainerPersistence persistence = new ListContainerPersistence();
-        	
-        	nextAvailableListId = persistence.loadListId();
-        	nextAvailableTaskId = persistence.loadTaskId();
-    		for(List list : persistence.loadLists()) {
-        		lists.add(list);
-        	}
-        }
-        return container;
-    }
-    
-    public void addList(String name){
+	/**
+	 * Default-Konstruktor, der nicht außerhalb dieser Klasse aufgerufen werden
+	 * kann
+	 */
+	private ListContainer() {
+	}
 
-    	lists.add(new List(name));
-    	new ListContainerPersistence().saveLists(lists);
-    }
+	/**
+	 * Statische Methode, liefert die einzige Instanz dieser Klasse zurück
+	 */
+	public static ListContainer getInstance() {
+
+		if (container == null) {
+			container = new ListContainer();
+
+			ListContainerPersistence persistence = new ListContainerPersistence();
+
+			nextAvailableListId = persistence.loadListId();
+			nextAvailableTaskId = persistence.loadTaskId();
+			for (List list : persistence.loadLists()) {
+				lists.add(list);
+			}
+			ChangeListener.onListContainerChange(lists);
+		}
+		return container;
+	}
+
+	public void addList(String name) {
+
+		lists.add(new List(name));
+		ChangeListener.onListContainerChange(lists);
+	}
 
 	public java.util.List<List> getLists() {
 		return lists;
@@ -56,65 +59,65 @@ public class ListContainer {
 	}
 
 	public static long getNextListId() {
-				
+
 		return getNextListId(false);
 	}
-	
+
 	public static long getNextListId(boolean noIncrement) {
-		
-		if(noIncrement) {
+
+		if (noIncrement) {
 			return nextAvailableListId;
 		} else {
 			return nextAvailableListId++;
 		}
-		
+
 	}
-	
+
 	public static long getNextTaskId() {
-		
+
 		return getNextTaskId(false);
 	}
-	
+
 	public static long getNextTaskId(boolean noIncrement) {
-		
-		if(noIncrement) {
+
+		if (noIncrement) {
 			return nextAvailableTaskId;
 		} else {
 			return nextAvailableTaskId++;
 		}
-		
+
 	}
 
 	public List getList(Long listId) {
-		
-		for(List list : lists) {
-			if(list.getId() == listId) {
+
+		for (List list : lists) {
+			if (list.getId() == listId) {
 				return list;
 			}
 		}
 		throw new NoSuchElementException("Cannot find list with ID: " + listId);
 	}
-	
+
 	public List getList(String listName) {
-		
-		for(List list : lists) {
-			if(list.getName() == listName) {
+
+		for (List list : lists) {
+			if (list.getName() == listName) {
 				return list;
 			}
 		}
-		throw new NoSuchElementException("Cannot find list with Name: " + listName);
+		throw new NoSuchElementException("Cannot find list with Name: "
+				+ listName);
 	}
 
 	public void deleteList(long listId) {
-		
-		for(List list : lists){
-			if(list.getId() == listId){
+
+		for (List list : lists) {
+			if (list.getId() == listId) {
 				lists.remove(list);
-				new ListContainerPersistence().saveLists(lists);
+				ChangeListener.onListContainerChange(lists);
 				return;
 			}
 		}
 		throw new NoSuchElementException("Cannot find the right list");
 	}
 }
-

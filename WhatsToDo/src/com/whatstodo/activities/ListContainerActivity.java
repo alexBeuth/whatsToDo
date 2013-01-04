@@ -21,10 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.whatstodo.R;
-import com.whatstodo.R.array;
-import com.whatstodo.R.id;
-import com.whatstodo.R.layout;
-import com.whatstodo.R.menu;
 import com.whatstodo.models.List;
 import com.whatstodo.models.ListContainer;
 import com.whatstodo.persistence.ChangeListener;
@@ -158,7 +154,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 		} else if (menuItemName == menuItems[2]) { // Copy the name of the list
 			// TODO
 		}
-		
+
 		TextView text = (TextView) findViewById(R.id.footer);
 		text.setText(String.format("Selected %s for item %s", menuItemName,
 				list.getName()));

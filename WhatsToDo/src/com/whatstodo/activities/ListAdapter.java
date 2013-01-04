@@ -1,6 +1,6 @@
-package com.whatstodo.utility;
+package com.whatstodo.activities;
 
-import com.whatstodo.list.List;
+import com.whatstodo.models.List;
 
 import com.whatstodo.R;
 import android.content.Context;

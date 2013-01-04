@@ -1,10 +1,9 @@
-package com.whatstodo.task;
+package com.whatstodo.models;
 
 import java.io.Serializable;
 import java.util.Date;
 
-import com.whatstodo.ListContainer;
-import com.whatstodo.utility.Priority;
+import com.whatstodo.utils.Priority;
 
 public class Task implements Serializable, Comparable<Task> {
 

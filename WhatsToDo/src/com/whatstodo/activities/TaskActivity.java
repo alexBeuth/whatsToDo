@@ -1,4 +1,4 @@
-package com.whatstodo.task;
+package com.whatstodo.activities;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -21,11 +21,11 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.whatstodo.ListContainer;
 import com.whatstodo.R;
-import com.whatstodo.list.List;
-import com.whatstodo.list.ListActivity;
-import com.whatstodo.utility.Priority;
+import com.whatstodo.models.List;
+import com.whatstodo.models.ListContainer;
+import com.whatstodo.models.Task;
+import com.whatstodo.utils.Priority;
 
 public class TaskActivity extends Activity implements OnClickListener {
 

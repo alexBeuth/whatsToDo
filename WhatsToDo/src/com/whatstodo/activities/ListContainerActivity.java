@@ -1,4 +1,4 @@
-package com.whatstodo;
+package com.whatstodo.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,10 +20,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.whatstodo.list.List;
-import com.whatstodo.list.ListActivity;
+import com.whatstodo.R;
+import com.whatstodo.R.array;
+import com.whatstodo.R.id;
+import com.whatstodo.R.layout;
+import com.whatstodo.R.menu;
+import com.whatstodo.models.List;
+import com.whatstodo.models.ListContainer;
 import com.whatstodo.persistence.ChangeListener;
-import com.whatstodo.utility.ListAdapter;
 
 public class ListContainerActivity extends Activity implements OnClickListener {
 

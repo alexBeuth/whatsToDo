@@ -1,9 +1,8 @@
-package com.whatstodo;
+package com.whatstodo.models;
 
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-import com.whatstodo.list.List;
 import com.whatstodo.persistence.ChangeListener;
 import com.whatstodo.persistence.ListContainerPersistence;
 

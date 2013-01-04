@@ -1,6 +1,6 @@
 package com.whatstodo.persistence;
 
-import com.whatstodo.list.List;
+import com.whatstodo.models.List;
 
 public class ChangeListener {
 	

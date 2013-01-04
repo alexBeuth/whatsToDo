@@ -1,4 +1,4 @@
-package com.whatstodo.utility;
+package com.whatstodo.activities;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.whatstodo.R;
-import com.whatstodo.task.Task;
+import com.whatstodo.models.Task;
 
 public class TaskAdapter extends ArrayAdapter<Task> {
 

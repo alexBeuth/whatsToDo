@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 import android.content.Context;
 
 import com.whatstodo.WhatsToDo;
-import com.whatstodo.list.List;
+import com.whatstodo.models.List;
 
 public class ListPersistence {
 

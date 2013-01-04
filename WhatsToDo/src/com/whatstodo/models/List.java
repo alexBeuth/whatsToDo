@@ -1,4 +1,4 @@
-package com.whatstodo.list;
+package com.whatstodo.models;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -9,8 +9,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.whatstodo.ListContainer;
-import com.whatstodo.task.Task;
 
 /**
  * The list class represents a LIFO-Stack of tasks. It has the usual stack

@@ -1,4 +1,4 @@
-package com.whatstodo.list;
+package com.whatstodo.activities;
 
 import java.util.ArrayList;
 
@@ -17,11 +17,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.whatstodo.ListContainer;
 import com.whatstodo.R;
-import com.whatstodo.task.Task;
-import com.whatstodo.task.TaskActivity;
-import com.whatstodo.utility.TaskAdapter;
+import com.whatstodo.models.List;
+import com.whatstodo.models.ListContainer;
+import com.whatstodo.models.Task;
 
 public class ListActivity extends Activity implements OnClickListener {
 

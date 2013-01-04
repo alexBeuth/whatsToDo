@@ -11,9 +11,9 @@ import java.util.NoSuchElementException;
 
 import android.content.Context;
 
-import com.whatstodo.ListContainer;
 import com.whatstodo.WhatsToDo;
-import com.whatstodo.list.List;
+import com.whatstodo.models.List;
+import com.whatstodo.models.ListContainer;
 
 public class ListContainerPersistence {
 

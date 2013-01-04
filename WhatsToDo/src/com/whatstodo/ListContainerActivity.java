@@ -1,6 +1,8 @@
 package com.whatstodo;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 
 import com.whatstodo.list.List;
 import com.whatstodo.list.ListActivity;
+import com.whatstodo.persistence.ChangeListener;
 import com.whatstodo.utility.ListAdapter;
 
 public class ListContainerActivity extends Activity implements OnClickListener {
@@ -73,7 +76,8 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				String item = ((TextView) (((FrameLayout) view).getChildAt(0))).getText().toString();
+				String item = ((TextView) (((FrameLayout) view).getChildAt(0)))
+						.getText().toString();
 
 				List list = container.getList(item);
 				if (item == list.getName()) {
@@ -108,22 +112,52 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-	  AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-	  String[] menuItems = getResources().getStringArray(R.array.menu);
-	  String menuItemName = menuItems[item.getItemId()];
-	  List list = container.getLists().get(info.position);
-	  	  
-	  if(menuItemName == menuItems[0]){			//Delete the chosen list
-		  //TODO
-	  }else if (menuItemName == menuItems[1]){	//Edit the chosen list
-		  container.deleteList(list.getId());
-		  showLists();
-	  }else if (menuItemName == menuItems[2]);{	//Copy the name of the list
-		  //TODO
-	  }
-	  
-	  TextView text = (TextView)findViewById(R.id.footer);
-	  text.setText(String.format("Selected %s for item %s", menuItemName, list.getName()));
-	  return true;
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+		String[] menuItems = getResources().getStringArray(R.array.menu);
+		String menuItemName = menuItems[item.getItemId()];
+		final List list = container.getLists().get(info.position);
+
+		if (menuItemName == menuItems[0]) { // Edit the chosen list
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Name");
+			builder.setMessage(list.getName());
+
+			final EditText input = new EditText(this);
+			builder.setView(input);
+
+			builder.setPositiveButton("Ok",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+
+							list.setName(input.getText().toString());
+							showLists();
+							ChangeListener.onListChange(list);
+						}
+					});
+
+			builder.setNegativeButton("Abbrechen",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+						}
+					});
+
+			AlertDialog alert = builder.create();
+			alert.show();
+
+		} else if (menuItemName == menuItems[1]) { // Delete the chosen list
+			container.deleteList(list.getId());
+			showLists();
+
+		} else if (menuItemName == menuItems[2]) { // Copy the name of the list
+			// TODO
+		}
+		
+		TextView text = (TextView) findViewById(R.id.footer);
+		text.setText(String.format("Selected %s for item %s", menuItemName,
+				list.getName()));
+		return true;
 	}
 }

@@ -41,6 +41,8 @@ public class ListActivity extends Activity implements OnClickListener {
 		list = container.getList(listId);
 
 		setTitle(list.getName());
+		
+		showTasks();
 
 		Button createTask = (Button) findViewById(R.id.newTask);
 		createTask.setOnClickListener(this);

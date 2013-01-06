@@ -14,11 +14,13 @@ public class Task implements Serializable, Comparable<Task> {
 	private Date date;
 	private Date reminder;
 	private Priority priority;
+	private boolean done;
 	
 	public Task(String name) {
 		this.setName(name);
 		this.id = ListContainer.getNextTaskId();
 		priority = Priority.NORMAL;
+		done = false;
 	}
 
 	public String getName() {
@@ -39,6 +41,14 @@ public class Task implements Serializable, Comparable<Task> {
 
 	public void setPriority(Priority priority) {
 		this.priority = priority;
+	}
+
+	public boolean isDone() {
+		return done;
+	}
+
+	public void setDone(boolean done) {
+		this.done = done;
 	}
 
 	public Date getDate() {

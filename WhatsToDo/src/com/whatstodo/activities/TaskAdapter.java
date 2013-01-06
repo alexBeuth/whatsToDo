@@ -1,6 +1,7 @@
 package com.whatstodo.activities;
 
 import android.content.Context;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,15 +34,19 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 		Task task = tasks.get(position);
 
 		TextView taskName = (TextView) element.findViewById(R.id.taskName);
-		TextView taskPriority = (TextView) element.findViewById(R.id.taskPriority);
+		TextView taskPriority = (TextView) element
+				.findViewById(R.id.taskPriority);
 		TextView taskDone = (TextView) element.findViewById(R.id.taskDone);
+		TextView taskDate = (TextView) element.findViewById(R.id.taskDate);
 
 		taskName.setText(task.getName());
-		//TODO Pictures!
+		// TODO Pictures!
 		taskPriority.setText(task.getPriority().toString());
-		taskDone.setText("false");
-		
-		
+		taskDone.setText(Boolean.valueOf(task.isDone()).toString());
+
+		if (task.getDate() != null) {
+			taskDate.setText(DateFormat.format("dd.MM.yyyy", task.getDate()));
+		}
 
 		return element;
 	}

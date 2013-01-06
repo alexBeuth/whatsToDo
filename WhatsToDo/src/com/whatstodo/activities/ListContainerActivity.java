@@ -88,8 +88,8 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 					intent.putExtras(bundle); // Put your id to your next Intent
 					startActivity(intent);
 				}
-				Toast.makeText(getBaseContext(), item, Toast.LENGTH_LONG)
-						.show();
+//				Toast.makeText(getBaseContext(), item, Toast.LENGTH_LONG)
+//						.show();
 			}
 		});
 

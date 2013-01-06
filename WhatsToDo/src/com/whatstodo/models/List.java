@@ -9,6 +9,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.whatstodo.persistence.ChangeListener;
+
 
 /**
  * The list class represents a LIFO-Stack of tasks. It has the usual stack
@@ -92,6 +94,7 @@ public class List implements Serializable, java.util.List<Task> {
 		}
 		orderedTasks[i + 1] = task;
 		size++;
+		ChangeListener.onListChange(this);
 		return true;
 	}
 

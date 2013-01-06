@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.whatstodo.R;
@@ -35,7 +37,10 @@ public class TaskActivity extends Activity implements OnClickListener {
 	private Priority userPriority;
 	private String userNotice;
 	private Date userDate;
+	private Date userReminder;
 	private static final int DATE_DIALOG_ID = 0;
+	private static final int REMINDER_DATE_DIALOG_ID = 1;
+	private static final int REMINDER_TIME_DIALOG_ID = 2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,8 @@ public class TaskActivity extends Activity implements OnClickListener {
 		task = list.getTask(taskId);
 		userPriority = task.getPriority();
 		userNotice = (String) task.getNotice();
+		userDate = task.getDate();
+		userReminder = task.getReminder();
 
 		setTitle("WhatsToDo");
 
@@ -63,27 +70,16 @@ public class TaskActivity extends Activity implements OnClickListener {
 
 		EditText editText = (EditText) findViewById(R.id.taskName);
 		editText.setText(task.getName());
-
-		TextView taskNotice = (TextView) findViewById(R.id.textViewNotice);
-		if (task.getNotice() != null) {
-			taskNotice.setText(task.getNotice());
-		} else {
-			taskNotice.setText("Keine Notiz");
-		}
+		
+		showNotice(task.getNotice());
 		FrameLayout editNotice = (FrameLayout) findViewById(R.id.taskNotice);
 		editNotice.setOnClickListener(this);
 
 		showDate(task.getDate());
-
 		FrameLayout editDate = (FrameLayout) findViewById(R.id.taskDate);
 		editDate.setOnClickListener(this);
 
-		TextView taskReminder = (TextView) findViewById(R.id.textViewReminder);
-		if (task.getReminder() != null) {
-			taskReminder.setText(task.getReminder().toString());
-		} else {
-			taskReminder.setText("Keine Erinnerung");
-		}
+		showReminder(task.getReminder());		
 		FrameLayout editReminder = (FrameLayout) findViewById(R.id.taskReminder);
 		editReminder.setOnClickListener(this);
 
@@ -101,72 +97,186 @@ public class TaskActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 
-		if (view.getId() == R.id.taskSave) {
+		switch (view.getId()) {
+
+		case R.id.taskSave:
 			EditText editText = (EditText) findViewById(R.id.taskName);
 			task.setName(editText.getText().toString());
 			task.setNotice(userNotice);
 			task.setPriority(userPriority);
 			task.setDate(userDate);
+			task.setReminder(userReminder);
 
 			startListActivity();
+			break;
 
-		} else if (view.getId() == R.id.taskCancel) {
+		case R.id.taskCancel:
 			startListActivity();
+			break;
 
-		} else if (view.getId() == R.id.taskNotice) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle("Notiz");
-			builder.setMessage(userNotice);
+		case R.id.taskNotice:
+			changeNotice();
+			break;
 
-			final EditText input = new EditText(this);
-			builder.setView(input);
+		case R.id.taskPriority:
+			changePriority();
+			break;
 
-			builder.setPositiveButton("Ok",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog,
-								int whichButton) {
+		case R.id.taskDate:
+			changeDate();
+			break;
 
-							userNotice = input.getText().toString();
-							TextView taskNotice = (TextView) findViewById(R.id.textViewNotice);
-							if (userNotice != null) {
-								taskNotice.setText(userNotice);
-							} else {
-								taskNotice.setText("Keine Notiz");
-							}
-						}
-					});
+		case R.id.taskReminder:
+			changeReminder();
+			break;
 
-			builder.setNegativeButton("Abbrechen",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog,
-								int whichButton) {
-						}
-					});
-
-			AlertDialog alert = builder.create();
-			alert.show();
-
-		} else if (view.getId() == R.id.taskPriority) {
-			TextView taskPriority = (TextView) findViewById(R.id.textViewPriority);
-			switch (userPriority) {
-			case LOW:
-				userPriority = Priority.NORMAL;
-				break;
-			case NORMAL:
-				userPriority = Priority.HIGH;
-				break;
-			case HIGH:
-				userPriority = Priority.LOW;
-				break;
-			default:
-				Toast.makeText(getBaseContext(), "Priority not found",
-						Toast.LENGTH_LONG).show();
-			}
-			taskPriority.setText(userPriority.toString());
-
-		} else if (view.getId() == R.id.taskDate) {
-			showDialog(DATE_DIALOG_ID);
+		case R.id.taskList:
+			changeList();
+			break;
 		}
+	}
+
+	private void changeNotice() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Notiz");
+		builder.setMessage(userNotice);
+
+		final EditText input = new EditText(this);
+		builder.setView(input);
+
+		builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+
+				userNotice = input.getText().toString();
+				TextView taskNotice = (TextView) findViewById(R.id.textViewNotice);
+				if (userNotice != null) {
+					taskNotice.setText(userNotice);
+				} else {
+					taskNotice.setText("Keine Notiz");
+				}
+			}
+		});
+
+		builder.setNegativeButton("Abbrechen",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+					}
+				});
+
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void changePriority() {
+		TextView taskPriority = (TextView) findViewById(R.id.textViewPriority);
+		switch (userPriority) {
+		case LOW:
+			userPriority = Priority.NORMAL;
+			break;
+		case NORMAL:
+			userPriority = Priority.HIGH;
+			break;
+		case HIGH:
+			userPriority = Priority.LOW;
+			break;
+		default:
+			Toast.makeText(getBaseContext(), "Priority not found",
+					Toast.LENGTH_LONG).show();
+		}
+		taskPriority.setText(userPriority.toString());
+	}
+
+	private void changeDate() {
+		showDialog(DATE_DIALOG_ID);
+	}
+
+	private void changeReminder() {
+		showDialog(REMINDER_DATE_DIALOG_ID);
+	}
+
+	// private void showDateDialog() {
+	//
+	// final Dialog dateDialog = new Dialog(this,
+	// android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+	// dateDialog.setContentView(R.layout.datelayout);
+	//
+	// DatePicker datePicker = (DatePicker) dateDialog
+	// .findViewById(R.id.dateReminderDate);
+	// int day, month, year;
+	//
+	// if (task.getReminder() != null) {
+	// day = task.getReminder().getDay();
+	// month = task.getReminder().getMonth();
+	// year = task.getReminder().getYear();
+	// } else {
+	// Calendar calendar = Calendar.getInstance();
+	// day = calendar.get(Calendar.DAY_OF_MONTH);
+	// month = calendar.get(Calendar.MONTH);
+	// year = calendar.get(Calendar.YEAR);
+	// }
+	// datePicker.updateDate(year, month, day);
+	//
+	// Button buttonTime = (Button) dateDialog.findViewById(R.id.reminderTime);
+	// buttonTime.setOnClickListener(new OnClickListener() {
+	//
+	// @Override
+	// public void onClick(View v) {
+	// showTimeDialog();
+	// dateDialog.dismiss();
+	// }
+	// });
+	//
+	// dateDialog.show();
+	//
+	// }
+
+	// private void showTimeDialog() {
+	//
+	// final Dialog timeDialog = new Dialog(this,
+	// android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+	// timeDialog.setContentView(R.layout.timelayout);
+	//
+	// TimePicker timePicker = (TimePicker) timeDialog
+	// .findViewById(R.id.timePickerTime);
+	// int hour, minute;
+	//
+	// if (task.getReminder() != null) {
+	// hour = task.getReminder().getHours();
+	// minute = task.getReminder().getMinutes();
+	// } else {
+	// Calendar calendar = Calendar.getInstance();
+	// hour = calendar.get(Calendar.HOUR);
+	// minute = calendar.get(Calendar.MINUTE);
+	// }
+	// timePicker.setIs24HourView(true);
+	// timePicker.setCurrentHour(hour);
+	// timePicker.setCurrentMinute(minute);
+	//
+	// Button buttonTime = (Button) timeDialog.findViewById(R.id.reminderDate);
+	// buttonTime.setOnClickListener(new OnClickListener() {
+	//
+	// @Override
+	// public void onClick(View v) {
+	// showDateDialog();
+	// timeDialog.dismiss();
+	//
+	// }
+	// });
+	//
+	// Button buttonSetDate = (Button) timeDialog
+	// .findViewById(R.id.timeReminderSave);
+	// buttonSetDate.setOnClickListener(new OnClickListener() {
+	//
+	// @Override
+	// public void onClick(View v) {
+	//
+	// }
+	// });
+	// timeDialog.show();
+	// }
+
+	private void changeList() {
+		// TODO Auto-generated method stub
 	}
 
 	private void startListActivity() {
@@ -186,6 +296,7 @@ public class TaskActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
+
 		switch (id) {
 		case DATE_DIALOG_ID:
 			DatePickerDialog dateDialog = new DatePickerDialog(this,
@@ -204,39 +315,144 @@ public class TaskActivity extends Activity implements OnClickListener {
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
 							if (which == DialogInterface.BUTTON_NEUTRAL) {
+
 								userDate = null;
 								showDate(userDate);
 							}
 						}
 					});
+			
 			dateDialog.setMessage("Datum der Aufgabe");
 			return dateDialog;
+
+		case REMINDER_DATE_DIALOG_ID:
+			DatePickerDialog remDateDialog = new DatePickerDialog(this,
+					new DatePickerDialog.OnDateSetListener() {
+						public void onDateSet(DatePicker view, int year,
+								int monthOfYear, int dayOfMonth) {
+
+							Calendar cal = Calendar.getInstance();
+							cal.set(year, monthOfYear, dayOfMonth);
+							userReminder = cal.getTime();
+							showDialog(REMINDER_TIME_DIALOG_ID);
+
+						}
+					}, 2011, 0, 1);
+
+			remDateDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Ohne Erinnerung",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							if (which == DialogInterface.BUTTON_NEUTRAL) {
+
+								userReminder = null;
+								showReminder(userReminder);
+							}
+						}
+					});
+			
+			remDateDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Zeit", remDateDialog);
+			remDateDialog.setMessage("Datum der Erinnerung:");
+			return remDateDialog;
+
+		case REMINDER_TIME_DIALOG_ID:
+			TimePickerDialog remTimeDialog = new TimePickerDialog(this,
+					new TimePickerDialog.OnTimeSetListener() {
+
+						@Override
+						public void onTimeSet(TimePicker view, int hourOfDay,
+								int minute) {
+
+							userReminder.setHours(hourOfDay);
+							userReminder.setMinutes(minute);
+							showReminder(userReminder);
+							setReminderAlarm(userReminder);
+						}
+					}, 12, 0, true);
+			
+			remTimeDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Ohne Erinnerung",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							if (which == DialogInterface.BUTTON_NEUTRAL) {
+
+								userReminder = null;
+								showReminder(userReminder);
+							}
+						}
+					});
+			
+			remTimeDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Einstellen", remTimeDialog);
+			remTimeDialog.setMessage("Zeit der Erinnerung: ");
+			return remTimeDialog;
 		}
 		return null;
 	}
 
 	@Override
 	protected void onPrepareDialog(int id, Dialog dialog) {
+
 		super.onPrepareDialog(id, dialog);
+		Calendar calendar = Calendar.getInstance();
+
 		switch (id) {
 		case DATE_DIALOG_ID:
-			DatePickerDialog dateDlg = (DatePickerDialog) dialog;
-			int Day,
-			Month,
-			Year;
+			DatePickerDialog dateDialog = (DatePickerDialog) dialog;
+			int day,
+			month,
+			year;
 
 			if (task.getDate() != null) {
-				Day = task.getDate().getDay();
-				Month = task.getDate().getMonth();
-				Year = task.getDate().getYear();
+				day = task.getDate().getDay();
+				month = task.getDate().getMonth();
+				year = task.getDate().getYear();
 			} else {
-				Calendar calendar = Calendar.getInstance();
-				Day = calendar.get(Calendar.DAY_OF_MONTH);
-				Month = calendar.get(Calendar.MONTH);
-				Year = calendar.get(Calendar.YEAR);
+				day = calendar.get(Calendar.DAY_OF_MONTH);
+				month = calendar.get(Calendar.MONTH);
+				year = calendar.get(Calendar.YEAR);
 			}
-			dateDlg.updateDate(Year, Month, Day);
+			dateDialog.updateDate(year, month, day);
 			break;
+
+		case REMINDER_DATE_DIALOG_ID:
+			DatePickerDialog reminderDateDialog = (DatePickerDialog) dialog;
+			int rDay,
+			rMonth,
+			rYear;
+
+			if (task.getReminder() != null) {
+				rDay = task.getReminder().getDay();
+				rMonth = task.getReminder().getMonth();
+				rYear = task.getReminder().getYear();
+			} else {
+				rDay = calendar.get(Calendar.DAY_OF_MONTH);
+				rMonth = calendar.get(Calendar.MONTH);
+				rYear = calendar.get(Calendar.YEAR);
+			}
+			reminderDateDialog.updateDate(rYear, rMonth, rDay);
+			break;
+
+		case REMINDER_TIME_DIALOG_ID:
+			TimePickerDialog reminderTimeDialog = (TimePickerDialog) dialog;
+			int rHour,
+			rMinute;
+			if (task.getReminder() != null) {
+				rHour = task.getReminder().getHours();
+				rMinute = task.getReminder().getMinutes();
+			} else {
+				rHour = calendar.get(Calendar.HOUR_OF_DAY);
+				rMinute = calendar.get(Calendar.MINUTE);
+			}
+			reminderTimeDialog.updateTime(rHour, rMinute);
+			break;
+		}
+	}
+	
+	private void showNotice(String string) {
+		
+		TextView taskNotice = (TextView) findViewById(R.id.textViewNotice);
+		if (string != null) {
+			taskNotice.setText(string);
+		} else {
+			taskNotice.setText("Keine Notiz");
 		}
 	}
 
@@ -244,10 +460,37 @@ public class TaskActivity extends Activity implements OnClickListener {
 
 		TextView taskDate = (TextView) findViewById(R.id.textViewDate);
 		if (date != null) {
-			CharSequence stringDate = DateFormat.format("dd.MM.yyyy", date);
+			String stringDate = DateFormat.format("dd.MM.yyyy", date).toString();
 			taskDate.setText(stringDate);
 		} else {
 			taskDate.setText("Ohne Datum");
 		}
+	}
+
+	private void showReminder(Date date) {
+
+		TextView taskReminder = (TextView) findViewById(R.id.textViewReminder);
+		if (date != null) {
+			String stringDate = DateFormat.format("kk:mm dd.MM.yyyy",
+					date).toString();
+			taskReminder.setText(stringDate);
+		} else {
+			taskReminder.setText("Keine Erinnerung");
+		}
+	}
+	
+	private void setReminderAlarm(Date userReminder) {
+		
+//		 Calendar cal = Calendar.getInstance();
+//		 cal.add(Calendar.SECOND, 30);
+//		
+//		 Intent intent = new Intent(this, AlarmActivity.class);
+//		 PendingIntent pendingIntent = PendingIntent.getActivity(this,
+//		 12345, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+//		 AlarmManager am =
+//		 (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
+//		 am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+//		 pendingIntent);
+//		
 	}
 }

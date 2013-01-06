@@ -16,15 +16,21 @@
         <item>Löschen</item>
         <item>Kopieren</item>
     </string-array>
-        <string name="footer">Fusszeile</string>
-        <string name="cancel">Abbrechen</string>
-        <string name="save">Speichern</string>
-        <string name="notice">Notiz</string>
-        <string name="date">Fälligkeitsdatum</string>
-        <string name="memory">Erinnerung</string>
-        <string name="list">Liste</string>
-        <string name="priority">Priorität</string>
-        <string name="task">Aufgabe</string>
-        <string name="details">Details</string>
-        <string name="textView">TextView</string>
+
+    <string name="footer">Fusszeile</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="save">Speichern</string>
+    <string name="notice">Notiz</string>
+    <string name="date">Fälligkeitsdatum</string>
+    <string name="memory">Erinnerung</string>
+    <string name="list">Liste</string>
+    <string name="priority">Priorität</string>
+    <string name="task">Aufgabe</string>
+    <string name="details">Details</string>
+    <string name="textView">TextView</string>
+    <string name="title_activity_alarm">AlarmActivity</string>
+    <string name="reminderDate">Datum</string>
+    <string name="reminderTime">Zeit</string>
+    <string name="reminder"> Erinnerung</string>
+
 </resources>

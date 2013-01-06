@@ -35,6 +35,10 @@
             android:name="com.whatstodo.OptionsTest"
             android:label="@string/title_activity_options_test" >
         </activity>
+        <activity
+            android:name="com.whatstodo.AlarmActivity"
+            android:label="@string/title_activity_alarm" >
+        </activity>
     </application>
 
 </manifest>

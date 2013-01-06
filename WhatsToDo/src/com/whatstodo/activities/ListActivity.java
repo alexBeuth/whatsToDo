@@ -21,6 +21,7 @@ import com.whatstodo.R;
 import com.whatstodo.models.List;
 import com.whatstodo.models.ListContainer;
 import com.whatstodo.models.Task;
+import com.whatstodo.persistence.ChangeListener;
 
 public class ListActivity extends Activity implements OnClickListener {
 
@@ -60,6 +61,7 @@ public class ListActivity extends Activity implements OnClickListener {
 		if (view.getId() == R.id.newTask) {
 			EditText editText = (EditText) findViewById(R.id.task);
 			list.addTask(editText.getText().toString());
+			ChangeListener.onListChange(list);
 			showTasks();
 		} else {
 			// TODO Button nicht gefunden			

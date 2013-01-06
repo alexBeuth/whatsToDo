@@ -28,21 +28,42 @@
     <ListView
         android:id="@+id/list1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/footer"
+        android:layout_height="200dp"
+        android:layout_above="@+id/FilterButtons"
         android:layout_below="@+id/list" >
-
     </ListView>
 
-    <TextView
-        android:id="@+id/footer"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/FilterButtons"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:background="#88888888"
-        android:height="40dp"
-        android:text="@string/footer" />
+        android:layout_alignParentRight="true" >
+
+        <Button
+            android:id="@+id/today"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:text="Heute" />
+
+        <Button
+            android:id="@+id/tomorrow"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:text="Morgen" />
+
+        <Button
+            android:id="@+id/priority"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:text="Priorität" />
+
+        <Button
+            android:id="@+id/more"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:text="Mehr" />
+    </LinearLayout>
 
 </RelativeLayout>

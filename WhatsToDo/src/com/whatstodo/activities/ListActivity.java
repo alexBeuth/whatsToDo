@@ -1,7 +1,5 @@
 package com.whatstodo.activities;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,13 +16,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.whatstodo.R;
+import com.whatstodo.filter.Filter;
+import com.whatstodo.filter.PriorityHighFilter;
+import com.whatstodo.filter.TodayFilter;
 import com.whatstodo.models.List;
 import com.whatstodo.models.ListContainer;
 import com.whatstodo.models.Task;
 
 public class ListActivity extends Activity implements OnClickListener {
 
-	private ListContainer container;
 	private List list;
 
 	@Override
@@ -34,17 +34,30 @@ public class ListActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_list);
 
 		Bundle bundle = getIntent().getExtras();
-		long listId = bundle.getLong("ListId");
 
-		container = ListContainer.getInstance();
-		list = container.getList(listId);
+		if (bundle.getBoolean("isFilter")) {
+			Filter filter = (Filter) bundle.getSerializable("filter");
+			list = filter.getTask();
+		} else {
+			long listId = bundle.getLong("ListId");
+			list = ListContainer.getInstance().getList(listId);
+		}
 
 		setTitle(list.getName());
-		
+
 		showTasks();
 
 		Button createTask = (Button) findViewById(R.id.newTask);
 		createTask.setOnClickListener(this);
+
+		Button todayFilter = (Button) findViewById(R.id.backToLists);
+		todayFilter.setOnClickListener(this);
+
+		Button tomorrowFilter = (Button) findViewById(R.id.today);
+		tomorrowFilter.setOnClickListener(this);
+
+		Button priorityFilter = (Button) findViewById(R.id.priority);
+		priorityFilter.setOnClickListener(this);
 	}
 
 	@Override
@@ -61,23 +74,32 @@ public class ListActivity extends Activity implements OnClickListener {
 			EditText editText = (EditText) findViewById(R.id.task);
 			list.addTask(editText.getText().toString());
 			showTasks();
-		} else {
-			// TODO Button nicht gefunden			
+		} else if (view.getId() == R.id.backToLists) {
+			Intent intent = new Intent(view.getContext(), ListContainerActivity.class);
+			startActivity(intent);
+		} else if (view.getId() == R.id.today) {
+			startFilteredActivity(view, new TodayFilter());
+		} else if (view.getId() == R.id.priority) {
+			startFilteredActivity(view, new PriorityHighFilter());
 		}
+	}
+
+	private void startFilteredActivity(View view, Filter filter) {
+		Intent intent = new Intent(view.getContext(), ListActivity.class);
+		Bundle bundle = new Bundle();
+
+		bundle.putBoolean("isFilter", true);
+		bundle.putSerializable("filter", filter);
+
+		intent.putExtras(bundle);
+		startActivity(intent);
 	}
 
 	private void showTasks() {
 
 		ListView listList = (ListView) findViewById(R.id.taskList);
 
-		// TODO We need to transform our list to java list this is really bad!
-		// -> our list needs to implement java list..
-		ArrayList<Task> tasks = new ArrayList<Task>();
-		for(Task task : list) {
-			tasks.add(task);
-
-
-		TaskAdapter adapter = new TaskAdapter(this, R.layout.taskitem, tasks);
+		TaskAdapter adapter = new TaskAdapter(this, R.layout.taskitem, list);
 
 		listList.setAdapter(adapter);
 		listList.setOnItemClickListener(new OnItemClickListener() {
@@ -85,8 +107,8 @@ public class ListActivity extends Activity implements OnClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				String item = ((TextView) (((RelativeLayout) view).getChildAt(2)))
-						.getText().toString();
+				String item = ((TextView) (((RelativeLayout) view)
+						.getChildAt(2))).getText().toString();
 
 				for (Task task : list) {
 
@@ -106,6 +128,6 @@ public class ListActivity extends Activity implements OnClickListener {
 		});
 
 		registerForContextMenu(listList);
-		}
+
 	}
 }

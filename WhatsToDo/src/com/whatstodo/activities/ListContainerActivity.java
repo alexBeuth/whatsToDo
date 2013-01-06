@@ -21,6 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.whatstodo.R;
+import com.whatstodo.filter.Filter;
+import com.whatstodo.filter.PriorityHighFilter;
+import com.whatstodo.filter.TodayFilter;
+import com.whatstodo.filter.TomorrowFilter;
 import com.whatstodo.models.List;
 import com.whatstodo.models.ListContainer;
 import com.whatstodo.persistence.ChangeListener;
@@ -37,6 +41,15 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 
 		Button createList = (Button) findViewById(R.id.newList);
 		createList.setOnClickListener(this);
+
+		Button todayFilter = (Button) findViewById(R.id.today);
+		todayFilter.setOnClickListener(this);
+		
+		Button tomorrowFilter = (Button) findViewById(R.id.tomorrow);
+		tomorrowFilter.setOnClickListener(this);
+
+		Button priorityFilter = (Button) findViewById(R.id.priority);
+		priorityFilter.setOnClickListener(this);
 
 		container = ListContainer.getInstance();
 		showLists();
@@ -56,7 +69,24 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			EditText editText = (EditText) findViewById(R.id.list);
 			container.addList(editText.getText().toString());
 			showLists();
+		} else if (view.getId() == R.id.today) {
+			startFilteredActivity(view, new TodayFilter());
+		} else if (view.getId() == R.id.tomorrow) {
+			startFilteredActivity(view, new TomorrowFilter());
+		} else if (view.getId() == R.id.priority) {
+			startFilteredActivity(view, new PriorityHighFilter());
 		}
+	}
+
+	private void startFilteredActivity(View view, Filter filter) {
+		Intent intent = new Intent(view.getContext(), ListActivity.class);
+		Bundle bundle = new Bundle();
+
+		bundle.putBoolean("isFilter", true);
+		bundle.putSerializable("filter", filter);
+
+		intent.putExtras(bundle);
+		startActivity(intent);
 	}
 
 	/**
@@ -84,7 +114,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 					Intent intent = new Intent(view.getContext(),
 							ListActivity.class);
 					Bundle bundle = new Bundle();
-					bundle.putLong("ListId", list.getId()); // List ID
+					bundle.putLong("ListId", list.getId()); // List
 					intent.putExtras(bundle); // Put your id to your next Intent
 					startActivity(intent);
 				}
@@ -155,9 +185,6 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			// TODO
 		}
 
-		TextView text = (TextView) findViewById(R.id.footer);
-		text.setText(String.format("Selected %s for item %s", menuItemName,
-				list.getName()));
 		return true;
 	}
 }

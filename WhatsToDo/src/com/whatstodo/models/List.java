@@ -27,12 +27,16 @@ public class List implements Serializable, java.util.List<Task> {
 	transient private Comparator<Task> comparator;
 	private long id;
 	private String name;
+	
+	public List() {
+		orderedTasks = new Task[1];
+	}
 
 	public List(String name) {
 		
+		this();
 		id = ListContainer.getNextListId();
 		this.name = name + " (" + id + ")";
-		orderedTasks = new Task[1];
 	}
 	
 	public List(String name, Comparator<Task> comparator) {

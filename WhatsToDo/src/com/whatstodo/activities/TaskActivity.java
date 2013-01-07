@@ -4,9 +4,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -42,6 +44,8 @@ public class TaskActivity extends Activity implements OnClickListener {
 	private static final int REMINDER_DATE_DIALOG_ID = 1;
 	private static final int REMINDER_TIME_DIALOG_ID = 2;
 
+	private PendingIntent pendingIntent;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,7 +74,7 @@ public class TaskActivity extends Activity implements OnClickListener {
 
 		EditText editText = (EditText) findViewById(R.id.taskName);
 		editText.setText(task.getName());
-		
+
 		showNotice(task.getNotice());
 		FrameLayout editNotice = (FrameLayout) findViewById(R.id.taskNotice);
 		editNotice.setOnClickListener(this);
@@ -79,7 +83,7 @@ public class TaskActivity extends Activity implements OnClickListener {
 		FrameLayout editDate = (FrameLayout) findViewById(R.id.taskDate);
 		editDate.setOnClickListener(this);
 
-		showReminder(task.getReminder());		
+		showReminder(task.getReminder());
 		FrameLayout editReminder = (FrameLayout) findViewById(R.id.taskReminder);
 		editReminder.setOnClickListener(this);
 
@@ -187,11 +191,13 @@ public class TaskActivity extends Activity implements OnClickListener {
 	}
 
 	private void changeDate() {
-		showDialog(DATE_DIALOG_ID);
+
+		 showDialog(DATE_DIALOG_ID);
 	}
 
 	private void changeReminder() {
-		showDialog(REMINDER_DATE_DIALOG_ID);
+
+		 showDialog(REMINDER_DATE_DIALOG_ID);
 	}
 
 	// private void showDateDialog() {
@@ -321,7 +327,7 @@ public class TaskActivity extends Activity implements OnClickListener {
 							}
 						}
 					});
-			
+
 			dateDialog.setMessage("Datum der Aufgabe");
 			return dateDialog;
 
@@ -339,8 +345,8 @@ public class TaskActivity extends Activity implements OnClickListener {
 						}
 					}, 2011, 0, 1);
 
-			remDateDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Ohne Erinnerung",
-					new DialogInterface.OnClickListener() {
+			remDateDialog.setButton(DialogInterface.BUTTON_NEUTRAL,
+					"Ohne Erinnerung", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
 							if (which == DialogInterface.BUTTON_NEUTRAL) {
 
@@ -349,8 +355,9 @@ public class TaskActivity extends Activity implements OnClickListener {
 							}
 						}
 					});
-			
-			remDateDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Zeit", remDateDialog);
+
+			remDateDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Zeit",
+					remDateDialog);
 			remDateDialog.setMessage("Datum der Erinnerung:");
 			return remDateDialog;
 
@@ -364,13 +371,14 @@ public class TaskActivity extends Activity implements OnClickListener {
 
 							userReminder.setHours(hourOfDay);
 							userReminder.setMinutes(minute);
+							userReminder.setSeconds(0);
 							showReminder(userReminder);
 							setReminderAlarm(userReminder);
 						}
 					}, 12, 0, true);
-			
-			remTimeDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Ohne Erinnerung",
-					new DialogInterface.OnClickListener() {
+
+			remTimeDialog.setButton(DialogInterface.BUTTON_NEUTRAL,
+					"Ohne Erinnerung", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
 							if (which == DialogInterface.BUTTON_NEUTRAL) {
 
@@ -379,8 +387,9 @@ public class TaskActivity extends Activity implements OnClickListener {
 							}
 						}
 					});
-			
-			remTimeDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Einstellen", remTimeDialog);
+
+			remTimeDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+					"Einstellen", remTimeDialog);
 			remTimeDialog.setMessage("Zeit der Erinnerung: ");
 			return remTimeDialog;
 		}
@@ -445,9 +454,9 @@ public class TaskActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
-	
+
 	private void showNotice(String string) {
-		
+
 		TextView taskNotice = (TextView) findViewById(R.id.textViewNotice);
 		if (string != null) {
 			taskNotice.setText(string);
@@ -460,7 +469,8 @@ public class TaskActivity extends Activity implements OnClickListener {
 
 		TextView taskDate = (TextView) findViewById(R.id.textViewDate);
 		if (date != null) {
-			String stringDate = DateFormat.format("dd.MM.yyyy", date).toString();
+			String stringDate = DateFormat.format("dd.MM.yyyy", date)
+					.toString();
 			taskDate.setText(stringDate);
 		} else {
 			taskDate.setText("Ohne Datum");
@@ -471,26 +481,25 @@ public class TaskActivity extends Activity implements OnClickListener {
 
 		TextView taskReminder = (TextView) findViewById(R.id.textViewReminder);
 		if (date != null) {
-			String stringDate = DateFormat.format("kk:mm dd.MM.yyyy",
-					date).toString();
+			String stringDate = DateFormat.format("kk:mm dd.MM.yyyy", date)
+					.toString();
 			taskReminder.setText(stringDate);
 		} else {
 			taskReminder.setText("Keine Erinnerung");
 		}
 	}
-	
-	private void setReminderAlarm(Date userReminder) {
+
+	private void setReminderAlarm(Date date) {
+
+		Intent intent = new Intent(this, AlarmActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putString("Task", task.getName()); // List ID
+		intent.putExtras(bundle);
+		pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+		alarmManager.set(AlarmManager.RTC_WAKEUP, date.getTime(),
+				pendingIntent);
 		
-//		 Calendar cal = Calendar.getInstance();
-//		 cal.add(Calendar.SECOND, 30);
-//		
-//		 Intent intent = new Intent(this, AlarmActivity.class);
-//		 PendingIntent pendingIntent = PendingIntent.getActivity(this,
-//		 12345, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-//		 AlarmManager am =
-//		 (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
-//		 am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
-//		 pendingIntent);
-//		
 	}
 }

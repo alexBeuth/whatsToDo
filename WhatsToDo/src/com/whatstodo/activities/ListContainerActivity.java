@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.whatstodo.R;
 import com.whatstodo.filter.Filter;

@@ -35,9 +35,11 @@
             android:name="com.whatstodo.OptionsTest"
             android:label="@string/title_activity_options_test" >
         </activity>
-        <activity
-            android:name="com.whatstodo.AlarmActivity"
-            android:label="@string/title_activity_alarm" >
+
+        <service android:name="com.whatstodo.activities.MyAlarmService" >
+        </service>
+
+        <activity android:name="com.whatstodo.activities.AlarmActivity" >
         </activity>
     </application>
 

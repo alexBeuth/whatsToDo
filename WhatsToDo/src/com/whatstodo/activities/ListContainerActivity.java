@@ -161,8 +161,8 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 								int whichButton) {
 
 							list.setName(input.getText().toString());
+							saveLists(container.getLists());
 							showLists();
-							ChangeListener.onListChange(list);
 						}
 					});
 
@@ -178,6 +178,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 
 		} else if (menuItemName == menuItems[1]) { // Delete the chosen list
 			container.deleteList(list.getId());
+			saveLists(container.getLists());
 			showLists();
 
 		} else if (menuItemName == menuItems[2]) { // Copy the name of the list
@@ -185,5 +186,9 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 		}
 
 		return true;
+	}
+	
+	private void saveLists(Iterable<List>  lists){
+		ChangeListener.onListContainerChange(lists);
 	}
 }

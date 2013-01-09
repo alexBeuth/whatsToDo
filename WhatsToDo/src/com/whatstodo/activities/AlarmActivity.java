@@ -18,10 +18,18 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.whatstodo.R;
+import com.whatstodo.models.List;
+import com.whatstodo.models.ListContainer;
+import com.whatstodo.models.Task;
 
 public class AlarmActivity extends Activity {
 
 	private MediaPlayer mediaPlayer;
+	
+	private ListContainer container;
+	private Task task;
+	private List list;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +41,13 @@ public class AlarmActivity extends Activity {
 		setContentView(R.layout.activity_alarm);
 		
 		Bundle bundle = getIntent().getExtras();
+		
+		container = ListContainer.getInstance();
+		list = container.getList(bundle.getLong("List"));
+		task = list.getTask(bundle.getLong("Task"));
 
 		Button stopAlarm = (Button) findViewById(R.id.stopAlarm);
-		stopAlarm.setText( "Stop " + bundle.getString("Task"));
+		stopAlarm.setText( "Stop " + task.getName());
 		stopAlarm.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View arg0, MotionEvent arg1) {
 				mediaPlayer.stop();

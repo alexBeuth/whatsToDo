@@ -74,7 +74,7 @@ public class ListActivity extends Activity implements OnClickListener {
 		if (view.getId() == R.id.newTask) {
 			EditText editText = (EditText) findViewById(R.id.task);
 			list.addTask(editText.getText().toString());
-			ChangeListener.onListChange(list);
+			saveList(list);
 			showTasks();
 		} else if (view.getId() == R.id.backToLists) {
 			Intent intent = new Intent(view.getContext(), ListContainerActivity.class);
@@ -130,6 +130,9 @@ public class ListActivity extends Activity implements OnClickListener {
 		});
 
 		registerForContextMenu(listList);
-
+	}
+	
+	private void saveList(List list){
+		ChangeListener.onListChange(list);
 	}
 }

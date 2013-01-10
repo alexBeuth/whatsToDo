@@ -100,7 +100,7 @@ public class ListContainer {
 	public List getList(String listName) {
 
 		for (List list : lists) {
-			if (list.getName() == listName) {
+			if (list.getName().equals(listName)) {
 				return list;
 			}
 		}

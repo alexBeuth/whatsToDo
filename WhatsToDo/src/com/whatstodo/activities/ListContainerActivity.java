@@ -110,7 +110,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 						.getText().toString();
 
 				List list = container.getList(item);
-				if (item == list.getName()) {
+				if (item.equals(list.getName())) {
 					Intent intent = new Intent(view.getContext(),
 							ListActivity.class);
 					Bundle bundle = new Bundle();
@@ -149,7 +149,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 		String menuItemName = menuItems[item.getItemId()];
 		final List list = container.getLists().get(info.position);
 
-		if (menuItemName == menuItems[0]) { // Edit the chosen list
+		if (menuItemName.equals(menuItems[0])) { // Edit the chosen list
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle("Name");
 			builder.setMessage(list.getName());
@@ -178,12 +178,12 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			AlertDialog alert = builder.create();
 			alert.show();
 
-		} else if (menuItemName == menuItems[1]) { // Delete the chosen list
+		} else if (menuItemName.equals(menuItems[1])) { // Delete the chosen list
 			container.deleteList(list.getId());
 			saveLists(container.getLists());
 			showLists();
 
-		} else if (menuItemName == menuItems[2]) { // Copy the name of the list
+		} else if (menuItemName.equals(menuItems[2])) { // Copy the name of the list
 			// TODO
 		}
 

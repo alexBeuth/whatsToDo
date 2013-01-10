@@ -7,6 +7,7 @@ public class ChangeListener {
 	public static void onListChange(List list) {
 		
 		new ListPersistence().saveList(list);
+		new ListContainerPersistence().saveContainerIds();
 		//TODO
 		//list.setLastModified()
 	}

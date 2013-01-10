@@ -17,8 +17,8 @@ import com.whatstodo.models.ListContainer;
 
 public class ListContainerPersistence {
 
-	private final String FILENAME_LISTS = "listIds";
-	private final String FILENAME_IDS = "freeIds";
+	private static final String FILENAME_LISTS = "listIds";
+	private static final String FILENAME_IDS = "freeIds";
 
 	Context context = WhatsToDo.getContext();
 
@@ -107,7 +107,7 @@ public class ListContainerPersistence {
 	public long loadListId() {
 
 		String idString = getFileAsString(FILENAME_IDS);
-		if (idString == "") {
+		if (idString.equals("")) {
 			return 0;
 		}
 		String listId = idString.split(",")[0];
@@ -117,14 +117,14 @@ public class ListContainerPersistence {
 	public long loadTaskId() {
 
 		String idString = getFileAsString(FILENAME_IDS);
-		if (idString == "") {
+		if (idString.equals("")) {
 			return 0;
 		}
 		String taskId = idString.split(",")[1];
 		return Long.valueOf(taskId);
 	}
 
-	void saveContainerIds() {
+	 protected void saveContainerIds() {
 		long listId = ListContainer.getNextListId(true);
 		long taskId = ListContainer.getNextTaskId(true);
 

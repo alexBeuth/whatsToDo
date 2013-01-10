@@ -27,13 +27,14 @@ import com.whatstodo.persistence.ChangeListener;
 public class ListActivity extends Activity implements OnClickListener {
 
 	private List list;
+	protected static final int TASK_ACTIVITY = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_list);
-
+		
 		Bundle bundle = getIntent().getExtras();
 
 		if (bundle.getBoolean("isFilter")) {
@@ -77,8 +78,10 @@ public class ListActivity extends Activity implements OnClickListener {
 			saveList(list);
 			showTasks();
 		} else if (view.getId() == R.id.backToLists) {
-			Intent intent = new Intent(view.getContext(), ListContainerActivity.class);
-			startActivity(intent);
+//			Intent intent = new Intent(view.getContext(), ListContainerActivity.class);
+//			startActivity(intent);
+			setResult(Activity.RESULT_OK);
+			finish();
 		} else if (view.getId() == R.id.today) {
 			startFilteredActivity(view, new TodayFilter());
 		} else if (view.getId() == R.id.priority) {
@@ -95,6 +98,7 @@ public class ListActivity extends Activity implements OnClickListener {
 
 		intent.putExtras(bundle);
 		startActivity(intent);
+		finish();
 	}
 
 	private void showTasks() {
@@ -114,14 +118,15 @@ public class ListActivity extends Activity implements OnClickListener {
 
 				for (Task task : list) {
 
-					if (item == task.getName()) {
+					if (item.equals(task.getName())) {
 						Intent intent = new Intent(view.getContext(),
 								TaskActivity.class);
 						Bundle bundle = new Bundle();
 						bundle.putLong("TaskId", task.getId());
 						bundle.putLong("ListId", list.getId());
 						intent.putExtras(bundle);
-						startActivity(intent);
+						//startActivity(intent);
+						startActivityForResult(intent, TASK_ACTIVITY);
 					}
 				}
 				Toast.makeText(getBaseContext(), item, Toast.LENGTH_LONG)
@@ -134,5 +139,12 @@ public class ListActivity extends Activity implements OnClickListener {
 	
 	private void saveList(List list){
 		ChangeListener.onListChange(list);
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK){
+			showTasks();
+		}
 	}
 }

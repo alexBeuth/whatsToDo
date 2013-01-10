@@ -18,10 +18,11 @@
 
     <FrameLayout
         android:id="@+id/frameLayout1"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/taskAufgabe"
+        android:layout_toLeftOf="@+id/CheckBoxLayout"
         android:minHeight="60dp" >
 
         <EditText
@@ -33,7 +34,8 @@
             android:layout_marginRight="3dp"
             android:layout_marginTop="2dp"
             android:ems="10"
-            android:inputType="text" >
+            android:inputType="text"
+            android:singleLine="true" >
 
             <requestFocus />
         </EditText>
@@ -110,7 +112,6 @@
                 android:text="TextView"
                 android:textSize="15sp"
                 tools:ignore="HardcodedText" />
-
         </FrameLayout>
 
         <FrameLayout
@@ -136,7 +137,6 @@
                 android:text="TextView"
                 android:textSize="15sp"
                 tools:ignore="HardcodedText" />
-
         </FrameLayout>
 
         <FrameLayout
@@ -162,7 +162,6 @@
                 android:text="TextView"
                 android:textSize="15sp"
                 tools:ignore="HardcodedText" />
-
         </FrameLayout>
 
         <FrameLayout
@@ -188,7 +187,6 @@
                 android:text="TextView"
                 android:textSize="15sp"
                 tools:ignore="HardcodedText" />
-
         </FrameLayout>
 
         <FrameLayout
@@ -214,8 +212,26 @@
                 android:text="TextView"
                 android:textSize="15sp"
                 tools:ignore="HardcodedText" />
-
         </FrameLayout>
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/CheckBoxLayout"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/frameLayout1"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/taskAufgabe" >
+
+        <CheckBox
+            android:id="@+id/checkBox1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:checked="false"
+            android:gravity="center" />
+    </FrameLayout>
 
 </RelativeLayout>

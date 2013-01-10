@@ -17,8 +17,8 @@ public class Task implements Serializable, Comparable<Task> {
 	private boolean done;
 	
 	public Task(String name) {
-		this.setName(name);
 		this.id = ListContainer.getNextTaskId();
+		this.name = name + " (" + id + ")";
 		priority = Priority.NORMAL;
 		done = false;
 	}

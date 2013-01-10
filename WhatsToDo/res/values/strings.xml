@@ -25,8 +25,8 @@
     <string name="memory">Erinnerung</string>
     <string name="list">Liste</string>
     <string name="priority">Priorität</string>
-    <string name="task">Aufgabe</string>
-    <string name="details">Details</string>
+    <string name="task"> Aufgabe</string>
+    <string name="details"> Details</string>
     <string name="textView">TextView</string>
     <string name="title_activity_alarm">AlarmActivity</string>
     <string name="reminderDate">Datum</string>

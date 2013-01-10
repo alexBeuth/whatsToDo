@@ -10,4 +10,8 @@ public class PriorityNormalFilter extends Filter {
 		return task.getPriority().equals(Priority.NORMAL);
 	}
 
+	@Override
+	protected String getFilterName() {
+		return "Normale Priorität";
+	}
 }

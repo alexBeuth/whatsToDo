@@ -9,4 +9,9 @@ public class AllFilter extends Filter {
 		return true;
 	}
 
+	@Override
+	protected String getFilterName() {
+		return "Alle";
+	}
+
 }

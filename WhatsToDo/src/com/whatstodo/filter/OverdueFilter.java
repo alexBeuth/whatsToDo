@@ -21,4 +21,8 @@ public class OverdueFilter extends Filter {
 		return compareDate(date, today) < 0;
 	}
 
+	@Override
+	protected String getFilterName() {
+		return "Überfällig";
+	}
 }

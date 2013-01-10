@@ -9,5 +9,10 @@ public class PriorityLowFilter extends Filter {
 	protected boolean filter(Task task) {
 		return task.getPriority().equals(Priority.LOW);
 	}
+	
+	@Override
+	protected String getFilterName() {
+		return "Niedrige Priorität";
+	}
 
 }

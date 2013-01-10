@@ -21,5 +21,10 @@ public class TomorrowFilter extends Filter {
 
 		return compareDate(date, tomorrow) == 0;
 	}
+	
+	@Override
+	protected String getFilterName() {
+		return "Morgen";
+	}
 
 }

@@ -24,5 +24,10 @@ public class Next7DaysFilter extends Filter {
 		return (compareDate(date, future) <= 0)
 				&& (compareDate(date, today) >= 0);
 	}
+	
+	@Override
+	protected String getFilterName() {
+		return "Nächste 7 Tage";
+	}
 
 }

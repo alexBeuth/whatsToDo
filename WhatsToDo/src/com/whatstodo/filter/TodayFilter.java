@@ -21,5 +21,9 @@ public class TodayFilter extends Filter {
 		return compareDate(date, today) == 0;
 	}
 	
-
+	@Override
+	protected String getFilterName() {
+		return "Heute";
+	}
+	
 }

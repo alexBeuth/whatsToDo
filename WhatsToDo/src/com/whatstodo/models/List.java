@@ -9,9 +9,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.whatstodo.persistence.ChangeListener;
-
-
 /**
  * The list class represents a LIFO-Stack of tasks. It has the usual stack
  * methods push and pop plus some methods for convenience.
@@ -21,28 +18,37 @@ import com.whatstodo.persistence.ChangeListener;
  */
 public class List implements Serializable, java.util.List<Task> {
 
-
 	private static final long serialVersionUID = -2889639373188534039L;
-	
+
 	transient private int size;
-	transient private Task[] orderedTasks; 
+	transient private Task[] orderedTasks;
 	transient private Comparator<Task> comparator;
 	private long id;
 	private String name;
-	
+
 	public List() {
 		orderedTasks = new Task[1];
 	}
 
 	public List(String name) {
-		
-		this();
-		id = ListContainer.getNextListId();
-		this.name = name + " (" + id + ")";
+
+		this(name, false);
 	}
-	
+
+	public List(String name, boolean isFilteredList) {
+
+		this();
+		if (!isFilteredList) {
+			id = ListContainer.getNextListId();
+			this.name = name + " (" + id + ")";
+		}
+		else {
+			this.name = name;
+		}
+	}
+
 	public List(String name, Comparator<Task> comparator) {
-		
+
 		this(name);
 		this.comparator = comparator;
 	}
@@ -98,7 +104,6 @@ public class List implements Serializable, java.util.List<Task> {
 		}
 		orderedTasks[i + 1] = task;
 		size++;
-		ChangeListener.onListChange(this);
 		return true;
 	}
 
@@ -308,7 +313,7 @@ public class List implements Serializable, java.util.List<Task> {
 	private void writeObject(ObjectOutputStream s) throws IOException {
 		s.defaultWriteObject();
 		s.writeInt(size);
-		for (int i = 0; i < orderedTasks.length; i++) {
+		for (int i = 0; i < size; i++) {
 			s.writeObject(orderedTasks[i]);
 		}
 	}
@@ -341,7 +346,7 @@ public class List implements Serializable, java.util.List<Task> {
 	public Task getTask(long taskId) {
 
 		for (Task task : this) {
-			if ( task.getId() == taskId) {
+			if (task.getId() == taskId) {
 				return task;
 			}
 		}

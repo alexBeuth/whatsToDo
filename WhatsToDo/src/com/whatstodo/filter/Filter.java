@@ -12,7 +12,7 @@ public abstract class Filter implements Serializable {
 	public List getTask() {
 		ListContainer container = ListContainer.getInstance();
 
-		List result = new List();
+		List result = new List(getFilterName(), true);
 
 		for (List list : container.getLists()) {
 			for (Task task : list) {
@@ -24,6 +24,8 @@ public abstract class Filter implements Serializable {
 
 		return result;
 	}
+
+	protected abstract String getFilterName();
 
 	protected abstract boolean filter(Task task);
 

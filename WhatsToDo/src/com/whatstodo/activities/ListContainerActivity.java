@@ -30,6 +30,7 @@ import com.whatstodo.persistence.ChangeListener;
 
 public class ListContainerActivity extends Activity implements OnClickListener {
 
+	protected static final int LIST_ACTIVITY = 0;
 	ListContainer container;
 
 	@Override
@@ -115,7 +116,8 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 					Bundle bundle = new Bundle();
 					bundle.putLong("ListId", list.getId()); // List
 					intent.putExtras(bundle); // Put your id to your next Intent
-					startActivity(intent);
+//					startActivity(intent);
+					startActivityForResult(intent, LIST_ACTIVITY);
 				}
 //				Toast.makeText(getBaseContext(), item, Toast.LENGTH_LONG)
 //						.show();
@@ -190,5 +192,12 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 	
 	private void saveLists(Iterable<List>  lists){
 		ChangeListener.onListContainerChange(lists);
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK){
+			showLists();
+		}
 	}
 }

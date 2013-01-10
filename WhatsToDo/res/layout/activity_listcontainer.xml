@@ -3,6 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ListActivity" >
+    
+<!--   	<ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="center"
+        android:contentDescription="none"
+        android:src="@drawable/background"/> -->
 
     <EditText
         android:id="@+id/list"

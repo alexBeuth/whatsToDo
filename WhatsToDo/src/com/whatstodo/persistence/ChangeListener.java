@@ -6,6 +6,7 @@ public class ChangeListener {
 	
 	public static void onListChange(List list) {
 		
+		list.sort();
 		new ListPersistence().saveList(list);
 		new ListContainerPersistence().saveContainerIds();
 		//TODO

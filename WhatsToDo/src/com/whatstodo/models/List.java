@@ -77,7 +77,6 @@ public class List implements Serializable, java.util.List<Task> {
 
 	public void addTask(String name) {
 		add(new Task(name));
-		notifyListener();
 	}
 
 	public Task getTask(long taskId) {
@@ -89,6 +88,23 @@ public class List implements Serializable, java.util.List<Task> {
 		}
 		throw new NoSuchElementException("Cannot find task with ID: " + taskId);
 	}
+	
+	//Insertion sort
+	//Do not save in here. it will be called before saving!
+	public void sort() {
+        int N = size;
+        for (int i = 0; i < N; i++) {
+            for (int j = i; j > 0 && less(orderedTasks[j], orderedTasks[j-1]); j--) {
+                exch(orderedTasks, j, j-1);
+            }
+        }
+	}
+	
+    private static void exch(Object[] a, int i, int j) {
+        Object swap = a[i];
+        a[i] = a[j];
+        a[j] = swap;
+    }
 
 	@Override
 	public boolean isEmpty() {
@@ -119,7 +135,7 @@ public class List implements Serializable, java.util.List<Task> {
 
 		// Add item
 		int i = size - 1;
-		while (i >= 0 && greater(task, orderedTasks[i])) {
+		while (i >= 0 && less(task, orderedTasks[i])) {
 			orderedTasks[i + 1] = orderedTasks[i];
 			i--;
 		}
@@ -143,7 +159,6 @@ public class List implements Serializable, java.util.List<Task> {
 		for (Task newTask : collection) {
 			add(newTask);
 		}
-		notifyListener();
 		return true;
 	}
 
@@ -272,11 +287,11 @@ public class List implements Serializable, java.util.List<Task> {
 		return null;
 	}
 
-	private boolean greater(Task i, Task j) {
+	private boolean less(Task i, Task j) {
 		if (comparator == null) {
-			return i.compareTo(j) > 0;
+			return i.compareTo(j) < 0;
 		} else {
-			return comparator.compare(i, j) > 0;
+			return comparator.compare(i, j) < 0;
 		}
 	}
 
@@ -359,7 +374,7 @@ public class List implements Serializable, java.util.List<Task> {
 		if (size < 1) {
 			orderedTasks = new Task[1];
 		} else {
-			orderedTasks = new Task[i];
+			orderedTasks = new Task[i + 1];
 		}
 		while (--i >= 0)
 			orderedTasks[i] = ((Task) s.readObject());

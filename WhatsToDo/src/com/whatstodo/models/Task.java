@@ -104,12 +104,20 @@ public class Task implements Serializable, Comparable<Task> {
 			if (another.date != null)
 				return date.compareTo(another.date);
 			else
-				return 1;
+				return -1;
 		}
-		return -1;
+		return 1;
 	}
 
 	private void notifyListener() {
 		ListContainer.getInstance().getList(listId).notifyListener();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o instanceof Task) {
+			return id == ((Task) o).id;
+		}
+		return false;
 	}
 }

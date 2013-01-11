@@ -3,34 +3,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/taskDone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
-
-    <TextView
-        android:id="@+id/taskPriority"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/taskDone" />
-
-    <TextView
-        android:id="@+id/taskName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <FrameLayout
+        android:id="@+id/clickTaskLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/taskPriority" />
+        android:background="@color/Transparent" >
 
-    <TextView
-        android:id="@+id/taskDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/taskName" />
+        <FrameLayout
+            android:id="@+id/buttonLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button3" >
+
+            <TextView
+                android:id="@+id/taskName"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="left"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="55dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="2dp"
+                android:gravity="center_vertical"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/taskPriority"
+                android:layout_width="30dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginBottom="6dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:textColor="@color/Black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/taskDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="55dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="25dp"
+                android:textSize="8sp" />
+
+            <TextView
+                android:id="@+id/taskDone"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/checkbox3"
+                android:gravity="center"
+                android:textColor="@color/Black"
+                android:textSize="16sp" />
+
+        </FrameLayout>
+    </FrameLayout>
 
 </RelativeLayout>

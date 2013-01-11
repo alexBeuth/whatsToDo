@@ -44,7 +44,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 
 		Button todayFilter = (Button) findViewById(R.id.today);
 		todayFilter.setOnClickListener(this);
-		
+
 		Button tomorrowFilter = (Button) findViewById(R.id.tomorrow);
 		tomorrowFilter.setOnClickListener(this);
 
@@ -106,21 +106,20 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				String item = ((TextView) (((FrameLayout) view).getChildAt(0)))
-						.getText().toString();
 
-				List list = container.getList(item);
-				if (item.equals(list.getName())) {
-					Intent intent = new Intent(view.getContext(),
-							ListActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putLong("ListId", list.getId()); // List
-					intent.putExtras(bundle); // Put your id to your next Intent
-//					startActivity(intent);
-					startActivityForResult(intent, LIST_ACTIVITY);
-				}
-//				Toast.makeText(getBaseContext(), item, Toast.LENGTH_LONG)
-//						.show();
+				long listId = ((TextView) ((FrameLayout) ((FrameLayout) ((FrameLayout) view)
+						.getChildAt(0)).getChildAt(0)).getChildAt(0))
+						.getInputExtras(false).getLong("id");
+
+				List list = container.getList(listId);
+				
+				Intent intent = new Intent(view.getContext(),
+						ListActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putLong("ListId", list.getId()); // List
+				intent.putExtras(bundle); // Put your id to your next Intent
+				startActivityForResult(intent, LIST_ACTIVITY);
+
 			}
 		});
 
@@ -178,25 +177,27 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			AlertDialog alert = builder.create();
 			alert.show();
 
-		} else if (menuItemName.equals(menuItems[1])) { // Delete the chosen list
+		} else if (menuItemName.equals(menuItems[1])) { // Delete the chosen
+														// list
 			container.deleteList(list.getId());
 			saveLists(container.getLists());
 			showLists();
 
-		} else if (menuItemName.equals(menuItems[2])) { // Copy the name of the list
+		} else if (menuItemName.equals(menuItems[2])) { // Copy the name of the
+														// list
 			// TODO
 		}
 
 		return true;
 	}
-	
-	private void saveLists(Iterable<List>  lists){
+
+	private void saveLists(Iterable<List> lists) {
 		ChangeListener.onListContainerChange(lists);
 	}
-	
-	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == Activity.RESULT_OK){
+		if (resultCode == Activity.RESULT_OK) {
 			showLists();
 		}
 	}

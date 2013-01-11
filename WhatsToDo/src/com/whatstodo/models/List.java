@@ -40,11 +40,8 @@ public class List implements Serializable, java.util.List<Task> {
 		this();
 		if (!isFilteredList) {
 			id = ListContainer.getNextListId();
-			this.name = name + " (" + id + ")";
 		}
-		else {
-			this.name = name;
-		}
+		this.name = name;
 	}
 
 	public List(String name, Comparator<Task> comparator) {

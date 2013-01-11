@@ -94,10 +94,11 @@
 	 <color name="LightSkyBlue">#87CEFA</color>
 	 <color name="SkyBlue">#87CEEB</color>
 	 <color name="Gray">#808080</color>
+	 <color name="DarkTransparent">#88000000</color>
+	 <color name="WhiteTransparent">#88FFFFFF</color>
 	 <color name="Olive">#808000</color>
 	 <color name="Purple">#800080</color>
 	 <color name="Maroon">#800000</color>
-	 <color name="Transparent">#88000000</color>
 	 <color name="Aquamarine">#7FFFD4</color>
 	 <color name="Chartreuse">#7FFF00</color>
 	 <color name="LawnGreen">#7CFC00</color>
@@ -141,4 +142,5 @@
 	 <color name="DarkBlue">#00008B</color>
 	 <color name="Navy">#000080</color>
 	 <color name="Black">#000000</color>
+	 <color name="Transparent">#00000000</color>
 </resources>

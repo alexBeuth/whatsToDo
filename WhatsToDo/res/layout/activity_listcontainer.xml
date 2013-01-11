@@ -18,6 +18,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
         android:layout_toLeftOf="@+id/newList"
         android:inputType="text"
         android:text="@string/listName" >
@@ -28,9 +31,13 @@
     <Button
         android:id="@+id/newList"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignBottom="@id/list"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_alignTop="@id/list"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
         android:text="@string/newList" />
 
     <ListView
@@ -53,25 +60,30 @@
             android:id="@+id/today"
             android:layout_width="75dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
             android:text="Heute" />
 
         <Button
             android:id="@+id/tomorrow"
             android:layout_width="75dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
             android:text="Morgen" />
 
         <Button
             android:id="@+id/priority"
             android:layout_width="75dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
             android:text="Priorität" />
 
         <Button
             android:id="@+id/more"
             android:layout_width="75dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
             android:text="Mehr" />
+
     </LinearLayout>
 
 </RelativeLayout>

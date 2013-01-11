@@ -10,10 +10,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.whatstodo.R;
 import com.whatstodo.filter.Filter;
@@ -34,7 +34,7 @@ public class ListActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_list);
-		
+
 		Bundle bundle = getIntent().getExtras();
 
 		if (bundle.getBoolean("isFilter")) {
@@ -78,8 +78,9 @@ public class ListActivity extends Activity implements OnClickListener {
 			saveList(list);
 			showTasks();
 		} else if (view.getId() == R.id.backToLists) {
-//			Intent intent = new Intent(view.getContext(), ListContainerActivity.class);
-//			startActivity(intent);
+			// Intent intent = new Intent(view.getContext(),
+			// ListContainerActivity.class);
+			// startActivity(intent);
 			setResult(Activity.RESULT_OK);
 			finish();
 		} else if (view.getId() == R.id.today) {
@@ -113,37 +114,42 @@ public class ListActivity extends Activity implements OnClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				String item = ((TextView) (((RelativeLayout) view)
-						.getChildAt(2))).getText().toString();
 
-				for (Task task : list) {
+				// String item = ((TextView) ((FrameLayout) ((FrameLayout)
+				// ((FrameLayout) view)
+				// .getChildAt(0)).getChildAt(0)).getChildAt(0)).getText().toString();
 
-					if (item.equals(task.getName())) {
-						Intent intent = new Intent(view.getContext(),
-								TaskActivity.class);
-						Bundle bundle = new Bundle();
-						bundle.putLong("TaskId", task.getId());
-						bundle.putLong("ListId", list.getId());
-						intent.putExtras(bundle);
-						//startActivity(intent);
-						startActivityForResult(intent, TASK_ACTIVITY);
-					}
-				}
-				Toast.makeText(getBaseContext(), item, Toast.LENGTH_LONG)
-						.show();
+				// String item = ((TextView) (((FrameLayout)
+				// view).getChildAt(0)))
+				// .getText().toString();
+
+				long taskId = ((TextView) ((FrameLayout) ((FrameLayout) ((RelativeLayout) view)
+						.getChildAt(0)).getChildAt(0)).getChildAt(0))
+						.getInputExtras(false).getLong("id");
+
+				Task task = list.getTask(taskId);
+
+				Intent intent = new Intent(view.getContext(),
+						TaskActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putLong("TaskId", task.getId());
+				bundle.putLong("ListId", list.getId());
+				intent.putExtras(bundle);
+				startActivityForResult(intent, TASK_ACTIVITY);
+
 			}
 		});
 
 		registerForContextMenu(listList);
 	}
-	
-	private void saveList(List list){
+
+	private void saveList(List list) {
 		ChangeListener.onListChange(list);
 	}
-	
-	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == Activity.RESULT_OK){
+		if (resultCode == Activity.RESULT_OK) {
 			showTasks();
 		}
 	}

@@ -36,6 +36,7 @@ public class ListAdapter extends ArrayAdapter<List> {
 		TextView numberOfTasks = (TextView) element
 				.findViewById(R.id.numberOfTasks);
 
+		listName.getInputExtras(true).putLong("id", list.getId());
 		listName.setText(list.getName());
 		numberOfTasks.setText(Integer.toString(list.size()));
 

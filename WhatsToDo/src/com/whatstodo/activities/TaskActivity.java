@@ -44,7 +44,7 @@ public class TaskActivity extends Activity implements OnClickListener {
 	private String userNotice;
 	private Date userDate;
 	private Date userReminder;
-		
+
 	private static final int DATE_DIALOG_ID = 0;
 	private static final int REMINDER_DATE_DIALOG_ID = 1;
 	private static final int REMINDER_TIME_DIALOG_ID = 2;
@@ -80,7 +80,7 @@ public class TaskActivity extends Activity implements OnClickListener {
 
 		EditText editText = (EditText) findViewById(R.id.taskName);
 		editText.setText(task.getName());
-				
+
 		CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox1);
 		checkBox.setChecked(task.isDone());
 
@@ -96,7 +96,7 @@ public class TaskActivity extends Activity implements OnClickListener {
 		FrameLayout editReminder = (FrameLayout) findViewById(R.id.taskReminder);
 		editReminder.setOnClickListener(this);
 
-		showList(task.getName());
+		showList(list.getName());
 		FrameLayout editList = (FrameLayout) findViewById(R.id.taskList);
 		editList.setOnClickListener(this);
 
@@ -118,7 +118,7 @@ public class TaskActivity extends Activity implements OnClickListener {
 			task.setPriority(userPriority);
 			task.setDate(userDate);
 			task.setReminder(userReminder);
-			
+
 			if (list != userList) {
 				userList.add(task);
 				list.remove(task);
@@ -127,18 +127,18 @@ public class TaskActivity extends Activity implements OnClickListener {
 			}
 
 			saveList(list);
-			//startListActivity();
+			// startListActivity();
 			setResult(Activity.RESULT_OK);
 			finish();
 
 			break;
 
 		case R.id.taskCancel:
-			//startListActivity();
+			// startListActivity();
 			setResult(Activity.RESULT_CANCELED);
 			finish();
 			break;
-			
+
 		case R.id.taskNotice:
 			changeNotice();
 			break;
@@ -160,15 +160,15 @@ public class TaskActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
-	
-	private boolean getCheckBox(){
+
+	private boolean getCheckBox() {
 		CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox1);
-		if (checkBox.isChecked()){
+		if (checkBox.isChecked()) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	private void changeNotice() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Notiz");
@@ -230,11 +230,11 @@ public class TaskActivity extends Activity implements OnClickListener {
 		showDialog(LIST_DIALOG_ID);
 	}
 
-//	private void startListActivity() {
-//		Intent intent = new Intent(this, ListActivity.class);
-//		intent.putExtras(getBundle()); // Put your id to your next Intent
-//		startActivity(intent);
-//	}
+	// private void startListActivity() {
+	// Intent intent = new Intent(this, ListActivity.class);
+	// intent.putExtras(getBundle()); // Put your id to your next Intent
+	// startActivity(intent);
+	// }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -287,6 +287,7 @@ public class TaskActivity extends Activity implements OnClickListener {
 							Calendar calendar = Calendar.getInstance();
 							calendar.set(year, monthOfYear, dayOfMonth);
 							userReminder = calendar.getTime();
+							showDialog(REMINDER_TIME_DIALOG_ID);
 						}
 					}, 2011, 0, 1);
 
@@ -301,7 +302,7 @@ public class TaskActivity extends Activity implements OnClickListener {
 							}
 						}
 					});
-			
+
 			remDateDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
 					"Abbrechen", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
@@ -310,17 +311,9 @@ public class TaskActivity extends Activity implements OnClickListener {
 							}
 						}
 					});
-			
-			remDateDialog.setButton(DialogInterface.BUTTON_POSITIVE,
-					"Zeit", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							if (which == DialogInterface.BUTTON_POSITIVE) {
-								showDialog(REMINDER_TIME_DIALOG_ID);
-								dialog.dismiss();
-							}
-						}
-					});
 
+			remDateDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Zeit",
+					remDateDialog);
 			remDateDialog.setMessage("Datum der Erinnerung:");
 			return remDateDialog;
 
@@ -335,6 +328,12 @@ public class TaskActivity extends Activity implements OnClickListener {
 							userReminder.setHours(hourOfDay);
 							userReminder.setMinutes(minute);
 							userReminder.setSeconds(0);
+							showReminder(userReminder);
+							Calendar calendar = Calendar.getInstance();
+							if (calendar.getTimeInMillis() < userReminder
+									.getTime()) {
+								setReminderAlarm(userReminder);
+							}
 						}
 					}, 12, 0, true);
 
@@ -349,7 +348,7 @@ public class TaskActivity extends Activity implements OnClickListener {
 							}
 						}
 					});
-			
+
 			remTimeDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
 					"Abbrechen", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
@@ -358,21 +357,9 @@ public class TaskActivity extends Activity implements OnClickListener {
 							}
 						}
 					});
-			
-			remTimeDialog.setButton(DialogInterface.BUTTON_POSITIVE,
-					"Einstellen", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							if (which == DialogInterface.BUTTON_POSITIVE) {
-								showReminder(userReminder);
-								Calendar calendar = Calendar.getInstance();
-								if (calendar.getTimeInMillis() < userReminder.getTime()){
-									setReminderAlarm(userReminder);
-								}
-								dialog.dismiss();
-							}
-						}
-					});
 
+			remTimeDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+					"Einstellen", remTimeDialog);
 			remTimeDialog.setMessage("Zeit der Erinnerung: ");
 			return remTimeDialog;
 
@@ -484,7 +471,7 @@ public class TaskActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
-	
+
 	private void showNotice(String string) {
 		TextView taskNotice = (TextView) findViewById(R.id.textViewNotice);
 		if (string != null) {
@@ -520,8 +507,8 @@ public class TaskActivity extends Activity implements OnClickListener {
 		TextView taskList = (TextView) findViewById(R.id.textViewList);
 		taskList.setText(name);
 	}
-	
-	private void showPriority(String priority){
+
+	private void showPriority(String priority) {
 		TextView taskPriority = (TextView) findViewById(R.id.textViewPriority);
 		taskPriority.setText(priority);
 	}

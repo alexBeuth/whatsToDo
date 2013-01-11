@@ -38,7 +38,7 @@ public class MyAlarmService extends Service {
 			NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 			Notification notif = new Notification(R.drawable.ic_launcher, "WhatsToDo", System.currentTimeMillis());
 			notif.setLatestEventInfo(this, "WhatsToDo", "Erinnerung: "+task.getName(), pendingIntent);
-//			notif.vibrate = new long[] {100, 250, 100, 500};
+			notif.vibrate = new long[] {100, 250, 100, 500};
 			nm.notify((int) task.getId(), notif);
 		}
 	}

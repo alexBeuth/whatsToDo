@@ -23,6 +23,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/taskAufgabe"
         android:layout_toLeftOf="@+id/CheckBoxLayout"
+        android:background="@color/WhiteTransparent"
         android:minHeight="60dp" >
 
         <EditText
@@ -60,7 +61,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/taskEdit" >
+        android:layout_below="@+id/taskEdit"
+        android:background="@color/WhiteTransparent" >
 
         <Button
             android:id="@+id/taskCancel"
@@ -92,7 +94,8 @@
         <FrameLayout
             android:id="@+id/taskNotice"
             android:layout_width="match_parent"
-            android:layout_height="50dp" >
+            android:layout_height="50dp"
+            android:background="@color/WhiteTransparent" >
 
             <TextView
                 android:id="@+id/textView1"
@@ -117,7 +120,8 @@
         <FrameLayout
             android:id="@+id/taskDate"
             android:layout_width="match_parent"
-            android:layout_height="50dp" >
+            android:layout_height="50dp"
+            android:background="@color/WhiteTransparent" >
 
             <TextView
                 android:id="@+id/TextView01"
@@ -142,7 +146,8 @@
         <FrameLayout
             android:id="@+id/taskReminder"
             android:layout_width="match_parent"
-            android:layout_height="50dp" >
+            android:layout_height="50dp"
+            android:background="@color/WhiteTransparent" >
 
             <TextView
                 android:id="@+id/TextView03"
@@ -167,7 +172,8 @@
         <FrameLayout
             android:id="@+id/taskList"
             android:layout_width="match_parent"
-            android:layout_height="50dp" >
+            android:layout_height="50dp"
+            android:background="@color/WhiteTransparent" >
 
             <TextView
                 android:id="@+id/TextView04"
@@ -192,7 +198,8 @@
         <FrameLayout
             android:id="@+id/taskPriority"
             android:layout_width="match_parent"
-            android:layout_height="50dp" >
+            android:layout_height="50dp"
+            android:background="@color/WhiteTransparent" >
 
             <TextView
                 android:id="@+id/TextView05"
@@ -221,7 +228,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/frameLayout1"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/taskAufgabe" >
+        android:layout_below="@+id/taskAufgabe"
+        android:background="@color/WhiteTransparent" >
 
         <CheckBox
             android:id="@+id/checkBox1"

@@ -3,6 +3,7 @@ package com.whatstodo.models;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.whatstodo.persistence.ChangeListener;
 import com.whatstodo.utils.Priority;
 
 public class Task implements Serializable, Comparable<Task> {
@@ -15,10 +16,14 @@ public class Task implements Serializable, Comparable<Task> {
 	private Date reminder;
 	private Priority priority;
 	private boolean done;
-	
+
+	// This is mainly for the listener to know which list was changed. Should
+	// only be set be the owner of this task
+	private long listId;
+
 	public Task(String name) {
 		this.id = ListContainer.getNextTaskId();
-		this.name = name;
+		this.name = name + "(" + id + ")";
 		priority = Priority.NORMAL;
 		done = false;
 	}
@@ -29,6 +34,7 @@ public class Task implements Serializable, Comparable<Task> {
 
 	public void setName(String name) {
 		this.name = name;
+		notifyListener();
 	}
 
 	public long getId() {
@@ -41,6 +47,7 @@ public class Task implements Serializable, Comparable<Task> {
 
 	public void setPriority(Priority priority) {
 		this.priority = priority;
+		notifyListener();
 	}
 
 	public boolean isDone() {
@@ -49,6 +56,7 @@ public class Task implements Serializable, Comparable<Task> {
 
 	public void setDone(boolean done) {
 		this.done = done;
+		notifyListener();
 	}
 
 	public Date getDate() {
@@ -57,36 +65,52 @@ public class Task implements Serializable, Comparable<Task> {
 
 	public void setDate(Date date) {
 		this.date = date;
+		notifyListener();
 	}
 
 	public String getNotice() {
 		return notice;
 	}
-	
+
 	public void setNotice(String notice) {
 		this.notice = notice;
+		notifyListener();
 	}
-	
+
 	public Date getReminder() {
 		return reminder;
 	}
 
 	public void setReminder(Date reminder) {
 		this.reminder = reminder;
+		notifyListener();
+	}
+
+	public long getListId() {
+		return listId;
+	}
+
+	protected void setListId(long listId) {
+		this.listId = listId;
 	}
 
 	@Override
 	public int compareTo(Task another) {
-		
-		if(date == null && another.date == null)
+
+		if (date == null && another.date == null)
 			return 0;
-		
-		if(date != null) {
-			if(another.date != null)
+
+		if (date != null) {
+			if (another.date != null)
 				return date.compareTo(another.date);
 			else
 				return 1;
 		}
 		return -1;
+	}
+
+	private void notifyListener() {
+		ChangeListener
+				.onListChange(ListContainer.getInstance().getList(listId));
 	}
 }

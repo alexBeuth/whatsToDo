@@ -122,12 +122,9 @@ public class TaskActivity extends Activity implements OnClickListener {
 			if (list != userList) {
 				userList.add(task);
 				list.remove(task);
-				saveList(list);
 				list = userList;
 			}
 
-			saveList(list);
-			// startListActivity();
 			setResult(Activity.RESULT_OK);
 			finish();
 
@@ -541,9 +538,5 @@ public class TaskActivity extends Activity implements OnClickListener {
 		bundle.putLong("ListId", list.getId());
 		bundle.putLong("TaskId", task.getId());
 		return bundle;
-	}
-
-	private void saveList(List list) {
-		ChangeListener.onListChange(list);
 	}
 }

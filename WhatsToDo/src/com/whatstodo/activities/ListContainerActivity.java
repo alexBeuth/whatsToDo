@@ -165,7 +165,6 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 								int whichButton) {
 
 							list.setName(input.getText().toString());
-							saveLists(container.getLists());
 							showLists();
 						}
 					});
@@ -182,24 +181,17 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 
 		} else if (menuItemName.equals(menuItems[1])) { // Delete
 			container.deleteList(list.getId());
-			saveLists(container.getLists());
 			showLists();
 
 		} else if (menuItemName.equals(menuItems[2])) { // Copy
 			clipboard.setText(list.getName());
-			saveLists(container.getLists());
 			showLists();
 		} else if (menuItemName.equals(menuItems[3])) { // Paste
 		    list.setName(clipboard.getText().toString());
-			saveLists(container.getLists());
 			showLists();
 		}
 
 		return true;
-	}
-
-	private void saveLists(Iterable<List> lists) {
-		ChangeListener.onListContainerChange(lists);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

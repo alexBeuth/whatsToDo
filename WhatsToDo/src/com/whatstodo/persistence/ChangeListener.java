@@ -12,7 +12,7 @@ public class ChangeListener {
 		//list.setLastModified()
 	}
 	
-	public static void onListContainerChange(Iterable<List> lists) {
+	public static void onContainerChange(Iterable<List> lists) {
 		
 		new ListContainerPersistence().saveLists(lists);
 		//TODO

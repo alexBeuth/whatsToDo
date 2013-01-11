@@ -9,9 +9,11 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.whatstodo.persistence.ChangeListener;
+
 /**
- * The list class represents a LIFO-Stack of tasks. It has the usual stack
- * methods push and pop plus some methods for convenience.
+ * The list class represents a list of tasks. It is ordered in the natural order
+ * of the tasks or with an optional comparator
  * 
  * @author alex
  * 
@@ -28,6 +30,7 @@ public class List implements Serializable, java.util.List<Task> {
 
 	public List() {
 		orderedTasks = new Task[1];
+		notifyListener();
 	}
 
 	public List(String name) {
@@ -56,6 +59,7 @@ public class List implements Serializable, java.util.List<Task> {
 
 	public void setName(String name) {
 		this.name = name;
+		notifyListener();
 	}
 
 	public long getId() {
@@ -64,6 +68,22 @@ public class List implements Serializable, java.util.List<Task> {
 
 	public void setId(long id) {
 		this.id = id;
+		notifyListener();
+	}
+
+	public void addTask(String name) {
+		add(new Task(name));
+		notifyListener();
+	}
+
+	public Task getTask(long taskId) {
+
+		for (Task task : this) {
+			if (task.getId() == taskId) {
+				return task;
+			}
+		}
+		throw new NoSuchElementException("Cannot find task with ID: " + taskId);
 	}
 
 	@Override
@@ -101,6 +121,10 @@ public class List implements Serializable, java.util.List<Task> {
 		}
 		orderedTasks[i + 1] = task;
 		size++;
+		
+		notifyListener();
+		task.setListId(id);
+		
 		return true;
 	}
 
@@ -115,6 +139,7 @@ public class List implements Serializable, java.util.List<Task> {
 		for (Task newTask : collection) {
 			add(newTask);
 		}
+		notifyListener();
 		return true;
 	}
 
@@ -124,6 +149,7 @@ public class List implements Serializable, java.util.List<Task> {
 			orderedTasks[i] = null;
 		}
 		size = 0;
+		notifyListener();
 	}
 
 	@Override
@@ -193,7 +219,8 @@ public class List implements Serializable, java.util.List<Task> {
 		// resize array
 		if ((size > 0) && (size == (orderedTasks.length - 1) / 4))
 			resize(orderedTasks.length / 2);
-
+		
+		notifyListener();
 		return toReturn;
 
 	}
@@ -251,10 +278,10 @@ public class List implements Serializable, java.util.List<Task> {
 
 	private void checkBound(int index) {
 		if (index < 0 || index > size)
-			throw new IndexOutOfBoundsException("In " + index + ", S" + size);
+			throw new IndexOutOfBoundsException("Index " + index + ", Size"
+					+ size);
 	}
 
-	// helper function to double the size of the heap array
 	private void resize(int capacity) {
 		assert capacity > size;
 		Task[] temp = new Task[capacity];
@@ -263,13 +290,6 @@ public class List implements Serializable, java.util.List<Task> {
 		orderedTasks = temp;
 	}
 
-	/**
-	 * An iterator to the stack that iterates through the items in LIFO order.
-	 * remove() is not implemented.
-	 * 
-	 * @author alex
-	 * 
-	 */
 	private class ListIterator implements Iterator<Task> {
 
 		private int i;
@@ -310,7 +330,7 @@ public class List implements Serializable, java.util.List<Task> {
 	private void writeObject(ObjectOutputStream s) throws IOException {
 		s.defaultWriteObject();
 		s.writeInt(size);
-		for (int i = 0; i < size; i++) {
+		for (int i = size - 1; i >= 0; i--) {
 			s.writeObject(orderedTasks[i]);
 		}
 	}
@@ -331,22 +351,17 @@ public class List implements Serializable, java.util.List<Task> {
 			ClassNotFoundException {
 		s.defaultReadObject();
 		int i = s.readInt();
-		orderedTasks = new Task[1];
-		while (--i >= 0)
-			add(((Task) s.readObject()));
-	}
-
-	public void addTask(String name) {
-		add(new Task(name));
-	}
-
-	public Task getTask(long taskId) {
-
-		for (Task task : this) {
-			if (task.getId() == taskId) {
-				return task;
-			}
+		size = i;
+		if(size < 1) {
+			orderedTasks = new Task[1];
+		} else {
+			orderedTasks = new Task[i];
 		}
-		throw new NoSuchElementException("Cannot find task with ID: " + taskId);
+		while (--i >= 0)
+			orderedTasks[i] = ((Task) s.readObject());
+	}
+	
+	private void notifyListener() {
+		ChangeListener.onListChange(this);
 	}
 }

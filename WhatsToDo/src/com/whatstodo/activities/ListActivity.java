@@ -1,9 +1,15 @@
 package com.whatstodo.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.ClipboardManager;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -14,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.whatstodo.R;
 import com.whatstodo.filter.Filter;
@@ -78,9 +85,6 @@ public class ListActivity extends Activity implements OnClickListener {
 			saveList(list);
 			showTasks();
 		} else if (view.getId() == R.id.backToLists) {
-			// Intent intent = new Intent(view.getContext(),
-			// ListContainerActivity.class);
-			// startActivity(intent);
 			setResult(Activity.RESULT_OK);
 			finish();
 		} else if (view.getId() == R.id.today) {
@@ -115,14 +119,6 @@ public class ListActivity extends Activity implements OnClickListener {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 
-				// String item = ((TextView) ((FrameLayout) ((FrameLayout)
-				// ((FrameLayout) view)
-				// .getChildAt(0)).getChildAt(0)).getChildAt(0)).getText().toString();
-
-				// String item = ((TextView) (((FrameLayout)
-				// view).getChildAt(0)))
-				// .getText().toString();
-
 				long taskId = ((TextView) ((FrameLayout) ((FrameLayout) ((RelativeLayout) view)
 						.getChildAt(0)).getChildAt(0)).getChildAt(0))
 						.getInputExtras(false).getLong("id");
@@ -141,6 +137,88 @@ public class ListActivity extends Activity implements OnClickListener {
 		});
 
 		registerForContextMenu(listList);
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View view,
+			ContextMenuInfo menuInfo) {
+		if (view.getId() == R.id.taskList) {
+			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+
+			long taskId = ((TextView) ((FrameLayout) ((FrameLayout) ((RelativeLayout) ((ListView) view)
+					.getChildAt(info.position)).getChildAt(0)).getChildAt(0))
+					.getChildAt(0)).getInputExtras(false).getLong("id");
+			Task task = list.getTask(taskId);
+			menu.setHeaderTitle(task.getName());
+			String[] menuItems = getResources().getStringArray(R.array.menu);
+			for (int i = 0; i < menuItems.length; i++) {
+				menu.add(Menu.NONE, i, i, menuItems[i]);
+			}
+			Toast.makeText(getApplicationContext(), task.getName().toString(),
+					Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+		View view = findViewById(R.id.taskList);
+		long taskId = ((TextView) ((FrameLayout) ((FrameLayout) ((RelativeLayout) ((ListView) view)
+				.getChildAt(info.position)).getChildAt(0)).getChildAt(0))
+				.getChildAt(0)).getInputExtras(false).getLong("id");
+		final Task task = list.getTask(taskId);
+		String[] menuItems = getResources().getStringArray(R.array.menu);
+
+		String menuItemName = menuItems[item.getItemId()];
+
+		ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+
+		if (menuItemName.equals(menuItems[0])) { // Edit
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Name");
+			builder.setMessage(task.getName());
+
+			final EditText input = new EditText(this);
+			builder.setView(input);
+
+			builder.setPositiveButton("Ok",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+
+							task.setName(input.getText().toString());
+							saveList(list);
+							showTasks();
+						}
+					});
+
+			builder.setNegativeButton("Abbrechen",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+						}
+					});
+
+			AlertDialog alert = builder.create();
+			alert.show();
+
+		} else if (menuItemName.equals(menuItems[1])) { // Delete
+			list.remove(task);
+			saveList(list);
+			showTasks();
+
+		} else if (menuItemName.equals(menuItems[2])) { // Copy
+			clipboard.setText(task.getName());
+			saveList(list);
+			showTasks();
+		} else if (menuItemName.equals(menuItems[3])) { // Paste
+			task.setName(clipboard.getText().toString());
+			saveList(list);
+			showTasks();
+		}
+
+		return true;
 	}
 
 	private void saveList(List list) {

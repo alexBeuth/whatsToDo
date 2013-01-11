@@ -15,6 +15,7 @@
         <item>Bearbeiten</item>
         <item>Löschen</item>
         <item>Kopieren</item>
+        <item>Einfügen</item>
     </string-array>
 
     <string name="footer">Fusszeile</string>

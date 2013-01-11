@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.ClipboardManager;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -147,8 +148,10 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 		String[] menuItems = getResources().getStringArray(R.array.menu);
 		String menuItemName = menuItems[item.getItemId()];
 		final List list = container.getLists().get(info.position);
+		
+		ClipboardManager clipboard= (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
 
-		if (menuItemName.equals(menuItems[0])) { // Edit the chosen list
+		if (menuItemName.equals(menuItems[0])) { // Edit
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle("Name");
 			builder.setMessage(list.getName());
@@ -177,15 +180,19 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			AlertDialog alert = builder.create();
 			alert.show();
 
-		} else if (menuItemName.equals(menuItems[1])) { // Delete the chosen
-														// list
+		} else if (menuItemName.equals(menuItems[1])) { // Delete
 			container.deleteList(list.getId());
 			saveLists(container.getLists());
 			showLists();
 
-		} else if (menuItemName.equals(menuItems[2])) { // Copy the name of the
-														// list
-			// TODO
+		} else if (menuItemName.equals(menuItems[2])) { // Copy
+			clipboard.setText(list.getName());
+			saveLists(container.getLists());
+			showLists();
+		} else if (menuItemName.equals(menuItems[3])) { // Paste
+		    list.setName(clipboard.getText().toString());
+			saveLists(container.getLists());
+			showLists();
 		}
 
 		return true;

@@ -23,7 +23,7 @@ public class Task implements Serializable, Comparable<Task> {
 
 	public Task(String name) {
 		this.id = ListContainer.getNextTaskId();
-		this.name = name + "(" + id + ")";
+		this.name = name;
 		priority = Priority.NORMAL;
 		done = false;
 	}
@@ -110,7 +110,6 @@ public class Task implements Serializable, Comparable<Task> {
 	}
 
 	private void notifyListener() {
-		ChangeListener
-				.onListChange(ListContainer.getInstance().getList(listId));
+		ListContainer.getInstance().getList(listId).notifyListener();
 	}
 }

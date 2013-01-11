@@ -28,9 +28,11 @@ public class List implements Serializable, java.util.List<Task> {
 	private long id;
 	private String name;
 
+	// Dont save if its a temp. list (like filter)
+	private boolean save;
+
 	public List() {
 		orderedTasks = new Task[1];
-		notifyListener();
 	}
 
 	public List(String name) {
@@ -38,13 +40,15 @@ public class List implements Serializable, java.util.List<Task> {
 		this(name, false);
 	}
 
-	public List(String name, boolean isFilteredList) {
+	public List(String name, boolean dontSave) {
 
 		this();
-		if (!isFilteredList) {
+		if (!dontSave) {
 			id = ListContainer.getNextListId();
 		}
 		this.name = name;
+		save = !dontSave;
+		notifyListener();
 	}
 
 	public List(String name, Comparator<Task> comparator) {
@@ -121,10 +125,10 @@ public class List implements Serializable, java.util.List<Task> {
 		}
 		orderedTasks[i + 1] = task;
 		size++;
-		
+
 		notifyListener();
 		task.setListId(id);
-		
+
 		return true;
 	}
 
@@ -219,7 +223,7 @@ public class List implements Serializable, java.util.List<Task> {
 		// resize array
 		if ((size > 0) && (size == (orderedTasks.length - 1) / 4))
 			resize(orderedTasks.length / 2);
-		
+
 		notifyListener();
 		return toReturn;
 
@@ -352,7 +356,7 @@ public class List implements Serializable, java.util.List<Task> {
 		s.defaultReadObject();
 		int i = s.readInt();
 		size = i;
-		if(size < 1) {
+		if (size < 1) {
 			orderedTasks = new Task[1];
 		} else {
 			orderedTasks = new Task[i];
@@ -360,8 +364,9 @@ public class List implements Serializable, java.util.List<Task> {
 		while (--i >= 0)
 			orderedTasks[i] = ((Task) s.readObject());
 	}
-	
-	private void notifyListener() {
-		ChangeListener.onListChange(this);
+
+	protected void notifyListener() {
+		if (save)
+			ChangeListener.onListChange(this);
 	}
 }

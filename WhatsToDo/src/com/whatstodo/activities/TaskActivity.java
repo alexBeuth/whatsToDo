@@ -15,9 +15,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -55,9 +55,6 @@ public class TaskActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_task);
-		
-		this.getWindow().setSoftInputMode(
-			    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
@@ -126,9 +123,12 @@ public class TaskActivity extends Activity implements OnClickListener {
 			if (list != userList) {
 				userList.add(task);
 				list.remove(task);
+				saveList(list);
 				list = userList;
 			}
 
+			saveList(list);
+			// startListActivity();
 			setResult(Activity.RESULT_OK);
 			finish();
 
@@ -280,7 +280,7 @@ public class TaskActivity extends Activity implements OnClickListener {
 			return dateDialog;
 
 		case REMINDER_DATE_DIALOG_ID:
-			DatePickerDialog remDateDialog = new DatePickerDialog(this,
+			final DatePickerDialog remDateDialog = new DatePickerDialog(this,
 					new DatePickerDialog.OnDateSetListener() {
 						public void onDateSet(DatePicker view, int year,
 								int monthOfYear, int dayOfMonth) {
@@ -316,10 +316,29 @@ public class TaskActivity extends Activity implements OnClickListener {
 			remDateDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Zeit",
 					remDateDialog);
 			remDateDialog.setMessage("Datum der Erinnerung:");
+			
+			remDateDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+			    @Override
+			    public void onShow(DialogInterface dialog) {
+
+			        float textSize = 14.0f;
+
+			        Button positive = remDateDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+			        positive.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+
+			        Button neutral = remDateDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+			        neutral.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+
+			        Button negative = remDateDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+			        negative.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+			    }
+			});
+			
 			return remDateDialog;
 
 		case REMINDER_TIME_DIALOG_ID:
-			TimePickerDialog remTimeDialog = new TimePickerDialog(this,
+			final TimePickerDialog remTimeDialog = new TimePickerDialog(this,
 					new TimePickerDialog.OnTimeSetListener() {
 
 						@Override
@@ -362,6 +381,24 @@ public class TaskActivity extends Activity implements OnClickListener {
 			remTimeDialog.setButton(DialogInterface.BUTTON_POSITIVE,
 					"Einstellen", remTimeDialog);
 			remTimeDialog.setMessage("Zeit der Erinnerung: ");
+			
+			remTimeDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+			    @Override
+			    public void onShow(DialogInterface dialog) {
+
+			        float textSize = 14.0f;
+
+			        Button positive = remTimeDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+			        positive.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+
+			        Button neutral = remTimeDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+			        neutral.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+
+			        Button negative = remTimeDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+			        negative.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+			    }
+			});
 			return remTimeDialog;
 
 		case LIST_DIALOG_ID:
@@ -542,5 +579,9 @@ public class TaskActivity extends Activity implements OnClickListener {
 		bundle.putLong("ListId", list.getId());
 		bundle.putLong("TaskId", task.getId());
 		return bundle;
+	}
+
+	private void saveList(List list) {
+		ChangeListener.onListChange(list);
 	}
 }

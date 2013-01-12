@@ -9,9 +9,11 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.whatstodo.persistence.ChangeListener;
+
 /**
- * The list class represents a LIFO-Stack of tasks. It has the usual stack
- * methods push and pop plus some methods for convenience.
+ * The list class represents a list of tasks. It is ordered in the natural order
+ * of the tasks or with an optional comparator
  * 
  * @author alex
  * 
@@ -26,6 +28,9 @@ public class List implements Serializable, java.util.List<Task> {
 	private long id;
 	private String name;
 
+	// Dont save if its a temp. list (like filter)
+	private boolean save;
+
 	public List() {
 		orderedTasks = new Task[1];
 	}
@@ -35,13 +40,15 @@ public class List implements Serializable, java.util.List<Task> {
 		this(name, false);
 	}
 
-	public List(String name, boolean isFilteredList) {
+	public List(String name, boolean dontSave) {
 
 		this();
-		if (!isFilteredList) {
+		if (!dontSave) {
 			id = ListContainer.getNextListId();
 		}
 		this.name = name;
+		save = !dontSave;
+		notifyListener();
 	}
 
 	public List(String name, Comparator<Task> comparator) {
@@ -56,6 +63,7 @@ public class List implements Serializable, java.util.List<Task> {
 
 	public void setName(String name) {
 		this.name = name;
+		notifyListener();
 	}
 
 	public long getId() {
@@ -64,7 +72,39 @@ public class List implements Serializable, java.util.List<Task> {
 
 	public void setId(long id) {
 		this.id = id;
+		notifyListener();
 	}
+
+	public void addTask(String name) {
+		add(new Task(name));
+	}
+
+	public Task getTask(long taskId) {
+
+		for (Task task : this) {
+			if (task.getId() == taskId) {
+				return task;
+			}
+		}
+		throw new NoSuchElementException("Cannot find task with ID: " + taskId);
+	}
+	
+	//Insertion sort
+	//Do not save in here. it will be called before saving!
+	public void sort() {
+        int N = size;
+        for (int i = 0; i < N; i++) {
+            for (int j = i; j > 0 && less(orderedTasks[j], orderedTasks[j-1]); j--) {
+                exch(orderedTasks, j, j-1);
+            }
+        }
+	}
+	
+    private static void exch(Object[] a, int i, int j) {
+        Object swap = a[i];
+        a[i] = a[j];
+        a[j] = swap;
+    }
 
 	@Override
 	public boolean isEmpty() {
@@ -95,12 +135,16 @@ public class List implements Serializable, java.util.List<Task> {
 
 		// Add item
 		int i = size - 1;
-		while (i >= 0 && greater(task, orderedTasks[i])) {
+		while (i >= 0 && less(task, orderedTasks[i])) {
 			orderedTasks[i + 1] = orderedTasks[i];
 			i--;
 		}
 		orderedTasks[i + 1] = task;
 		size++;
+
+		notifyListener();
+		task.setListId(id);
+
 		return true;
 	}
 
@@ -124,6 +168,7 @@ public class List implements Serializable, java.util.List<Task> {
 			orderedTasks[i] = null;
 		}
 		size = 0;
+		notifyListener();
 	}
 
 	@Override
@@ -194,6 +239,7 @@ public class List implements Serializable, java.util.List<Task> {
 		if ((size > 0) && (size == (orderedTasks.length - 1) / 4))
 			resize(orderedTasks.length / 2);
 
+		notifyListener();
 		return toReturn;
 
 	}
@@ -241,20 +287,20 @@ public class List implements Serializable, java.util.List<Task> {
 		return null;
 	}
 
-	private boolean greater(Task i, Task j) {
+	private boolean less(Task i, Task j) {
 		if (comparator == null) {
-			return i.compareTo(j) > 0;
+			return i.compareTo(j) < 0;
 		} else {
-			return comparator.compare(i, j) > 0;
+			return comparator.compare(i, j) < 0;
 		}
 	}
 
 	private void checkBound(int index) {
 		if (index < 0 || index > size)
-			throw new IndexOutOfBoundsException("In " + index + ", S" + size);
+			throw new IndexOutOfBoundsException("Index " + index + ", Size"
+					+ size);
 	}
 
-	// helper function to double the size of the heap array
 	private void resize(int capacity) {
 		assert capacity > size;
 		Task[] temp = new Task[capacity];
@@ -263,13 +309,6 @@ public class List implements Serializable, java.util.List<Task> {
 		orderedTasks = temp;
 	}
 
-	/**
-	 * An iterator to the stack that iterates through the items in LIFO order.
-	 * remove() is not implemented.
-	 * 
-	 * @author alex
-	 * 
-	 */
 	private class ListIterator implements Iterator<Task> {
 
 		private int i;
@@ -310,7 +349,7 @@ public class List implements Serializable, java.util.List<Task> {
 	private void writeObject(ObjectOutputStream s) throws IOException {
 		s.defaultWriteObject();
 		s.writeInt(size);
-		for (int i = 0; i < size; i++) {
+		for (int i = size - 1; i >= 0; i--) {
 			s.writeObject(orderedTasks[i]);
 		}
 	}
@@ -331,22 +370,18 @@ public class List implements Serializable, java.util.List<Task> {
 			ClassNotFoundException {
 		s.defaultReadObject();
 		int i = s.readInt();
-		orderedTasks = new Task[1];
-		while (--i >= 0)
-			add(((Task) s.readObject()));
-	}
-
-	public void addTask(String name) {
-		add(new Task(name));
-	}
-
-	public Task getTask(long taskId) {
-
-		for (Task task : this) {
-			if (task.getId() == taskId) {
-				return task;
-			}
+		size = i;
+		if (size < 1) {
+			orderedTasks = new Task[1];
+		} else {
+			orderedTasks = new Task[i + 1];
 		}
-		throw new NoSuchElementException("Cannot find task with ID: " + taskId);
+		while (--i >= 0)
+			orderedTasks[i] = ((Task) s.readObject());
+	}
+
+	protected void notifyListener() {
+		if (save)
+			ChangeListener.onListChange(this);
 	}
 }

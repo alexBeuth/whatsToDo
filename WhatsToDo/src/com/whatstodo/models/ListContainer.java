@@ -38,7 +38,7 @@ public class ListContainer {
 			for (List list : persistence.loadLists()) {
 				lists.add(list);
 			}
-			ChangeListener.onListContainerChange(lists);
+			notifyListener();
 		}
 		return container;
 	}
@@ -46,7 +46,7 @@ public class ListContainer {
 	public void addList(String name) {
 
 		lists.add(new List(name));
-		ChangeListener.onListContainerChange(lists);
+		notifyListener();
 	}
 
 	public java.util.List<List> getLists() {
@@ -55,6 +55,7 @@ public class ListContainer {
 
 	public void setLists(ArrayList<List> lists) {
 		ListContainer.lists = lists;
+		notifyListener();
 	}
 
 	public static long getNextListId() {
@@ -67,7 +68,9 @@ public class ListContainer {
 		if (noIncrement) {
 			return nextAvailableListId;
 		} else {
-			return nextAvailableListId++;
+			long toReturn = nextAvailableListId++;
+			notifyListener();
+			return toReturn;
 		}
 
 	}
@@ -82,7 +85,9 @@ public class ListContainer {
 		if (noIncrement) {
 			return nextAvailableTaskId;
 		} else {
-			return nextAvailableTaskId++;
+			long toReturn = nextAvailableTaskId++;
+			notifyListener();
+			return toReturn;
 		}
 
 	}
@@ -113,10 +118,14 @@ public class ListContainer {
 		for (List list : lists) {
 			if (list.getId() == listId) {
 				lists.remove(list);
-				ChangeListener.onListContainerChange(lists);
+				notifyListener();
 				return;
 			}
 		}
 		throw new NoSuchElementException("Cannot find the right list");
+	}
+
+	private static void notifyListener() {
+		ChangeListener.onContainerChange(lists);
 	}
 }

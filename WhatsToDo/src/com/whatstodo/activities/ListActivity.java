@@ -85,7 +85,6 @@ public class ListActivity extends Activity implements OnClickListener {
 		if (view.getId() == R.id.newTask) {
 			EditText editText = (EditText) findViewById(R.id.task);
 			list.addTask(editText.getText().toString());
-			saveList(list);
 			showTasks();
 		} else if (view.getId() == R.id.backToLists) {
 			setResult(Activity.RESULT_OK);
@@ -191,7 +190,6 @@ public class ListActivity extends Activity implements OnClickListener {
 								int whichButton) {
 
 							task.setName(input.getText().toString());
-							saveList(list);
 							showTasks();
 						}
 					});
@@ -208,24 +206,17 @@ public class ListActivity extends Activity implements OnClickListener {
 
 		} else if (menuItemName.equals(menuItems[1])) { // Delete
 			list.remove(task);
-			saveList(list);
 			showTasks();
 
 		} else if (menuItemName.equals(menuItems[2])) { // Copy
 			clipboard.setText(task.getName());
-			saveList(list);
 			showTasks();
 		} else if (menuItemName.equals(menuItems[3])) { // Paste
 			task.setName(clipboard.getText().toString());
-			saveList(list);
 			showTasks();
 		}
 
 		return true;
-	}
-
-	private void saveList(List list) {
-		ChangeListener.onListChange(list);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

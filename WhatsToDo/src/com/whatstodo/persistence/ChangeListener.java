@@ -6,13 +6,14 @@ public class ChangeListener {
 	
 	public static void onListChange(List list) {
 		
+		list.sort();
 		new ListPersistence().saveList(list);
 		new ListContainerPersistence().saveContainerIds();
 		//TODO
 		//list.setLastModified()
 	}
 	
-	public static void onListContainerChange(Iterable<List> lists) {
+	public static void onContainerChange(Iterable<List> lists) {
 		
 		new ListContainerPersistence().saveLists(lists);
 		//TODO

@@ -14,6 +14,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.View;
@@ -31,10 +32,10 @@ import com.whatstodo.R;
 import com.whatstodo.models.List;
 import com.whatstodo.models.ListContainer;
 import com.whatstodo.models.Task;
-import com.whatstodo.persistence.ChangeListener;
 import com.whatstodo.utils.Priority;
 
-public class TaskActivity extends Activity implements OnClickListener {
+public class TaskActivity extends FragmentActivity implements OnClickListener,
+		AddressDialogFragment.NoticeDialogListener {
 
 	private ListContainer container;
 	private List list;
@@ -44,11 +45,14 @@ public class TaskActivity extends Activity implements OnClickListener {
 	private String userNotice;
 	private Date userDate;
 	private Date userReminder;
+	private String userAddress;
 
 	private static final int DATE_DIALOG_ID = 0;
 	private static final int REMINDER_DATE_DIALOG_ID = 1;
 	private static final int REMINDER_TIME_DIALOG_ID = 2;
 	private static final int LIST_DIALOG_ID = 3;
+
+	// private static final int ADDRESS_DIALOG_ID = 4;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +73,7 @@ public class TaskActivity extends Activity implements OnClickListener {
 		userDate = task.getDate();
 		userReminder = task.getReminder();
 		userList = list;
+		userAddress = task.getAddress();
 
 		setTitle("WhatsToDo");
 
@@ -103,6 +108,11 @@ public class TaskActivity extends Activity implements OnClickListener {
 		showPriority(task.getPriority().toString());
 		FrameLayout editPriority = (FrameLayout) findViewById(R.id.taskPriority);
 		editPriority.setOnClickListener(this);
+
+		showAddress(task.getAddress() == null ? "" : task.getAddress()
+				.toString());
+		FrameLayout editAddress = (FrameLayout) findViewById(R.id.taskAddress);
+		editAddress.setOnClickListener(this);
 	}
 
 	@Override
@@ -118,6 +128,7 @@ public class TaskActivity extends Activity implements OnClickListener {
 			task.setPriority(userPriority);
 			task.setDate(userDate);
 			task.setReminder(userReminder);
+			task.setAddress(userAddress);
 
 			if (list != userList) {
 				userList.add(task);
@@ -154,6 +165,9 @@ public class TaskActivity extends Activity implements OnClickListener {
 
 		case R.id.taskList:
 			changeList();
+			break;
+		case R.id.taskAddress:
+			changeAddress();
 			break;
 		}
 	}
@@ -225,6 +239,12 @@ public class TaskActivity extends Activity implements OnClickListener {
 
 	private void changeList() {
 		showDialog(LIST_DIALOG_ID);
+	}
+
+	private void changeAddress() {
+		AddressDialogFragment dialogFragment = new AddressDialogFragment();
+		dialogFragment.show(getSupportFragmentManager(), "??");
+		dialogFragment.setAddress(task.getAddress());
 	}
 
 	// private void startListActivity() {
@@ -406,6 +426,10 @@ public class TaskActivity extends Activity implements OnClickListener {
 						}
 					});
 			return builder.create();
+
+			// case ADDRESS_DIALOG_ID:
+			// return new AddressDialogFragment().onCreateDialog(null);
+
 		}
 		return null;
 	}
@@ -510,6 +534,11 @@ public class TaskActivity extends Activity implements OnClickListener {
 		taskPriority.setText(priority);
 	}
 
+	private void showAddress(String address) {
+		TextView taskAddress = (TextView) findViewById(R.id.textViewAdress);
+		taskAddress.setText(address);
+	}
+
 	private void setReminderAlarm(Date date) {
 
 		Intent intent = new Intent(this, MyAlarmService.class);
@@ -538,5 +567,16 @@ public class TaskActivity extends Activity implements OnClickListener {
 		bundle.putLong("ListId", list.getId());
 		bundle.putLong("TaskId", task.getId());
 		return bundle;
+	}
+
+	@Override
+	public void onAddressDialogPositiveClick(AddressDialogFragment dialog) {
+		userAddress = dialog.getAddress();
+		showAddress(userAddress);
+	}
+
+	@Override
+	public void onAddressDialogNegativeClick(AddressDialogFragment dialog) {
+		//TODO???
 	}
 }

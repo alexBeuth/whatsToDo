@@ -2,6 +2,9 @@ package com.whatstodo.models;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Locale;
+
+import android.location.Address;
 
 import com.whatstodo.persistence.ChangeListener;
 import com.whatstodo.utils.Priority;
@@ -16,6 +19,7 @@ public class Task implements Serializable, Comparable<Task> {
 	private Date reminder;
 	private Priority priority;
 	private boolean done;
+	private String address;
 
 	// This is mainly for the listener to know which list was changed. Should
 	// only be set be the owner of this task
@@ -92,6 +96,15 @@ public class Task implements Serializable, Comparable<Task> {
 
 	protected void setListId(long listId) {
 		this.listId = listId;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+		notifyListener();
 	}
 
 	@Override

@@ -10,6 +10,9 @@
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name="com.whatstodo.WhatsToDo"
@@ -40,6 +43,7 @@
 
         <service android:name="com.whatstodo.activities.MyAlarmService" >
         </service>
+         <service android:name="com.whatstodo.utils.LocationService"></service>
 
         <activity android:name="com.whatstodo.activities.AlarmActivity" >
         </activity>

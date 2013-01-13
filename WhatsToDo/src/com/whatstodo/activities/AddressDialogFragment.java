@@ -3,11 +3,14 @@ package com.whatstodo.activities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.DialogFragment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -55,15 +58,14 @@ public class AddressDialogFragment extends DialogFragment implements
 		Button getLocation = (Button) view
 				.findViewById(R.id.addressGetLocation);
 		getLocation.setOnClickListener(this);
-		
-		Button navigate = (Button) view
-				.findViewById(R.id.addressNavigate);
+
+		Button navigate = (Button) view.findViewById(R.id.addressNavigate);
 		navigate.setOnClickListener(this);
 
 		builder.setView(view);
 
 		// TODO Strings
-		builder.setMessage("Ändere Adresse");
+		builder.setTitle("Wähle Adresse");
 		builder.setPositiveButton("Speichern",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
@@ -103,50 +105,7 @@ public class AddressDialogFragment extends DialogFragment implements
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.addressGetLocation:
-			if (LocationService.mostRecentLocation != null) {
-
-				final String[] addresses = LocationUtils
-						.addressFromLocation(LocationService.mostRecentLocation);
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						getActivity());
-				builder.setTitle("Wähle Adresse");
-				builder.setSingleChoiceItems(addresses, 0,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-							}
-						});
-				builder.setPositiveButton("Ok",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								if (which == DialogInterface.BUTTON_POSITIVE) {
-									int checkedPosition = ((AlertDialog) dialog)
-											.getListView()
-											.getCheckedItemPosition();
-									addressView
-											.setText(addresses[checkedPosition]);
-									dialog.dismiss();
-								}
-							}
-						});
-
-				builder.setNegativeButton("Abbrechen",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								if (which == DialogInterface.BUTTON_POSITIVE) {
-									dialog.dismiss();
-								}
-							}
-						});
-				builder.create().show();
-
-			}
+			getLocation();
 			break;
 
 		case R.id.addressNavigate:
@@ -156,6 +115,107 @@ public class AddressDialogFragment extends DialogFragment implements
 			startActivity(i);
 			break;
 		}
+	}
+
+	public void getLocation() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+		if (LocationService.mostRecentLocation != null) {
+
+			final String[] addresses = LocationUtils
+					.addressFromLocation(LocationService.mostRecentLocation);
+
+			builder.setTitle("Wähle Adresse");
+			builder.setSingleChoiceItems(addresses, 0,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					});
+			builder.setPositiveButton("Ok",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							if (which == DialogInterface.BUTTON_POSITIVE) {
+								int checkedPosition = ((AlertDialog) dialog)
+										.getListView().getCheckedItemPosition();
+								addressView.setText(addresses[checkedPosition]);
+								dialog.dismiss();
+							}
+						}
+					});
+
+			builder.setNegativeButton("Abbruch",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							if (which == DialogInterface.BUTTON_POSITIVE) {
+								dialog.dismiss();
+							}
+						}
+					});
+			
+			builder.setNeutralButton("Neue Ortung", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if (which == DialogInterface.BUTTON_NEUTRAL) {
+						dialog.dismiss();
+
+						final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+						progressDialog.setTitle("Position wird ermittelt");
+						progressDialog.setMessage("Aktivieren sie GPS und WLAN für eine genauere Ortung.");
+						progressDialog.show();
+	
+						final Handler handler = new Handler();
+						handler.postDelayed(new Runnable() {
+						  @Override
+						  public void run() {
+							  progressDialog.dismiss();
+							  getLocation();
+						  }
+						}, 3000);
+					}
+				}
+			});
+			
+		} else {
+			builder.setMessage("Ihre momentane Position konnte leider nicht bestimmt werden.");
+			builder.setPositiveButton("Neue Ortung",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							if (which == DialogInterface.BUTTON_POSITIVE) {
+								dialog.dismiss();
+								final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+								progressDialog.setTitle("Position wird ermittelt");
+								progressDialog.setMessage("Aktivieren sie GPS und WLAN für eine genauere Ortung.");
+								progressDialog.show();
+								
+								final Handler handler = new Handler();
+								handler.postDelayed(new Runnable() {
+								  @Override
+								  public void run() {
+									  progressDialog.dismiss();
+									  getLocation();
+								  }
+								}, 3000);
+							}
+						}
+					});
+
+			builder.setNegativeButton("Abbrechen",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							if (which == DialogInterface.BUTTON_POSITIVE) {
+								dialog.dismiss();
+							}
+						}
+					});
+		}
+		builder.create().show();
 	}
 
 	@Override
@@ -172,5 +232,4 @@ public class AddressDialogFragment extends DialogFragment implements
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
 }

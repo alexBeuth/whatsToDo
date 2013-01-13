@@ -142,9 +142,10 @@ public class List implements Serializable, java.util.List<Task> {
 		orderedTasks[i + 1] = task;
 		size++;
 
+		if (save) {
+			task.setListId(id);
+		}
 		notifyListener();
-		task.setListId(id);
-
 		return true;
 	}
 

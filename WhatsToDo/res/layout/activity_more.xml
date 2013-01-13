@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <FrameLayout
+                android:id="@+id/today"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/WhiteTransparent" >
+
+                <TextView
+                    android:id="@+id/textToday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Heute"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <ImageView
+                    android:id="@+id/imageToday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:src="@drawable/ic_launcher" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/tomorrow"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/WhiteTransparent" >
+
+                <TextView
+                    android:id="@+id/textTomorrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Heute"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <ImageView
+                    android:id="@+id/imageTomorrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:src="@drawable/ic_launcher" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/allTasks"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/WhiteTransparent" >
+
+                <TextView
+                    android:id="@+id/textAllTasks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Alle Aufgaben"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <ImageView
+                    android:id="@+id/imageAllTasks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:src="@drawable/ic_launcher" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/next7Days"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/WhiteTransparent" >
+
+                <TextView
+                    android:id="@+id/textNext7Days"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Nächste 7 Tage"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <ImageView
+                    android:id="@+id/imageNext7Days"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:src="@drawable/ic_launcher" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/noDate"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/WhiteTransparent" >
+
+                <TextView
+                    android:id="@+id/textNoDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Ohne Datum"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <ImageView
+                    android:id="@+id/imageNoDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:src="@drawable/ic_launcher" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/overdue"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/WhiteTransparent" >
+
+                <TextView
+                    android:id="@+id/textOverdue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Überfällig"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <ImageView
+                    android:id="@+id/imageOverdue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:src="@drawable/ic_launcher" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/prioHigh"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/WhiteTransparent" >
+
+                <TextView
+                    android:id="@+id/textPrioHigh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Hohe Priorität"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <ImageView
+                    android:id="@+id/imagePrioHigh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:src="@drawable/ic_launcher" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/prioNormal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/WhiteTransparent" >
+
+                <TextView
+                    android:id="@+id/textPrioNormal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Normale Priorität"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <ImageView
+                    android:id="@+id/imagePrioNormal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:src="@drawable/ic_launcher" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/prioLow"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/WhiteTransparent" >
+
+                <TextView
+                    android:id="@+id/textPrioLow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Niedrige Priorität"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <ImageView
+                    android:id="@+id/imagePrioLow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:src="@drawable/ic_launcher" />
+            </FrameLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

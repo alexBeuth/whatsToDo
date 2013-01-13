@@ -11,8 +11,8 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -30,7 +30,7 @@ import com.whatstodo.filter.TodayFilter;
 import com.whatstodo.models.List;
 import com.whatstodo.models.ListContainer;
 import com.whatstodo.models.Task;
-import com.whatstodo.persistence.ChangeListener;
+import com.whatstodo.utils.ActivityUtils;
 
 public class ListActivity extends Activity implements OnClickListener {
 
@@ -70,6 +70,9 @@ public class ListActivity extends Activity implements OnClickListener {
 
 		Button priorityFilter = (Button) findViewById(R.id.priority);
 		priorityFilter.setOnClickListener(this);
+		
+		Button more = (Button) findViewById(R.id.more);
+		more.setOnClickListener(this);
 	}
 
 	@Override
@@ -81,31 +84,31 @@ public class ListActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View view) {
-
-		if (view.getId() == R.id.newTask) {
+		
+		switch (view.getId()) {
+		case R.id.newTask:
 			EditText editText = (EditText) findViewById(R.id.task);
 			list.addTask(editText.getText().toString());
 			showTasks();
-		} else if (view.getId() == R.id.backToLists) {
-			setResult(Activity.RESULT_OK);
+			break;
+		case R.id.backToLists:
+			Intent intent = new Intent(view.getContext(), ListContainerActivity.class);
+			startActivity(intent);
 			finish();
-		} else if (view.getId() == R.id.today) {
-			startFilteredActivity(view, new TodayFilter());
-		} else if (view.getId() == R.id.priority) {
-			startFilteredActivity(view, new PriorityHighFilter());
+			break;
+		case R.id.today:
+			ActivityUtils.startFilteredActivity(this, view, new TodayFilter());
+			break;
+		case R.id.priority:
+			ActivityUtils.startFilteredActivity(this, view, new PriorityHighFilter());
+			break;
+		case R.id.more:
+			Intent moreIntent = new Intent(view.getContext(), MoreActivity.class);
+			startActivity(moreIntent);
+			finish();
+			break;
 		}
-	}
 
-	private void startFilteredActivity(View view, Filter filter) {
-		Intent intent = new Intent(view.getContext(), ListActivity.class);
-		Bundle bundle = new Bundle();
-
-		bundle.putBoolean("isFilter", true);
-		bundle.putSerializable("filter", filter);
-
-		intent.putExtras(bundle);
-		startActivity(intent);
-		finish();
 	}
 
 	private void showTasks() {

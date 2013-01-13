@@ -28,7 +28,7 @@ import com.whatstodo.filter.TodayFilter;
 import com.whatstodo.filter.TomorrowFilter;
 import com.whatstodo.models.List;
 import com.whatstodo.models.ListContainer;
-import com.whatstodo.persistence.ChangeListener;
+import com.whatstodo.utils.ActivityUtils;
 
 public class ListContainerActivity extends Activity implements OnClickListener {
 
@@ -40,9 +40,9 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_listcontainer);
-		
+
 		this.getWindow().setSoftInputMode(
-			    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		Button createList = (Button) findViewById(R.id.newList);
 		createList.setOnClickListener(this);
@@ -55,6 +55,9 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 
 		Button priorityFilter = (Button) findViewById(R.id.priority);
 		priorityFilter.setOnClickListener(this);
+
+		Button more = (Button) findViewById(R.id.more);
+		more.setOnClickListener(this);
 
 		container = ListContainer.getInstance();
 		showLists();
@@ -70,28 +73,30 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 	// @Override
 	public void onClick(View view) {
 
-		if (view.getId() == R.id.newList) {
+		switch (view.getId()) {
+		case R.id.newList:
 			EditText editText = (EditText) findViewById(R.id.list);
 			container.addList(editText.getText().toString());
 			showLists();
-		} else if (view.getId() == R.id.today) {
-			startFilteredActivity(view, new TodayFilter());
-		} else if (view.getId() == R.id.tomorrow) {
-			startFilteredActivity(view, new TomorrowFilter());
-		} else if (view.getId() == R.id.priority) {
-			startFilteredActivity(view, new PriorityHighFilter());
+			break;
+		case R.id.today:
+			ActivityUtils.startFilteredActivity(this, view, new TodayFilter());
+			break;
+		case R.id.tomorrow:
+			ActivityUtils.startFilteredActivity(this, view,
+					new TomorrowFilter());
+			break;
+		case R.id.priority:
+			ActivityUtils.startFilteredActivity(this, view,
+					new PriorityHighFilter());
+			break;
+		case R.id.more:
+			Intent intent = new Intent(view.getContext(), MoreActivity.class);
+			startActivity(intent);
+			finish();
+			break;
 		}
-	}
 
-	private void startFilteredActivity(View view, Filter filter) {
-		Intent intent = new Intent(view.getContext(), ListActivity.class);
-		Bundle bundle = new Bundle();
-
-		bundle.putBoolean("isFilter", true);
-		bundle.putSerializable("filter", filter);
-
-		intent.putExtras(bundle);
-		startActivity(intent);
 	}
 
 	/**
@@ -117,7 +122,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 						.getInputExtras(false).getLong("id");
 
 				List list = container.getList(listId);
-				
+
 				Intent intent = new Intent(view.getContext(),
 						ListActivity.class);
 				Bundle bundle = new Bundle();
@@ -152,8 +157,8 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 		String[] menuItems = getResources().getStringArray(R.array.menu);
 		String menuItemName = menuItems[item.getItemId()];
 		final List list = container.getLists().get(info.position);
-		
-		ClipboardManager clipboard= (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+
+		ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
 		if (menuItemName.equals(menuItems[0])) { // Edit
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -191,7 +196,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			clipboard.setText(list.getName());
 			showLists();
 		} else if (menuItemName.equals(menuItems[3])) { // Paste
-		    list.setName(clipboard.getText().toString());
+			list.setName(clipboard.getText().toString());
 			showLists();
 		}
 

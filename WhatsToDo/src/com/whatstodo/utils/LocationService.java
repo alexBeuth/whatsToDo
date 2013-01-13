@@ -29,9 +29,13 @@ public class LocationService extends Service implements LocationListener {
 
 		Criteria criteria = new Criteria();
 		criteria.setAccuracy(Criteria.ACCURACY_FINE);
-		String provider = locationManager.getBestProvider(criteria, true);
+		String providerFine = locationManager.getBestProvider(criteria, true);
 		
-		locationManager.requestLocationUpdates(provider, 1, 0, this);
+		criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+		String providerCoarse = locationManager.getBestProvider(criteria, true);
+		
+		locationManager.requestLocationUpdates(providerFine, 0, 0, this);
+		locationManager.requestLocationUpdates(providerCoarse, 0, 0, this);
 	}
 	
 	@Override
@@ -43,7 +47,9 @@ public class LocationService extends Service implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
-		mostRecentLocation = location;
+		if(mostRecentLocation == null || location.getAccuracy() >= mostRecentLocation.getAccuracy()) {
+			mostRecentLocation = location;
+		}
 	}
 
 	@Override

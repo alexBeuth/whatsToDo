@@ -109,6 +109,13 @@ public class Task implements Serializable, Comparable<Task> {
 
 	@Override
 	public int compareTo(Task another) {
+		
+		if(!isDone() && another.isDone()) {
+			return -1;
+		}
+		if(isDone() && !another.isDone()) {
+			return 1;
+		}
 
 		if (date == null && another.date == null)
 			return 0;

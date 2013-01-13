@@ -41,9 +41,9 @@ public class ListActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
-		
+
 		this.getWindow().setSoftInputMode(
-			    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		Bundle bundle = getIntent().getExtras();
 
@@ -70,7 +70,7 @@ public class ListActivity extends Activity implements OnClickListener {
 
 		Button priorityFilter = (Button) findViewById(R.id.priority);
 		priorityFilter.setOnClickListener(this);
-		
+
 		Button more = (Button) findViewById(R.id.more);
 		more.setOnClickListener(this);
 	}
@@ -84,7 +84,7 @@ public class ListActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View view) {
-		
+
 		switch (view.getId()) {
 		case R.id.newTask:
 			EditText editText = (EditText) findViewById(R.id.task);
@@ -92,7 +92,8 @@ public class ListActivity extends Activity implements OnClickListener {
 			showTasks();
 			break;
 		case R.id.backToLists:
-			Intent intent = new Intent(view.getContext(), ListContainerActivity.class);
+			Intent intent = new Intent(view.getContext(),
+					ListContainerActivity.class);
 			startActivity(intent);
 			finish();
 			break;
@@ -100,10 +101,12 @@ public class ListActivity extends Activity implements OnClickListener {
 			ActivityUtils.startFilteredActivity(this, view, new TodayFilter());
 			break;
 		case R.id.priority:
-			ActivityUtils.startFilteredActivity(this, view, new PriorityHighFilter());
+			ActivityUtils.startFilteredActivity(this, view,
+					new PriorityHighFilter());
 			break;
 		case R.id.more:
-			Intent moreIntent = new Intent(view.getContext(), MoreActivity.class);
+			Intent moreIntent = new Intent(view.getContext(),
+					MoreActivity.class);
 			startActivity(moreIntent);
 			finish();
 			break;
@@ -150,9 +153,10 @@ public class ListActivity extends Activity implements OnClickListener {
 		if (view.getId() == R.id.taskList) {
 			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
-			long taskId = ((TextView) ((FrameLayout) ((FrameLayout) ((RelativeLayout) ((ListView) view)
-					.getChildAt(info.position)).getChildAt(0)).getChildAt(0))
-					.getChildAt(0)).getInputExtras(false).getLong("id");
+			long taskId = ((TextView) ((FrameLayout) ((FrameLayout) ((RelativeLayout) info.targetView)
+					.getChildAt(0)).getChildAt(0)).getChildAt(0))
+					.getInputExtras(false).getLong("id");
+
 			Task task = list.getTask(taskId);
 			menu.setHeaderTitle(task.getName());
 			String[] menuItems = getResources().getStringArray(R.array.menu);
@@ -168,10 +172,11 @@ public class ListActivity extends Activity implements OnClickListener {
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
 				.getMenuInfo();
-		View view = findViewById(R.id.taskList);
-		long taskId = ((TextView) ((FrameLayout) ((FrameLayout) ((RelativeLayout) ((ListView) view)
-				.getChildAt(info.position)).getChildAt(0)).getChildAt(0))
-				.getChildAt(0)).getInputExtras(false).getLong("id");
+		
+		long taskId = ((TextView) ((FrameLayout) ((FrameLayout) ((RelativeLayout) info.targetView)
+				.getChildAt(0)).getChildAt(0)).getChildAt(0)).getInputExtras(
+				false).getLong("id");
+		
 		final Task task = list.getTask(taskId);
 		String[] menuItems = getResources().getStringArray(R.array.menu);
 

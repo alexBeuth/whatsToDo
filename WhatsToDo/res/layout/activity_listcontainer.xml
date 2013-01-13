@@ -23,7 +23,7 @@
         android:layout_marginTop="5dp"
         android:layout_toLeftOf="@+id/newList"
         android:inputType="text"
-        android:text="@string/listName" >
+        android:hint="@string/listName" >
 
         <requestFocus />
     </EditText>

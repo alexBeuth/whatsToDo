@@ -2,16 +2,20 @@ package com.whatstodo.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
+import android.view.inputmethod.InputMethodManager;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -41,9 +45,9 @@ public class ListActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
-		
+
 		this.getWindow().setSoftInputMode(
-			    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		Bundle bundle = getIntent().getExtras();
 
@@ -70,9 +74,25 @@ public class ListActivity extends Activity implements OnClickListener {
 
 		Button priorityFilter = (Button) findViewById(R.id.priority);
 		priorityFilter.setOnClickListener(this);
-		
+
 		Button more = (Button) findViewById(R.id.more);
 		more.setOnClickListener(this);
+
+		final EditText editText = (EditText) findViewById(R.id.task);
+		editText.setOnKeyListener(new OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// If the event is a key-down event on the "enter" button
+				if ((event.getAction() == KeyEvent.ACTION_DOWN)
+						&& (keyCode == KeyEvent.KEYCODE_ENTER)) {
+					list.addTask(editText.getText().toString());
+					showTasks();
+					InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+					inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+					return true;
+				}
+				return false;
+			}
+		});
 	}
 
 	@Override
@@ -84,15 +104,16 @@ public class ListActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View view) {
-		
+
 		switch (view.getId()) {
-		case R.id.newTask:
-			EditText editText = (EditText) findViewById(R.id.task);
-			list.addTask(editText.getText().toString());
-			showTasks();
-			break;
+		// case R.id.newTask:
+		// EditText editText = (EditText) findViewById(R.id.task);
+		// list.addTask(editText.getText().toString());
+		// showTasks();
+		// break;
 		case R.id.backToLists:
-			Intent intent = new Intent(view.getContext(), ListContainerActivity.class);
+			Intent intent = new Intent(view.getContext(),
+					ListContainerActivity.class);
 			startActivity(intent);
 			finish();
 			break;
@@ -100,10 +121,12 @@ public class ListActivity extends Activity implements OnClickListener {
 			ActivityUtils.startFilteredActivity(this, view, new TodayFilter());
 			break;
 		case R.id.priority:
-			ActivityUtils.startFilteredActivity(this, view, new PriorityHighFilter());
+			ActivityUtils.startFilteredActivity(this, view,
+					new PriorityHighFilter());
 			break;
 		case R.id.more:
-			Intent moreIntent = new Intent(view.getContext(), MoreActivity.class);
+			Intent moreIntent = new Intent(view.getContext(),
+					MoreActivity.class);
 			startActivity(moreIntent);
 			finish();
 			break;

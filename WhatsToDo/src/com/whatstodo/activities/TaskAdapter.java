@@ -43,14 +43,14 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 		FrameLayout button = (FrameLayout) element
 				.findViewById(R.id.buttonLayout);
 		
+		taskName.setText(task.getName());
+		taskName.getInputExtras(true).putLong("id", task.getId());
+		
 		if (task.getDate() != null) {
 			taskDate.setText(DateFormat.format("dd.MM.yyyy", task.getDate()));
 		} else {
 			taskDate.setText("");
 		}
-
-		taskName.setText(task.getName());
-		taskName.getInputExtras(true).putLong("id", task.getId());
 
 		switch (task.getPriority()) {
 		case HIGH:

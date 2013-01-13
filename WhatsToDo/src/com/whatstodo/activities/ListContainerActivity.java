@@ -28,7 +28,6 @@ import com.whatstodo.filter.TodayFilter;
 import com.whatstodo.filter.TomorrowFilter;
 import com.whatstodo.models.List;
 import com.whatstodo.models.ListContainer;
-import com.whatstodo.persistence.ChangeListener;
 
 public class ListContainerActivity extends Activity implements OnClickListener {
 

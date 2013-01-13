@@ -85,7 +85,7 @@
     <ScrollView
         android:id="@+id/scrollAttributes"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_above="@+id/taskButtons"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/taskDetails" >
@@ -238,7 +238,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:text="Adresse"
+                    android:text="@string/position"
                     android:textSize="15sp" />
 
                 <TextView

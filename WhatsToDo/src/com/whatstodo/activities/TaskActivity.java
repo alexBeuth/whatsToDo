@@ -67,8 +67,9 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 		nm.cancel((int) bundle.getLong("TaskId"));
 
 		container = ListContainer.getInstance();
-		list = container.getList(bundle.getLong("ListId"));
-		task = list.getTask(bundle.getLong("TaskId"));
+		
+		task = container.getTask(bundle.getLong("TaskId"));
+		list = container.getList(task.getListId());
 		userPriority = task.getPriority();
 		userNotice = (String) task.getNotice();
 		userDate = task.getDate();

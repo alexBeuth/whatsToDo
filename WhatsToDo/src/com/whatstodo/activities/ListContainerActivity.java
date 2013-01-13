@@ -22,7 +22,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.whatstodo.R;
-import com.whatstodo.filter.Filter;
 import com.whatstodo.filter.PriorityHighFilter;
 import com.whatstodo.filter.TodayFilter;
 import com.whatstodo.filter.TomorrowFilter;

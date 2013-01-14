@@ -15,8 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -36,7 +36,7 @@ import com.whatstodo.models.ListContainer;
 import com.whatstodo.models.Task;
 import com.whatstodo.utils.ActivityUtils;
 
-public class ListActivity extends Activity implements OnClickListener {
+public class ListActivity extends Activity implements OnClickListener, TaskAdapter.TaskAdapterListener {
 
 	private List list;
 	protected static final int TASK_ACTIVITY = 0;
@@ -139,6 +139,7 @@ public class ListActivity extends Activity implements OnClickListener {
 		ListView listList = (ListView) findViewById(R.id.taskList);
 
 		TaskAdapter adapter = new TaskAdapter(this, R.layout.taskitem, list);
+		adapter.registerListener(this);
 
 		listList.setAdapter(adapter);
 		listList.setOnItemClickListener(new OnItemClickListener() {
@@ -252,5 +253,10 @@ public class ListActivity extends Activity implements OnClickListener {
 		if (resultCode == Activity.RESULT_OK) {
 			showTasks();
 		}
+	}
+
+	@Override
+	public void onTaskChange() {
+		showTasks();
 	}
 }

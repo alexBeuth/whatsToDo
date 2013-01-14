@@ -29,7 +29,7 @@ public abstract class Filter implements Serializable {
 
 	protected abstract boolean filter(Task task);
 
-	protected int compareDate(Calendar cal1, Calendar cal2) {
+	public static int compareDate(Calendar cal1, Calendar cal2) {
 
 		if (cal1.get(Calendar.YEAR) > cal2.get(Calendar.YEAR)) {
 			return 1;

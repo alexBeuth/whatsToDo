@@ -204,12 +204,23 @@ public class AddressDialogFragment extends DialogFragment implements
 						}
 					});
 
-			builder.setNegativeButton("Abbrechen",
+			builder.setNegativeButton("Abbruch",
 					new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							if (which == DialogInterface.BUTTON_POSITIVE) {
 								dialog.dismiss();
+							}
+						}
+					});
+			builder.setNeutralButton("Alte Position",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							if (which == DialogInterface.BUTTON_NEUTRAL) {
+								LocationService.mostRecentLocation = LocationService.getLastKnowLocation();
+								dialog.dismiss();
+								getLocation();
 							}
 						}
 					});

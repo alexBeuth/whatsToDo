@@ -17,15 +17,20 @@
             <FrameLayout
                 android:id="@+id/today"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/WhiteTransparent" >
+                android:layout_height="50dp" >
 
                 <TextView
                     android:id="@+id/textToday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="Heute"
+                    android:layout_margin="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/button3"
+                    android:gravity="center"
+                    android:text="@string/today"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <ImageView
@@ -33,21 +38,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|center_vertical"
+                    android:layout_marginLeft="15dp"
                     android:src="@drawable/ic_launcher" />
+
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/tomorrow"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/WhiteTransparent" >
+                android:layout_height="50dp" >
 
                 <TextView
                     android:id="@+id/textTomorrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="Morgen"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/button3"
+                    android:gravity="center"
+                    android:text="@string/tomorrow"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <ImageView
@@ -55,21 +67,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|center_vertical"
+                    android:layout_marginLeft="15dp"
                     android:src="@drawable/ic_launcher" />
+
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/allTasks"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/WhiteTransparent" >
+                android:layout_height="50dp" >
 
                 <TextView
                     android:id="@+id/textAllTasks"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="Alle Aufgaben"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/button3"
+                    android:gravity="center"
+                    android:text="@string/allTasks"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <ImageView
@@ -77,21 +96,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|center_vertical"
+                    android:layout_marginLeft="15dp"
                     android:src="@drawable/ic_launcher" />
+
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/next7Days"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/WhiteTransparent" >
+                android:layout_height="50dp" >
 
                 <TextView
                     android:id="@+id/textNext7Days"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="Nächste 7 Tage"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/button3"
+                    android:gravity="center"
+                    android:text="@string/nextDays"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <ImageView
@@ -99,21 +125,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|center_vertical"
+                    android:layout_marginLeft="15dp"
                     android:src="@drawable/ic_launcher" />
+
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/noDate"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/WhiteTransparent" >
+                android:layout_height="50dp" >
 
                 <TextView
                     android:id="@+id/textNoDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="Ohne Datum"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/button3"
+                    android:gravity="center"
+                    android:text="@string/withoutDate"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <ImageView
@@ -121,21 +154,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|center_vertical"
+                    android:layout_marginLeft="15dp"
                     android:src="@drawable/ic_launcher" />
+
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/overdue"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/WhiteTransparent" >
+                android:layout_height="50dp" >
 
                 <TextView
                     android:id="@+id/textOverdue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="Überfällig"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/button3"
+                    android:gravity="center"
+                    android:text="@string/late"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <ImageView
@@ -143,21 +183,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|center_vertical"
+                    android:layout_marginLeft="15dp"
                     android:src="@drawable/ic_launcher" />
+
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/prioHigh"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/WhiteTransparent" >
+                android:layout_height="50dp" >
 
                 <TextView
                     android:id="@+id/textPrioHigh"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="Hohe Priorität"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/button3"
+                    android:gravity="center"
+                    android:text="@string/highPriority"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <ImageView
@@ -165,21 +209,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|center_vertical"
+                    android:layout_marginLeft="15dp"
                     android:src="@drawable/ic_launcher" />
+
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/prioNormal"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/WhiteTransparent" >
+                android:layout_height="50dp" >
 
                 <TextView
                     android:id="@+id/textPrioNormal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="Normale Priorität"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/button3"
+                    android:gravity="center"
+                    android:text="@string/normalPriority"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <ImageView
@@ -187,21 +235,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|center_vertical"
+                    android:layout_marginLeft="15dp"
                     android:src="@drawable/ic_launcher" />
+
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/prioLow"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/WhiteTransparent" >
+                android:layout_height="50dp" >
 
                 <TextView
                     android:id="@+id/textPrioLow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="Niedrige Priorität"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/button3"
+                    android:gravity="center"
+                    android:text="@string/lowPriority"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <ImageView
@@ -209,7 +261,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|center_vertical"
+                    android:layout_marginLeft="15dp"
                     android:src="@drawable/ic_launcher" />
+
             </FrameLayout>
         </LinearLayout>
     </ScrollView>

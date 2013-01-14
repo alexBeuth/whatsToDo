@@ -27,7 +27,7 @@ public class AlarmService extends Service {
 		Bundle bundle = intent.getExtras();
 		container = ListContainer.getInstance();
 		list = container.getList(bundle.getLong("ListId"));
-		task = list.getTask(bundle.getLong("ListId"));
+		task = list.getTask(bundle.getLong("TaskId"));
 		
 		if(task.getReminder()!=null){
 			Intent nIntent = new Intent(this, TaskActivity.class);

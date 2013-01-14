@@ -35,5 +35,14 @@
     <string name="reminder"> Erinnerung</string>
     <string name="position">Adresse</string>
     <string name="kalender_eintrag">Kalender Eintrag</string>
+    <string name="today">Heute</string>
+    <string name="tomorrow">Morgen</string>
+    <string name="allTasks">Alle Aufgaben</string>
+    <string name="nextDays">Nächste 7 Tage</string>
+    <string name="withoutDate">Ohne Datum</string>
+    <string name="late">Überfällig</string>
+    <string name="highPriority">Hohe Priorität</string>
+    <string name="normalPriority">Normale Priorität</string>
+    <string name="lowPriority">Niedrige Priorität</string>
 
 </resources>

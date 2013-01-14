@@ -71,6 +71,9 @@ public class ListActivity extends Activity implements OnClickListener,
 		filterButton4.setOnClickListener(this);
 
 		final EditText editText = (EditText) findViewById(R.id.task);
+		
+		filterButton2.setText("Heute");
+		filterButton3.setText("Priorität");
 
 		if (bundle.getBoolean("isFilter")) {
 			Filter filter = (Filter) bundle.getSerializable("filter");
@@ -80,25 +83,18 @@ public class ListActivity extends Activity implements OnClickListener,
 			if (filter instanceof TodayFilter) {
 				filterButton2.setText("Morgen");
 				filterButton3.setText("Priorität");
-				setTitle("Heute");
 			} else if (filter instanceof TomorrowFilter) {
 				filterButton2.setText("Heute");
 				filterButton3.setText("Priorität");
-				setTitle("Morgen");
 			} else if (filter instanceof PriorityHighFilter) {
 				filterButton2.setText("Heute");
 				filterButton3.setText("Morgen");
-				setTitle("Priorität");
 			}
 		} else {
-			filterButton2.setText("Heute");
-			filterButton3.setText("Priorität");
-			
+		
 			long listId = bundle.getLong("ListId");
 			list = ListContainer.getInstance().getList(listId);
 			
-			setTitle(list.getName());
-
 			editText.setOnKeyListener(new OnKeyListener() {
 				public boolean onKey(View v, int keyCode, KeyEvent event) {
 					// If the event is a key-down event on the "enter"
@@ -116,6 +112,7 @@ public class ListActivity extends Activity implements OnClickListener,
 				}
 			});
 		}
+		setTitle(list.getName());
 		showTasks();
 	}
 

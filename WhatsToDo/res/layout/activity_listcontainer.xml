@@ -51,7 +51,7 @@
     <FrameLayout
         android:id="@+id/frameLayoutFilterButton"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true" >
 
         <TextView
@@ -59,9 +59,9 @@
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:layout_gravity="left"
-            android:background="@drawable/buttondarkgrey"
+            android:background="@drawable/buttongrey"
             android:gravity="center"
-            android:textColor="@color/White"
+            android:textColor="@color/DarkGray"
             android:textStyle="bold" />
 
         <TextView
@@ -70,9 +70,9 @@
             android:layout_height="match_parent"
             android:layout_gravity="left"
             android:layout_marginLeft="80dp"
-            android:background="@drawable/buttondarkgrey"
+            android:background="@drawable/buttongrey"
             android:gravity="center"
-            android:textColor="@color/White"
+            android:textColor="@color/DarkGray"
             android:textStyle="bold" />
 
         <TextView
@@ -81,9 +81,9 @@
             android:layout_height="match_parent"
             android:layout_gravity="right"
             android:layout_marginRight="80dp"
-            android:background="@drawable/buttondarkgrey"
+            android:background="@drawable/buttongrey"
             android:gravity="center"
-            android:textColor="@color/White"
+            android:textColor="@color/DarkGray"
             android:textStyle="bold" />
 
         <TextView
@@ -91,9 +91,9 @@
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:layout_gravity="right"
-            android:background="@drawable/buttondarkgrey"
+            android:background="@drawable/buttongrey"
             android:gravity="center"
-            android:textColor="@color/White"
+            android:textColor="@color/DarkGray"
             android:textStyle="bold" />
 
     </FrameLayout>

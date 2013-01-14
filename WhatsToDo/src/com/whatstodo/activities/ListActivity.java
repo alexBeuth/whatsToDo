@@ -31,12 +31,14 @@ import com.whatstodo.R;
 import com.whatstodo.filter.Filter;
 import com.whatstodo.filter.PriorityHighFilter;
 import com.whatstodo.filter.TodayFilter;
+import com.whatstodo.filter.TomorrowFilter;
 import com.whatstodo.models.List;
 import com.whatstodo.models.ListContainer;
 import com.whatstodo.models.Task;
 import com.whatstodo.utils.ActivityUtils;
 
-public class ListActivity extends Activity implements OnClickListener, TaskAdapter.TaskAdapterListener {
+public class ListActivity extends Activity implements OnClickListener,
+		TaskAdapter.TaskAdapterListener {
 
 	private List list;
 	protected static final int TASK_ACTIVITY = 0;
@@ -51,65 +53,70 @@ public class ListActivity extends Activity implements OnClickListener, TaskAdapt
 
 		Bundle bundle = getIntent().getExtras();
 
+		Button createTask = (Button) findViewById(R.id.newTask);
+		createTask.setOnClickListener(this);
+
+		TextView filterButton1 = (TextView) findViewById(R.id.filterButton5);
+		filterButton1.setText("Listen");
+		filterButton1.setOnClickListener(this);
+
+		TextView filterButton2 = (TextView) findViewById(R.id.filterButton6);
+		filterButton2.setOnClickListener(this);
+
+		TextView filterButton3 = (TextView) findViewById(R.id.filterButton7);
+		filterButton3.setOnClickListener(this);
+
+		TextView filterButton4 = (TextView) findViewById(R.id.filterButton8);
+		filterButton4.setText("Mehr");
+		filterButton4.setOnClickListener(this);
+
+		final EditText editText = (EditText) findViewById(R.id.task);
+
 		if (bundle.getBoolean("isFilter")) {
 			Filter filter = (Filter) bundle.getSerializable("filter");
 			list = filter.getTask();
+			editText.setText("Filteransicht");
+			editText.setKeyListener(null);
+			if (filter instanceof TodayFilter) {
+				filterButton2.setText("Morgen");
+				filterButton3.setText("Priorität");
+				setTitle("Heute");
+			} else if (filter instanceof TomorrowFilter) {
+				filterButton2.setText("Heute");
+				filterButton3.setText("Priorität");
+				setTitle("Morgen");
+			} else if (filter instanceof PriorityHighFilter) {
+				filterButton2.setText("Heute");
+				filterButton3.setText("Morgen");
+				setTitle("Priorität");
+			}
 		} else {
+			filterButton2.setText("Heute");
+			filterButton3.setText("Priorität");
+			
 			long listId = bundle.getLong("ListId");
 			list = ListContainer.getInstance().getList(listId);
-		}
+			
+			setTitle(list.getName());
 
-		setTitle(list.getName());
-
-		showTasks();
-
-		Button createTask = (Button) findViewById(R.id.newTask);
-		createTask.setOnClickListener(this);
-		
-		TextView todayFilter = (TextView) findViewById(R.id.filterButton5);
-		todayFilter.setOnClickListener(this);
-
-		TextView tomorrowFilter = (TextView) findViewById(R.id.filterButton6);
-		tomorrowFilter.setOnClickListener(this);
-
-		TextView priorityFilter = (TextView) findViewById(R.id.filterButton7);
-		priorityFilter.setOnClickListener(this);
-
-		TextView more = (TextView) findViewById(R.id.filterButton8);
-		more.setOnClickListener(this);
-		
-		todayFilter.setText("Listen");
-		tomorrowFilter.setText("Morgen");
-		priorityFilter.setText("Priorität");
-		more.setText("Mehr");
-
-//		Button todayFilter = (Button) findViewById(R.id.backToLists);
-//		todayFilter.setOnClickListener(this);
-//
-//		Button tomorrowFilter = (Button) findViewById(R.id.today);
-//		tomorrowFilter.setOnClickListener(this);
-//
-//		Button priorityFilter = (Button) findViewById(R.id.priority);
-//		priorityFilter.setOnClickListener(this);
-//
-//		Button more = (Button) findViewById(R.id.more);
-//		more.setOnClickListener(this);
-
-		final EditText editText = (EditText) findViewById(R.id.task);
-		editText.setOnKeyListener(new OnKeyListener() {
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				// If the event is a key-down event on the "enter" button
-				if ((event.getAction() == KeyEvent.ACTION_DOWN)
-						&& (keyCode == KeyEvent.KEYCODE_ENTER)) {
-					list.addTask(editText.getText().toString());
-					showTasks();
-					InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-					inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-					return true;
+			editText.setOnKeyListener(new OnKeyListener() {
+				public boolean onKey(View v, int keyCode, KeyEvent event) {
+					// If the event is a key-down event on the "enter"
+					// button
+					if ((event.getAction() == KeyEvent.ACTION_DOWN)
+							&& (keyCode == KeyEvent.KEYCODE_ENTER)) {
+						list.addTask(editText.getText().toString());
+						showTasks();
+						InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+						inputMethodManager.hideSoftInputFromWindow(
+								editText.getWindowToken(), 0);
+						return true;
+					}
+					return false;
 				}
-				return false;
-			}
-		});
+			});
+		}
+		showTasks();
 	}
 
 	@Override
@@ -123,11 +130,7 @@ public class ListActivity extends Activity implements OnClickListener, TaskAdapt
 	public void onClick(View view) {
 
 		switch (view.getId()) {
-		// case R.id.newTask:
-		// EditText editText = (EditText) findViewById(R.id.task);
-		// list.addTask(editText.getText().toString());
-		// showTasks();
-		// break;
+
 		case R.id.filterButton5:
 			Intent intent = new Intent(view.getContext(),
 					ListContainerActivity.class);
@@ -135,11 +138,10 @@ public class ListActivity extends Activity implements OnClickListener, TaskAdapt
 			finish();
 			break;
 		case R.id.filterButton6:
-			ActivityUtils.startFilteredActivity(this, view, new TodayFilter());
+			startFilter(((TextView) view).getText().toString(),view);
 			break;
 		case R.id.filterButton7:
-			ActivityUtils.startFilteredActivity(this, view,
-					new PriorityHighFilter());
+			startFilter(((TextView) view).getText().toString(),view);
 			break;
 		case R.id.filterButton8:
 			Intent moreIntent = new Intent(view.getContext(),
@@ -149,6 +151,19 @@ public class ListActivity extends Activity implements OnClickListener, TaskAdapt
 			break;
 		}
 
+	}
+
+	private void startFilter(String filter, View view) {
+		if (filter.equals("Heute")) {
+			ActivityUtils.startFilteredActivity(this, view,
+					new TodayFilter());
+		} else if (filter.equals("Morgen")) {
+			ActivityUtils.startFilteredActivity(this, view,
+					new TomorrowFilter());
+		} else if (filter.equals("Priorität")) {
+			ActivityUtils.startFilteredActivity(this, view,
+					new PriorityHighFilter());
+		}
 	}
 
 	private void showTasks() {
@@ -210,11 +225,11 @@ public class ListActivity extends Activity implements OnClickListener, TaskAdapt
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
 				.getMenuInfo();
-		
+
 		long taskId = ((TextView) ((FrameLayout) ((FrameLayout) ((RelativeLayout) info.targetView)
 				.getChildAt(0)).getChildAt(0)).getChildAt(0)).getInputExtras(
 				false).getLong("id");
-		
+
 		final Task task = list.getTask(taskId);
 		String[] menuItems = getResources().getStringArray(R.array.menu);
 

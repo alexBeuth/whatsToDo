@@ -27,19 +27,21 @@ public class AlarmService extends Service {
 		Bundle bundle = intent.getExtras();
 		container = ListContainer.getInstance();
 		list = container.getList(bundle.getLong("ListId"));
-		task = list.getTask(bundle.getLong("ListId"));
-		
-		if(task.getReminder()!=null){
+		task = list.getTask(bundle.getLong("TaskId"));
+
+		if (task.getReminder() != null) {
 			Intent nIntent = new Intent(this, TaskActivity.class);
 			nIntent.putExtras(bundle);
 
 			PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
 					nIntent, 0);
-			
+
 			NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-			Notification notif = new Notification(R.drawable.ic_launcher, "WhatsToDo", System.currentTimeMillis());
-			notif.setLatestEventInfo(this, "WhatsToDo", "Erinnerung: "+task.getName(), pendingIntent);
-			notif.vibrate = new long[] {100, 250, 100, 500};
+			Notification notif = new Notification(R.drawable.ic_launcher,
+					"WhatsToDo", System.currentTimeMillis());
+			notif.setLatestEventInfo(this, "WhatsToDo",
+					"Erinnerung: " + task.getName(), pendingIntent);
+			notif.vibrate = new long[] { 100, 250, 100, 500 };
 			nm.notify((int) task.getId(), notif);
 		}
 	}

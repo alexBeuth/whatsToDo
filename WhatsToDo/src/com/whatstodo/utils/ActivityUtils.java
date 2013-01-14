@@ -19,7 +19,7 @@ public class ActivityUtils {
 		bundle.putSerializable("filter", filter);
 
 		intent.putExtras(bundle);
-		activity.startActivityForResult(intent, requestCode)(intent);
+		activity.startActivity(intent);
 		activity.finish();
 	}
 }

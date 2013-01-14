@@ -56,22 +56,14 @@ public class ListActivity extends Activity implements OnClickListener,
 		Button createTask = (Button) findViewById(R.id.newTask);
 		createTask.setOnClickListener(this);
 
-		TextView filterButton1 = (TextView) findViewById(R.id.filterButton5);
-		filterButton1.setText("Listen");
-		filterButton1.setOnClickListener(this);
-
-		TextView filterButton2 = (TextView) findViewById(R.id.filterButton6);
-		filterButton2.setOnClickListener(this);
-
-		TextView filterButton3 = (TextView) findViewById(R.id.filterButton7);
-		filterButton3.setOnClickListener(this);
-
-		TextView filterButton4 = (TextView) findViewById(R.id.filterButton8);
-		filterButton4.setText("Mehr");
-		filterButton4.setOnClickListener(this);
+		initTextView(R.id.filterButton5, "Listen");
+		initTextView(R.id.filterButton5, "Listen");
+		TextView filterButton2 = initTextView(R.id.filterButton6, null);
+		TextView filterButton3 = initTextView(R.id.filterButton7, null);
+		initTextView(R.id.filterButton8, "Mehr");
 
 		final EditText editText = (EditText) findViewById(R.id.task);
-		
+
 		filterButton2.setText("Heute");
 		filterButton3.setText("Priorität");
 
@@ -91,10 +83,10 @@ public class ListActivity extends Activity implements OnClickListener,
 				filterButton3.setText("Morgen");
 			}
 		} else {
-		
+
 			long listId = bundle.getLong("ListId");
 			list = ListContainer.getInstance().getList(listId);
-			
+
 			editText.setOnKeyListener(new OnKeyListener() {
 				public boolean onKey(View v, int keyCode, KeyEvent event) {
 					// If the event is a key-down event on the "enter"
@@ -116,6 +108,15 @@ public class ListActivity extends Activity implements OnClickListener,
 		showTasks();
 	}
 
+	private TextView initTextView(int id, String text) {
+		TextView textView = (TextView) findViewById(id);
+		if (text != null)
+			textView.setText(text);
+			textView.setOnClickListener(this);
+
+		return textView;
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -135,10 +136,10 @@ public class ListActivity extends Activity implements OnClickListener,
 			finish();
 			break;
 		case R.id.filterButton6:
-			startFilter(((TextView) view).getText().toString(),view);
+			startFilter(((TextView) view).getText().toString(), view);
 			break;
 		case R.id.filterButton7:
-			startFilter(((TextView) view).getText().toString(),view);
+			startFilter(((TextView) view).getText().toString(), view);
 			break;
 		case R.id.filterButton8:
 			Intent moreIntent = new Intent(view.getContext(),
@@ -152,8 +153,7 @@ public class ListActivity extends Activity implements OnClickListener,
 
 	private void startFilter(String filter, View view) {
 		if (filter.equals("Heute")) {
-			ActivityUtils.startFilteredActivity(this, view,
-					new TodayFilter());
+			ActivityUtils.startFilteredActivity(this, view, new TodayFilter());
 		} else if (filter.equals("Morgen")) {
 			ActivityUtils.startFilteredActivity(this, view,
 					new TomorrowFilter());
@@ -181,12 +181,10 @@ public class ListActivity extends Activity implements OnClickListener,
 						.getChildAt(0)).getChildAt(0)).getChildAt(0))
 						.getInputExtras(false).getLong("id");
 
-				Task task = list.getTask(taskId);
-
 				Intent intent = new Intent(view.getContext(),
 						TaskActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putLong("TaskId", task.getId());
+				bundle.putLong("TaskId", taskId);
 				bundle.putLong("ListId", list.getId());
 				intent.putExtras(bundle);
 				startActivityForResult(intent, TASK_ACTIVITY);

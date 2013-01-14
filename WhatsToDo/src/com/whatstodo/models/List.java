@@ -88,23 +88,23 @@ public class List implements Serializable, java.util.List<Task> {
 		}
 		throw new NoSuchElementException("Cannot find task with ID: " + taskId);
 	}
-	
-	//Insertion sort
-	//Do not save in here. it will be called before saving!
+
+	// Insertion sort
+	// Do not save in here. it will be called before saving!
 	public void sort() {
-        int N = size;
-        for (int i = 0; i < N; i++) {
-            for (int j = i; j > 0 && less(orderedTasks[j], orderedTasks[j-1]); j--) {
-                exch(orderedTasks, j, j-1);
-            }
-        }
+		int N = size;
+		for (int i = 0; i < N; i++) {
+			for (int j = i; j > 0 && less(orderedTasks[j], orderedTasks[j - 1]); j--) {
+				exch(orderedTasks, j, j - 1);
+			}
+		}
 	}
-	
-    private void exch(Object[] a, int i, int j) {
-        Object swap = a[i];
-        a[i] = a[j];
-        a[j] = swap;
-    }
+
+	private void exch(Object[] a, int i, int j) {
+		Object swap = a[i];
+		a[i] = a[j];
+		a[j] = swap;
+	}
 
 	@Override
 	public boolean isEmpty() {
@@ -179,8 +179,12 @@ public class List implements Serializable, java.util.List<Task> {
 
 	@Override
 	public boolean containsAll(Collection<?> collection) {
-		// TODO Auto-generated method stub
-		return false;
+
+		for (Object object : collection) {
+			if (!contains(object))
+				return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -218,8 +222,7 @@ public class List implements Serializable, java.util.List<Task> {
 
 	@Override
 	public java.util.ListIterator<Task> listIterator(int location) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException("List.listIterator(int)");
 	}
 
 	@Override
@@ -257,14 +260,21 @@ public class List implements Serializable, java.util.List<Task> {
 
 	@Override
 	public boolean removeAll(Collection<?> collection) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean changed = false;
+		for (Object object : collection) {
+			if (remove(object)) {
+				changed = true;
+			}
+		}
+
+		return changed;
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> collection) {
-		// TODO Auto-generated method stub
-		return false;
+		throw new UnsupportedOperationException(
+				"List.retainAll((Collection<?>)");
+
 	}
 
 	@Override
@@ -282,10 +292,23 @@ public class List implements Serializable, java.util.List<Task> {
 		return orderedTasks;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T[] toArray(T[] array) {
-		// TODO Auto-generated method stub
-		return null;
+		T[] toReturn = null;
+		if (array.length >= size) {
+			toReturn = array;
+		} else {
+			toReturn = (T[]) new Object[size];
+		}
+		int i = 0;
+		for (Task task : this) {
+			toReturn[i++] = (T) task;
+		}
+		for(;i < toReturn.length; i++) {
+			toReturn[i] = null;
+		}
+		return toReturn;
 	}
 
 	private boolean less(Task i, Task j) {

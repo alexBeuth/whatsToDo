@@ -25,6 +25,7 @@ public class ListContainer {
 
 	/**
 	 * Statische Methode, liefert die einzige Instanz dieser Klasse zurück
+	 * Singleton Pattern!
 	 */
 	public static ListContainer getInstance() {
 

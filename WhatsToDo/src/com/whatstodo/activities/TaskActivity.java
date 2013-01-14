@@ -96,34 +96,55 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 		CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox1);
 		checkBox.setChecked(task.isDone());
 
-		showNotice(task.getNotice());
-		FrameLayout editNotice = (FrameLayout) findViewById(R.id.taskNotice);
-		editNotice.setOnClickListener(this);
+		initFrameLayout(R.id.taskNotice);
+		initFrameLayout(R.id.taskDate);
+		initFrameLayout(R.id.taskCalendar);
+		initFrameLayout(R.id.taskReminder);
+		initFrameLayout(R.id.taskList);
+		initFrameLayout(R.id.taskPriority);
+		initFrameLayout(R.id.taskAddress);
 
+		showTextView(R.id.textViewNotice,
+				task.getNotice() == null ? "Keine Notiz" : task.getNotice());
 		showDate(task.getDate());
-		FrameLayout editDate = (FrameLayout) findViewById(R.id.taskDate);
-		editDate.setOnClickListener(this);
-
 		showCalendar(task.isCalendarCreated());
-		FrameLayout createCalendarEntry = (FrameLayout) findViewById(R.id.taskCalendar);
-		createCalendarEntry.setOnClickListener(this);
-
 		showReminder(task.getReminder());
-		FrameLayout editReminder = (FrameLayout) findViewById(R.id.taskReminder);
-		editReminder.setOnClickListener(this);
-
-		showList(list.getName());
-		FrameLayout editList = (FrameLayout) findViewById(R.id.taskList);
-		editList.setOnClickListener(this);
-
+		showTextView(R.id.textViewList, list.getName());
 		showPriority(task.getPriority());
-		FrameLayout editPriority = (FrameLayout) findViewById(R.id.taskPriority);
-		editPriority.setOnClickListener(this);
+		showTextView(R.id.textViewAdress,
+				task.getAddress() == null ? "Keine Adresse" : task.getAddress());
+	}
 
-		showAddress(task.getAddress() == null ? "" : task.getAddress()
-				.toString());
-		FrameLayout editAddress = (FrameLayout) findViewById(R.id.taskAddress);
-		editAddress.setOnClickListener(this);
+	private void initFrameLayout(int id) {
+		FrameLayout layout = (FrameLayout) findViewById(id);
+		layout.setOnClickListener(this);
+	}
+
+	private void showTextView(int id, String text) {
+		TextView taskNotice = (TextView) findViewById(id);
+		taskNotice.setText(text);
+	}
+
+	private void showDate(Date date) {
+		TextView taskDate = (TextView) findViewById(R.id.textViewDate);
+		if (date != null) {
+			String stringDate = DateFormat.format("dd.MM.yyyy", date)
+					.toString();
+			taskDate.setText(stringDate);
+		} else {
+			taskDate.setText("Ohne Datum");
+		}
+	}
+
+	private void showReminder(Date date) {
+		TextView taskReminder = (TextView) findViewById(R.id.textViewReminder);
+		if (date != null) {
+			String stringDate = DateFormat.format("kk:mm dd.MM.yyyy", date)
+					.toString();
+			taskReminder.setText(stringDate);
+		} else {
+			taskReminder.setText("Keine Erinnerung");
+		}
 	}
 
 	@Override
@@ -147,14 +168,12 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 				list = userList;
 			}
 
-			// startListActivity();
 			setResult(Activity.RESULT_OK);
 			finish();
 
 			break;
 
 		case R.id.taskCancel:
-			// startListActivity();
 			setResult(Activity.RESULT_CANCELED);
 			finish();
 			break;
@@ -202,9 +221,9 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 		if (task.getDate() != null) {
 			cal.setTime(userDate);
 		}
-		
+
 		EditText editText = (EditText) findViewById(R.id.taskName);
-		
+
 		Intent intent = new Intent(Intent.ACTION_EDIT);
 		intent.setType("vnd.android.cursor.item/event");
 		intent.putExtra("beginTime", cal.getTimeInMillis());
@@ -523,7 +542,8 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 								userList = container
 										.getList(listNames[checkedPosition]
 												.toString());
-								showList(userList.getName());
+								showTextView(R.id.textViewList,
+										userList.getName());
 								dialog.dismiss();
 							}
 						}
@@ -629,47 +649,12 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 		}
 	}
 
-	private void showNotice(String string) {
-		TextView taskNotice = (TextView) findViewById(R.id.textViewNotice);
-		if (string != null) {
-			taskNotice.setText(string);
-		} else {
-			taskNotice.setText("Keine Notiz");
-		}
-	}
-
-	private void showDate(Date date) {
-		TextView taskDate = (TextView) findViewById(R.id.textViewDate);
-		if (date != null) {
-			String stringDate = DateFormat.format("dd.MM.yyyy", date)
-					.toString();
-			taskDate.setText(stringDate);
-		} else {
-			taskDate.setText("Ohne Datum");
-		}
-	}
-
 	private void showCalendar(boolean calendarCreated) {
 		TextView taskCalendar = (TextView) findViewById(R.id.textViewCalendar);
 		taskCalendar.setText("");
-		taskCalendar.setBackgroundResource(calendarCreated ? R.drawable.thumbsup
-				: R.drawable.thumbsdown);
-	}
-
-	private void showReminder(Date date) {
-		TextView taskReminder = (TextView) findViewById(R.id.textViewReminder);
-		if (date != null) {
-			String stringDate = DateFormat.format("kk:mm dd.MM.yyyy", date)
-					.toString();
-			taskReminder.setText(stringDate);
-		} else {
-			taskReminder.setText("Keine Erinnerung");
-		}
-	}
-
-	private void showList(String name) {
-		TextView taskList = (TextView) findViewById(R.id.textViewList);
-		taskList.setText(name);
+		taskCalendar
+				.setBackgroundResource(calendarCreated ? R.drawable.thumbsup
+						: R.drawable.thumbsdown);
 	}
 
 	private void showPriority(Priority priority) {
@@ -680,17 +665,13 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 			taskPriority.setBackgroundResource(R.drawable.rating_important);
 			break;
 		case NORMAL:
-			taskPriority.setBackgroundResource(R.drawable.rating_half_important);
+			taskPriority
+					.setBackgroundResource(R.drawable.rating_half_important);
 			break;
 		case LOW:
 			taskPriority.setBackgroundResource(R.drawable.rating_not_important);
 			break;
 		}
-	}
-
-	private void showAddress(String address) {
-		TextView taskAddress = (TextView) findViewById(R.id.textViewAdress);
-		taskAddress.setText(address);
 	}
 
 	private void setReminderAlarm(Date date) {
@@ -726,12 +707,11 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 	@Override
 	public void onAddressDialogPositiveClick(AddressDialogFragment dialog) {
 		userAddress = dialog.getAddress();
-		showAddress(userAddress);
+		showTextView(R.id.textViewAdress, userAddress);
 	}
 
 	@Override
 	public void onAddressDialogNegativeClick(AddressDialogFragment dialog) {
-		// TODO???
-
+		// Do nothing on cancel
 	}
 }

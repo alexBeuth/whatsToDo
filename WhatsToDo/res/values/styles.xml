@@ -15,10 +15,11 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
 
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->  
-         <item name="android:windowBackground"> @drawable/logobackground</item> 
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:windowBackground"> @drawable/logobackground</item>
         <item name="android:listViewStyle">@style/TransparentListView</item>
         <item name="android:expandableListViewStyle">@style/TransparentExpandableListView</item>
+        <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
     </style>
 
     <style name="TransparentListView" parent="@android:style/Widget.ListView">
@@ -27,6 +28,10 @@
 
     <style name="TransparentExpandableListView" parent="@android:style/Widget.ExpandableListView">
         <item name="android:cacheColorHint">@android:color/transparent</item>
+    </style>
+
+    <style name="WindowTitleBackground">
+        <item name="android:background">@color/DarkGray</item>
     </style>
 
 </resources>

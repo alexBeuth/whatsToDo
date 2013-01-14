@@ -34,5 +34,6 @@
     <string name="reminderTime">Zeit</string>
     <string name="reminder"> Erinnerung</string>
     <string name="position">Adresse</string>
+    <string name="kalender_eintrag">Kalender Eintrag</string>
 
 </resources>

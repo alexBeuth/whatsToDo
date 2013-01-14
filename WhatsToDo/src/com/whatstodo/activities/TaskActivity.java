@@ -11,11 +11,15 @@ import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
+import android.util.EventLog.Event;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.View;
@@ -55,16 +59,15 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 	private static final int REMINDER_DATE_DIALOG_ID = 1;
 	private static final int REMINDER_TIME_DIALOG_ID = 2;
 	private static final int LIST_DIALOG_ID = 3;
-
-	// private static final int ADDRESS_DIALOG_ID = 4;
+	private static final int CALENDAR_DIALOG_ID = 4;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_task);
-		
+
 		this.getWindow().setSoftInputMode(
-			    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
@@ -73,7 +76,7 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 		nm.cancel((int) bundle.getLong("TaskId"));
 
 		container = ListContainer.getInstance();
-		
+
 		task = ActivityUtils.getTaskForId(bundle.getLong("TaskId"));
 		list = container.getList(task.getListId());
 		userPriority = task.getPriority();
@@ -104,6 +107,10 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 		showDate(task.getDate());
 		FrameLayout editDate = (FrameLayout) findViewById(R.id.taskDate);
 		editDate.setOnClickListener(this);
+
+		showCalendar(task.isCalendarCreated());
+		FrameLayout createCalendarEntry = (FrameLayout) findViewById(R.id.taskCalendar);
+		createCalendarEntry.setOnClickListener(this);
 
 		showReminder(task.getReminder());
 		FrameLayout editReminder = (FrameLayout) findViewById(R.id.taskReminder);
@@ -168,6 +175,10 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 			changeDate();
 			break;
 
+		case R.id.taskCalendar:
+			changeCalendarEntry();
+			break;
+
 		case R.id.taskReminder:
 			changeReminder();
 			break;
@@ -179,6 +190,32 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 			changeAddress();
 			break;
 		}
+	}
+
+	private void changeCalendarEntry() {
+		if (task.isCalendarCreated()) {
+			showDialog(CALENDAR_DIALOG_ID);
+		} else {
+			createCalendarEntry();
+		}
+	}
+
+	private void createCalendarEntry() {
+
+		Calendar cal = Calendar.getInstance();
+		if (task.getDate() != null) {
+			cal.setTime(task.getDate());
+		}
+		Intent intent = new Intent(Intent.ACTION_EDIT);
+		intent.setType("vnd.android.cursor.item/event");
+		intent.putExtra("beginTime", cal.getTimeInMillis());
+		intent.putExtra("endTime", cal.getTimeInMillis() + 15 * 60 * 1000);
+		intent.putExtra("title", task.getName());
+		intent.putExtra("description", task.getNotice());
+		intent.putExtra("eventLocation", task.getAddress());
+		startActivity(intent);
+		
+		task.setCalendarCreated(true);
 	}
 
 	private boolean getCheckBox() {
@@ -255,12 +292,6 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 		dialogFragment.show(getSupportFragmentManager(), "??");
 		dialogFragment.setAddress(task.getAddress());
 	}
-
-	// private void startListActivity() {
-	// Intent intent = new Intent(this, ListActivity.class);
-	// intent.putExtras(getBundle()); // Put your id to your next Intent
-	// startActivity(intent);
-	// }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -341,25 +372,32 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 			remDateDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Zeit",
 					remDateDialog);
 			remDateDialog.setMessage("Datum der Erinnerung:");
-			
-			remDateDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
-			    @Override
-			    public void onShow(DialogInterface dialog) {
+			remDateDialog
+					.setOnShowListener(new DialogInterface.OnShowListener() {
 
-			        float textSize = 14.0f;
+						@Override
+						public void onShow(DialogInterface dialog) {
 
-			        Button positive = remDateDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-			        positive.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+							float textSize = 14.0f;
 
-			        Button neutral = remDateDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
-			        neutral.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+							Button positive = remDateDialog
+									.getButton(AlertDialog.BUTTON_POSITIVE);
+							positive.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
+									textSize);
 
-			        Button negative = remDateDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-			        negative.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
-			    }
-			});
-			
+							Button neutral = remDateDialog
+									.getButton(AlertDialog.BUTTON_NEUTRAL);
+							neutral.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
+									textSize);
+
+							Button negative = remDateDialog
+									.getButton(AlertDialog.BUTTON_NEGATIVE);
+							negative.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
+									textSize);
+						}
+					});
+
 			return remDateDialog;
 
 		case REMINDER_TIME_DIALOG_ID:
@@ -406,24 +444,31 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 			remTimeDialog.setButton(DialogInterface.BUTTON_POSITIVE,
 					"Einstellen", remTimeDialog);
 			remTimeDialog.setMessage("Zeit der Erinnerung: ");
-			
-			remTimeDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
-			    @Override
-			    public void onShow(DialogInterface dialog) {
+			remTimeDialog
+					.setOnShowListener(new DialogInterface.OnShowListener() {
 
-			        float textSize = 14.0f;
+						@Override
+						public void onShow(DialogInterface dialog) {
 
-			        Button positive = remTimeDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-			        positive.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+							float textSize = 14.0f;
 
-			        Button neutral = remTimeDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
-			        neutral.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+							Button positive = remTimeDialog
+									.getButton(AlertDialog.BUTTON_POSITIVE);
+							positive.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
+									textSize);
 
-			        Button negative = remTimeDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-			        negative.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
-			    }
-			});
+							Button neutral = remTimeDialog
+									.getButton(AlertDialog.BUTTON_NEUTRAL);
+							neutral.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
+									textSize);
+
+							Button negative = remTimeDialog
+									.getButton(AlertDialog.BUTTON_NEGATIVE);
+							negative.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
+									textSize);
+						}
+					});
 			return remTimeDialog;
 
 		case LIST_DIALOG_ID:
@@ -473,9 +518,32 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 					});
 			return builder.create();
 
-			// case ADDRESS_DIALOG_ID:
-			// return new AddressDialogFragment().onCreateDialog(null);
+		case CALENDAR_DIALOG_ID:
+			AlertDialog.Builder builderCalendar = new AlertDialog.Builder(this);
+			builderCalendar.setTitle("Kalendereintrag");
+			builderCalendar
+					.setMessage("Der Kalendereintrag für diese Aufgabe ist bereits vorhanden. Soll ein Neuer erstellt werden?");
+			builderCalendar.setPositiveButton("Ok",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							if (which == DialogInterface.BUTTON_POSITIVE) {
+								createCalendarEntry();
+								dialog.dismiss();
+							}
+						}
+					});
 
+			builderCalendar.setNegativeButton("Abbrechen",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							if (which == DialogInterface.BUTTON_POSITIVE) {
+								dialog.dismiss();
+							}
+						}
+					});
+			return builderCalendar.create();
 		}
 		return null;
 	}
@@ -559,6 +627,11 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 		}
 	}
 
+	private void showCalendar(boolean calendarCreated) {
+		TextView taskCalendar = (TextView) findViewById(R.id.textViewCalendar);
+		taskCalendar.setText(Boolean.toString(calendarCreated));
+	}
+
 	private void showReminder(Date date) {
 		TextView taskReminder = (TextView) findViewById(R.id.textViewReminder);
 		if (date != null) {
@@ -623,7 +696,7 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 
 	@Override
 	public void onAddressDialogNegativeClick(AddressDialogFragment dialog) {
-		//TODO???
+		// TODO???
 
 	}
 }

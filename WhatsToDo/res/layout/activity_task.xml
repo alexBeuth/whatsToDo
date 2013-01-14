@@ -149,6 +149,32 @@
             </FrameLayout>
 
             <FrameLayout
+                android:id="@+id/taskCalendar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/WhiteTransparent" >
+
+                <TextView
+                    android:id="@+id/TextView07"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/kalender_eintrag"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/textViewCalendar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginRight="10dp"
+                    android:text="TextView"
+                    android:textSize="15sp"
+                    tools:ignore="HardcodedText" />
+            </FrameLayout>
+
+            <FrameLayout
                 android:id="@+id/taskReminder"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -253,7 +279,6 @@
                     android:text="TextView"
                     android:textSize="15sp"
                     tools:ignore="HardcodedText" />
-
             </FrameLayout>
         </LinearLayout>
     </ScrollView>

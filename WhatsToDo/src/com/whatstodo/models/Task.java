@@ -16,7 +16,8 @@ public class Task implements Serializable, Comparable<Task> {
 	private Priority priority;
 	private boolean done;
 	private String address;
-
+	private boolean calendarCreated;
+	
 	// This is mainly for the listener to know which list was changed. Should
 	// only be set be the owner of this task
 	private long listId;
@@ -135,5 +136,13 @@ public class Task implements Serializable, Comparable<Task> {
 			return id == ((Task) o).id;
 		}
 		return false;
+	}
+
+	public void setCalendarCreated(boolean calendarCreated) {
+		this.calendarCreated = calendarCreated;
+	}
+	
+	public boolean isCalendarCreated() {
+		return calendarCreated;
 	}
 }

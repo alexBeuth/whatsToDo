@@ -47,12 +47,10 @@
             android:screenOrientation="portrait" >
         </activity>
         
-        <service android:name="com.whatstodo.activities.MyAlarmService" >
+        <service android:name="com.whatstodo.utils.AlarmService" >
         </service>
          <service android:name="com.whatstodo.utils.LocationService"></service>
 
-        <activity android:name="com.whatstodo.activities.AlarmActivity" >
-        </activity>
     </application>
 
 </manifest>

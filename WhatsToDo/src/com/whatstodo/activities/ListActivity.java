@@ -65,18 +65,35 @@ public class ListActivity extends Activity implements OnClickListener {
 
 		Button createTask = (Button) findViewById(R.id.newTask);
 		createTask.setOnClickListener(this);
-
-		Button todayFilter = (Button) findViewById(R.id.backToLists);
+		
+		TextView todayFilter = (TextView) findViewById(R.id.filterButton5);
 		todayFilter.setOnClickListener(this);
 
-		Button tomorrowFilter = (Button) findViewById(R.id.today);
+		TextView tomorrowFilter = (TextView) findViewById(R.id.filterButton6);
 		tomorrowFilter.setOnClickListener(this);
 
-		Button priorityFilter = (Button) findViewById(R.id.priority);
+		TextView priorityFilter = (TextView) findViewById(R.id.filterButton7);
 		priorityFilter.setOnClickListener(this);
 
-		Button more = (Button) findViewById(R.id.more);
+		TextView more = (TextView) findViewById(R.id.filterButton8);
 		more.setOnClickListener(this);
+		
+		todayFilter.setText("Listen");
+		tomorrowFilter.setText("Morgen");
+		priorityFilter.setText("Priorität");
+		more.setText("Mehr");
+
+//		Button todayFilter = (Button) findViewById(R.id.backToLists);
+//		todayFilter.setOnClickListener(this);
+//
+//		Button tomorrowFilter = (Button) findViewById(R.id.today);
+//		tomorrowFilter.setOnClickListener(this);
+//
+//		Button priorityFilter = (Button) findViewById(R.id.priority);
+//		priorityFilter.setOnClickListener(this);
+//
+//		Button more = (Button) findViewById(R.id.more);
+//		more.setOnClickListener(this);
 
 		final EditText editText = (EditText) findViewById(R.id.task);
 		editText.setOnKeyListener(new OnKeyListener() {
@@ -111,20 +128,20 @@ public class ListActivity extends Activity implements OnClickListener {
 		// list.addTask(editText.getText().toString());
 		// showTasks();
 		// break;
-		case R.id.backToLists:
+		case R.id.filterButton5:
 			Intent intent = new Intent(view.getContext(),
 					ListContainerActivity.class);
 			startActivity(intent);
 			finish();
 			break;
-		case R.id.today:
+		case R.id.filterButton6:
 			ActivityUtils.startFilteredActivity(this, view, new TodayFilter());
 			break;
-		case R.id.priority:
+		case R.id.filterButton7:
 			ActivityUtils.startFilteredActivity(this, view,
 					new PriorityHighFilter());
 			break;
-		case R.id.more:
+		case R.id.filterButton8:
 			Intent moreIntent = new Intent(view.getContext(),
 					MoreActivity.class);
 			startActivity(moreIntent);

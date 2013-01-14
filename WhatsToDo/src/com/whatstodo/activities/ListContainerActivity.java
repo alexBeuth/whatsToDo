@@ -36,6 +36,7 @@ import com.whatstodo.utils.ActivityUtils;
 public class ListContainerActivity extends Activity implements OnClickListener {
 
 	protected static final int LIST_ACTIVITY = 0;
+	protected static final int FILTER_ACTIVITY = 1;
 	ListContainer container;
 
 	@Override
@@ -49,18 +50,34 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 
 		Button createList = (Button) findViewById(R.id.newList);
 		createList.setOnClickListener(this);
-
-		Button todayFilter = (Button) findViewById(R.id.today);
+		
+		TextView todayFilter = (TextView) findViewById(R.id.filterButton1);
+		todayFilter.setText("Heute");
 		todayFilter.setOnClickListener(this);
 
-		Button tomorrowFilter = (Button) findViewById(R.id.tomorrow);
+		TextView tomorrowFilter = (TextView) findViewById(R.id.filterButton2);
+		tomorrowFilter.setText("Morgen");
 		tomorrowFilter.setOnClickListener(this);
 
-		Button priorityFilter = (Button) findViewById(R.id.priority);
+		TextView priorityFilter = (TextView) findViewById(R.id.filterButton3);
+		priorityFilter.setText("Priorität");
 		priorityFilter.setOnClickListener(this);
 
-		Button more = (Button) findViewById(R.id.more);
+		TextView more = (TextView) findViewById(R.id.filterButton4);
+		more.setText("Mehr");
 		more.setOnClickListener(this);
+
+//		Button todayFilter = (Button) findViewById(R.id.today);
+//		todayFilter.setOnClickListener(this);
+//
+//		Button tomorrowFilter = (Button) findViewById(R.id.tomorrow);
+//		tomorrowFilter.setOnClickListener(this);
+//
+//		Button priorityFilter = (Button) findViewById(R.id.priority);
+//		priorityFilter.setOnClickListener(this);
+//
+//		Button more = (Button) findViewById(R.id.more);
+//		more.setOnClickListener(this);
 
 		final EditText editText = (EditText) findViewById(R.id.list);
 		editText.setOnKeyListener(new OnKeyListener() {
@@ -99,18 +116,18 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 		// container.addList(editText.getText().toString());
 		// showLists();
 		// break;
-		case R.id.today:
+		case R.id.filterButton1:
 			ActivityUtils.startFilteredActivity(this, view, new TodayFilter());
 			break;
-		case R.id.tomorrow:
+		case R.id.filterButton2:
 			ActivityUtils.startFilteredActivity(this, view,
 					new TomorrowFilter());
 			break;
-		case R.id.priority:
+		case R.id.filterButton3:
 			ActivityUtils.startFilteredActivity(this, view,
 					new PriorityHighFilter());
 			break;
-		case R.id.more:
+		case R.id.filterButton4:
 			Intent intent = new Intent(view.getContext(), MoreActivity.class);
 			startActivity(intent);
 			finish();
@@ -225,6 +242,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		
 		if (resultCode == Activity.RESULT_OK) {
 			showLists();
 		}

@@ -116,7 +116,7 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 		FrameLayout editList = (FrameLayout) findViewById(R.id.taskList);
 		editList.setOnClickListener(this);
 
-		showPriority(task.getPriority().toString());
+		showPriority(task.getPriority());
 		FrameLayout editPriority = (FrameLayout) findViewById(R.id.taskPriority);
 		editPriority.setOnClickListener(this);
 
@@ -200,18 +200,22 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 
 		Calendar cal = Calendar.getInstance();
 		if (task.getDate() != null) {
-			cal.setTime(task.getDate());
+			cal.setTime(userDate);
 		}
+		
+		EditText editText = (EditText) findViewById(R.id.taskName);
+		
 		Intent intent = new Intent(Intent.ACTION_EDIT);
 		intent.setType("vnd.android.cursor.item/event");
 		intent.putExtra("beginTime", cal.getTimeInMillis());
 		intent.putExtra("endTime", cal.getTimeInMillis() + 15 * 60 * 1000);
-		intent.putExtra("title", task.getName());
-		intent.putExtra("description", task.getNotice());
-		intent.putExtra("eventLocation", task.getAddress());
+		intent.putExtra("title", editText.getText().toString());
+		intent.putExtra("description", userNotice);
+		intent.putExtra("eventLocation", userAddress);
 		startActivity(intent);
-		
+
 		task.setCalendarCreated(true);
+		showCalendar(true);
 	}
 
 	private boolean getCheckBox() {
@@ -268,7 +272,7 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 			Toast.makeText(getBaseContext(), "Priority not found",
 					Toast.LENGTH_LONG).show();
 		}
-		showPriority(userPriority.toString());
+		showPriority(userPriority);
 	}
 
 	private void changeDate() {
@@ -301,7 +305,7 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 
 		switch (id) {
 		case DATE_DIALOG_ID:
-			DatePickerDialog dateDialog = new DatePickerDialog(this,
+			final DatePickerDialog dateDialog = new DatePickerDialog(this,
 					new DatePickerDialog.OnDateSetListener() {
 						public void onDateSet(DatePicker view, int year,
 								int monthOfYear, int dayOfMonth) {
@@ -329,6 +333,28 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 			dateDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Abbrechen",
 					dateDialog);
 			dateDialog.setMessage("Datum der Aufgabe");
+
+			dateDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+				@Override
+				public void onShow(DialogInterface dialog) {
+
+					float textSize = 14.0f;
+
+					Button positive = dateDialog
+							.getButton(AlertDialog.BUTTON_POSITIVE);
+					positive.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+
+					Button neutral = dateDialog
+							.getButton(AlertDialog.BUTTON_NEUTRAL);
+					neutral.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+
+					Button negative = dateDialog
+							.getButton(AlertDialog.BUTTON_NEGATIVE);
+					negative.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+				}
+			});
+
 			return dateDialog;
 
 		case REMINDER_DATE_DIALOG_ID:
@@ -625,7 +651,9 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 
 	private void showCalendar(boolean calendarCreated) {
 		TextView taskCalendar = (TextView) findViewById(R.id.textViewCalendar);
-		taskCalendar.setText(Boolean.toString(calendarCreated));
+		taskCalendar.setText("");
+		taskCalendar.setBackgroundResource(calendarCreated ? R.drawable.thumbsup
+				: R.drawable.thumbsdown);
 	}
 
 	private void showReminder(Date date) {
@@ -644,9 +672,20 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 		taskList.setText(name);
 	}
 
-	private void showPriority(String priority) {
+	private void showPriority(Priority priority) {
 		TextView taskPriority = (TextView) findViewById(R.id.textViewPriority);
-		taskPriority.setText(priority);
+		taskPriority.setText("");
+		switch (priority) {
+		case HIGH:
+			taskPriority.setBackgroundResource(R.drawable.rating_important);
+			break;
+		case NORMAL:
+			taskPriority.setBackgroundResource(R.drawable.rating_half_important);
+			break;
+		case LOW:
+			taskPriority.setBackgroundResource(R.drawable.rating_not_important);
+			break;
+		}
 	}
 
 	private void showAddress(String address) {

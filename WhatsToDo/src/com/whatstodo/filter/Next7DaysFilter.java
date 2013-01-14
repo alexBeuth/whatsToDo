@@ -6,6 +6,8 @@ import com.whatstodo.models.Task;
 
 public class Next7DaysFilter extends Filter {
 
+	private static final long serialVersionUID = 3438268894808041791L;
+
 	@Override
 	protected boolean filter(Task task) {
 		

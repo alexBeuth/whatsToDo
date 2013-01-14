@@ -6,6 +6,8 @@ import com.whatstodo.models.Task;
 
 public class OverdueFilter extends Filter {
 
+	private static final long serialVersionUID = 7082562771754590924L;
+
 	@Override
 	protected boolean filter(Task task) {
 		

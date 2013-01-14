@@ -9,6 +9,8 @@ import com.whatstodo.models.Task;
 
 public abstract class Filter implements Serializable {
 
+	private static final long serialVersionUID = 2645671922210489484L;
+
 	public List getTask() {
 		ListContainer container = ListContainer.getInstance();
 

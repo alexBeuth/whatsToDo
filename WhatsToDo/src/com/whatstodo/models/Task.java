@@ -7,7 +7,7 @@ import com.whatstodo.utils.Priority;
 
 public class Task implements Serializable, Comparable<Task> {
 
-	private static final long serialVersionUID = 0;
+	private static final long serialVersionUID = -8335115914160527642L;
 	private long id;
 	private String name;
 	private String notice;

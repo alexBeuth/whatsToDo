@@ -4,6 +4,8 @@ import com.whatstodo.models.Task;
 
 public class NoDateFilter extends Filter {
 
+	private static final long serialVersionUID = 7206958589452625246L;
+
 	@Override
 	protected boolean filter(Task task) {
 		return task.getDate() == null;

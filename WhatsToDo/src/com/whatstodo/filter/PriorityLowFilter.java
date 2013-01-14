@@ -5,6 +5,8 @@ import com.whatstodo.utils.Priority;
 
 public class PriorityLowFilter extends Filter {
 
+	private static final long serialVersionUID = -3658863246909470452L;
+
 	@Override
 	protected boolean filter(Task task) {
 		return task.getPriority().equals(Priority.LOW);

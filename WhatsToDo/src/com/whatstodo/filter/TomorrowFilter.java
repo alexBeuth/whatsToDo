@@ -6,6 +6,8 @@ import com.whatstodo.models.Task;
 
 public class TomorrowFilter extends Filter {
 
+	private static final long serialVersionUID = -6094397041253624962L;
+
 	@Override
 	protected boolean filter(Task task) {
 		

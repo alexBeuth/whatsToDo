@@ -6,6 +6,8 @@ import com.whatstodo.models.Task;
 
 public class TodayFilter extends Filter {
 
+	private static final long serialVersionUID = -7531658110133328556L;
+
 	@Override
 	protected boolean filter(Task task) {
 		

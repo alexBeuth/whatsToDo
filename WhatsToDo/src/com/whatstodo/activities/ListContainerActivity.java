@@ -48,9 +48,9 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 		this.getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-		Button createList = (Button) findViewById(R.id.newList);
+		Button createList = (Button) findViewById(R.id.synchronisationContainer);
 		createList.setOnClickListener(this);
-		
+
 		TextView todayFilter = (TextView) findViewById(R.id.filterButton1);
 		todayFilter.setText("Heute");
 		todayFilter.setOnClickListener(this);
@@ -67,28 +67,16 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 		more.setText("Mehr");
 		more.setOnClickListener(this);
 
-//		Button todayFilter = (Button) findViewById(R.id.today);
-//		todayFilter.setOnClickListener(this);
-//
-//		Button tomorrowFilter = (Button) findViewById(R.id.tomorrow);
-//		tomorrowFilter.setOnClickListener(this);
-//
-//		Button priorityFilter = (Button) findViewById(R.id.priority);
-//		priorityFilter.setOnClickListener(this);
-//
-//		Button more = (Button) findViewById(R.id.more);
-//		more.setOnClickListener(this);
-
 		final EditText editText = (EditText) findViewById(R.id.list);
 		editText.setOnKeyListener(new OnKeyListener() {
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				// If the event is a key-down event on the "enter" button
 				if ((event.getAction() == KeyEvent.ACTION_DOWN)
 						&& (keyCode == KeyEvent.KEYCODE_ENTER)) {
 					container.addList(editText.getText().toString());
 					showLists();
-					InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-					inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+					InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					inputMethodManager.hideSoftInputFromWindow(
+							editText.getWindowToken(), 0);
 
 					return true;
 				}
@@ -111,11 +99,9 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 	public void onClick(View view) {
 
 		switch (view.getId()) {
-		// case R.id.newList:
-		// EditText editText = (EditText) findViewById(R.id.list);
-		// container.addList(editText.getText().toString());
-		// showLists();
-		// break;
+		case R.id.synchronisationContainer:
+			startSynchronisation();
+			break;
 		case R.id.filterButton1:
 			ActivityUtils.startFilteredActivity(this, view, new TodayFilter());
 			break;
@@ -240,9 +226,14 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
+
 		if (resultCode == Activity.RESULT_OK) {
 			showLists();
 		}
+	}
+
+	private void startSynchronisation() {
+		// TODO Auto-generated method stub
+
 	}
 }

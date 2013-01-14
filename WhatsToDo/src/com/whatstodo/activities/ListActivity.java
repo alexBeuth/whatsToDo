@@ -53,7 +53,7 @@ public class ListActivity extends Activity implements OnClickListener,
 
 		Bundle bundle = getIntent().getExtras();
 
-		Button createTask = (Button) findViewById(R.id.newTask);
+		Button createTask = (Button) findViewById(R.id.synchronisationList);
 		createTask.setOnClickListener(this);
 
 		initTextView(R.id.filterButton5, "Listen");
@@ -112,7 +112,7 @@ public class ListActivity extends Activity implements OnClickListener,
 		TextView textView = (TextView) findViewById(id);
 		if (text != null)
 			textView.setText(text);
-			textView.setOnClickListener(this);
+		textView.setOnClickListener(this);
 
 		return textView;
 	}
@@ -129,6 +129,9 @@ public class ListActivity extends Activity implements OnClickListener,
 
 		switch (view.getId()) {
 
+		case R.id.synchronisationList:
+			startSynchronisation();
+			break;
 		case R.id.filterButton5:
 			Intent intent = new Intent(view.getContext(),
 					ListContainerActivity.class);
@@ -285,5 +288,10 @@ public class ListActivity extends Activity implements OnClickListener,
 	@Override
 	public void onTaskChange() {
 		showTasks();
+	}
+
+	private void startSynchronisation() {
+		// TODO Auto-generated method stub
+
 	}
 }

@@ -15,8 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -36,7 +36,7 @@ import com.whatstodo.models.ListContainer;
 import com.whatstodo.models.Task;
 import com.whatstodo.utils.ActivityUtils;
 
-public class ListActivity extends Activity implements OnClickListener {
+public class ListActivity extends Activity implements OnClickListener, TaskAdapter.TaskAdapterListener {
 
 	private List list;
 	protected static final int TASK_ACTIVITY = 0;
@@ -156,6 +156,7 @@ public class ListActivity extends Activity implements OnClickListener {
 		ListView listList = (ListView) findViewById(R.id.taskList);
 
 		TaskAdapter adapter = new TaskAdapter(this, R.layout.taskitem, list);
+		adapter.registerListener(this);
 
 		listList.setAdapter(adapter);
 		listList.setOnItemClickListener(new OnItemClickListener() {
@@ -190,9 +191,10 @@ public class ListActivity extends Activity implements OnClickListener {
 		if (view.getId() == R.id.taskList) {
 			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
-			long taskId = ((TextView) ((FrameLayout) ((FrameLayout) ((RelativeLayout) ((ListView) view)
-					.getChildAt(info.position)).getChildAt(0)).getChildAt(0))
-					.getChildAt(0)).getInputExtras(false).getLong("id");
+			long taskId = ((TextView) ((FrameLayout) ((FrameLayout) ((RelativeLayout) info.targetView)
+					.getChildAt(0)).getChildAt(0)).getChildAt(0))
+					.getInputExtras(false).getLong("id");
+
 			Task task = list.getTask(taskId);
 			menu.setHeaderTitle(task.getName());
 			String[] menuItems = getResources().getStringArray(R.array.menu);
@@ -208,10 +210,11 @@ public class ListActivity extends Activity implements OnClickListener {
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
 				.getMenuInfo();
-		View view = findViewById(R.id.taskList);
-		long taskId = ((TextView) ((FrameLayout) ((FrameLayout) ((RelativeLayout) ((ListView) view)
-				.getChildAt(info.position)).getChildAt(0)).getChildAt(0))
-				.getChildAt(0)).getInputExtras(false).getLong("id");
+		
+		long taskId = ((TextView) ((FrameLayout) ((FrameLayout) ((RelativeLayout) info.targetView)
+				.getChildAt(0)).getChildAt(0)).getChildAt(0)).getInputExtras(
+				false).getLong("id");
+		
 		final Task task = list.getTask(taskId);
 		String[] menuItems = getResources().getStringArray(R.array.menu);
 
@@ -267,5 +270,10 @@ public class ListActivity extends Activity implements OnClickListener {
 		if (resultCode == Activity.RESULT_OK) {
 			showTasks();
 		}
+	}
+
+	@Override
+	public void onTaskChange() {
+		showTasks();
 	}
 }

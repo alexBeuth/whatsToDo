@@ -34,6 +34,8 @@ import com.whatstodo.R;
 import com.whatstodo.models.List;
 import com.whatstodo.models.ListContainer;
 import com.whatstodo.models.Task;
+import com.whatstodo.utils.ActivityUtils;
+import com.whatstodo.utils.AlarmService;
 import com.whatstodo.utils.Priority;
 
 public class TaskActivity extends FragmentActivity implements OnClickListener,
@@ -72,7 +74,7 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 
 		container = ListContainer.getInstance();
 		
-		task = container.getTask(bundle.getLong("TaskId"));
+		task = ActivityUtils.getTaskForId(bundle.getLong("TaskId"));
 		list = container.getList(task.getListId());
 		userPriority = task.getPriority();
 		userNotice = (String) task.getNotice();
@@ -585,7 +587,7 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 
 	private void setReminderAlarm(Date date) {
 
-		Intent intent = new Intent(this, MyAlarmService.class);
+		Intent intent = new Intent(this, AlarmService.class);
 		intent.putExtras(getBundle());
 		PendingIntent pendingIntent = PendingIntent.getService(this,
 				(int) task.getId(), intent, 0);
@@ -598,7 +600,7 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 
 	private void cancelReminderAlarm(int id) {
 
-		Intent intent = new Intent(this, AlarmActivity.class);
+		Intent intent = new Intent(this, AlarmService.class);
 		PendingIntent pendingIntent = PendingIntent.getService(
 				getBaseContext(), id, intent, 0);
 

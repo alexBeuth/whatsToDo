@@ -1,18 +1,33 @@
 package com.whatstodo.activities;
 
+import java.util.Calendar;
+
+import android.app.Activity;
 import android.content.Context;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.whatstodo.R;
+import com.whatstodo.filter.Filter;
 import com.whatstodo.models.Task;
+import com.whatstodo.utils.ActivityUtils;
+import com.whatstodo.utils.Priority;
 
-public class TaskAdapter extends ArrayAdapter<Task> {
+public class TaskAdapter extends ArrayAdapter<Task> implements OnClickListener {
+
+	public interface TaskAdapterListener {
+		public void onTaskChange();
+
+	}
+
+	TaskAdapterListener mListener;
 
 	private Context context;
 	private java.util.List<Task> tasks;
@@ -33,21 +48,39 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 			element = inflater.inflate(R.layout.taskitem, null);
 		}
 		Task task = tasks.get(position);
-
+		
+		//set on click listener to overlaying layouts
+		FrameLayout parentLayout = (FrameLayout) element.findViewById(R.id.clickTaskLayout);
+		parentLayout.setTag(task.getId());
+		FrameLayout taskClickDone = (FrameLayout) element.findViewById(R.id.clickTaskDone);
+		taskClickDone.setOnClickListener(this);
+		FrameLayout clickTaskPriority = (FrameLayout) element.findViewById(R.id.clickTaskPriority);
+		clickTaskPriority.setOnClickListener(this);
+		
 		TextView taskName = (TextView) element.findViewById(R.id.taskName);
 		TextView taskDate = (TextView) element.findViewById(R.id.taskDate);
 		TextView taskPriority = (TextView) element
 				.findViewById(R.id.taskPriority);
-		TextView taskDone = (TextView) element.findViewById(R.id.taskDone);
 		
+		
+		TextView taskDone = (TextView) element.findViewById(R.id.taskDone);
+
 		FrameLayout button = (FrameLayout) element
 				.findViewById(R.id.buttonLayout);
-		
+
 		taskName.setText(task.getName());
 		taskName.getInputExtras(true).putLong("id", task.getId());
-		
+
 		if (task.getDate() != null) {
 			taskDate.setText(DateFormat.format("dd.MM.yyyy", task.getDate()));
+
+			Calendar taskCal = Calendar.getInstance();
+			taskCal.setTime(task.getDate());
+			if (Filter.compareDate(taskCal, Calendar.getInstance()) < 0
+					&& !task.isDone()) {
+				taskDate.setTextColor(context.getResources().getColor(
+						R.color.Red));
+			}
 		} else {
 			taskDate.setText("");
 		}
@@ -57,7 +90,8 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 			taskPriority.setBackgroundResource(R.drawable.rating_important);
 			break;
 		case NORMAL:
-			taskPriority.setBackgroundResource(R.drawable.rating_half_important);
+			taskPriority
+					.setBackgroundResource(R.drawable.rating_half_important);
 			break;
 		case LOW:
 			taskPriority.setBackgroundResource(R.drawable.rating_not_important);
@@ -66,15 +100,46 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 		if (task.isDone()) {
 			taskDone.setBackgroundResource(R.drawable.check);
 			button.setBackgroundResource(R.drawable.buttontransparent);
-//			taskName.setTextColor(R.color.White);
-//			taskDate.setTextColor(R.color.White);
+			taskName.setTextColor(context.getResources().getColor(
+					R.color.DarkGray));
+			taskDate.setTextColor(context.getResources().getColor(
+					R.color.DarkGray));
 		} else {
 			taskDone.setBackgroundResource(R.drawable.checkbox3);
 			button.setBackgroundResource(R.drawable.button3);
-//			taskName.setTextColor(R.color.Black);
-//			taskDate.setTextColor(R.color.Black);
+			taskName.setTextColor(context.getResources()
+					.getColor(R.color.Black));
 		}
-		
+
 		return element;
 	}
+
+	@Override
+	public void onClick(View view) {
+
+		long taskId = (Long) ((FrameLayout) view.getParent()).getTag();
+		Task task = ActivityUtils.getTaskForId(taskId);
+		
+		switch (view.getId()) {
+		case R.id.clickTaskDone:
+			task.setDone(!task.isDone());
+			mListener.onTaskChange();
+			break;
+		case R.id.clickTaskPriority:
+			task.setPriority(Priority.getNextPriority(task.getPriority()));
+			mListener.onTaskChange();
+			break;
+
+		}
+	}
+
+	public void registerListener(Activity activity) {
+		try {
+			mListener = (TaskAdapterListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement NoticeDialogListener");
+		}
+	}
+
 }

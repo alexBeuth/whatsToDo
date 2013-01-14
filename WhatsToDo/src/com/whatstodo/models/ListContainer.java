@@ -125,20 +125,6 @@ public class ListContainer {
 		throw new NoSuchElementException("Cannot find the right list");
 	}
 
-	public Task getTask(Long taskId) {
-
-		for (List list : lists) {
-			Task task = null;
-			try {
-				task = list.getTask(taskId);
-			} catch (NoSuchElementException e) {
-				continue;
-			}
-			return task;
-		}
-		throw new NoSuchElementException("Cannot find task with ID: " + taskId);
-	}
-
 	private static void notifyListener() {
 		ChangeListener.onContainerChange(lists);
 	}

@@ -71,6 +71,27 @@
                 android:textSize="16sp" />
 
         </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/clickTaskDone"
+            android:layout_width="60dp"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/clickTaskPriority"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right" >
+
+        </FrameLayout>
+
     </FrameLayout>
 
 </RelativeLayout>

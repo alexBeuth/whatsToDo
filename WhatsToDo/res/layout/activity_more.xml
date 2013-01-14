@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Heute"
+                    android:text="Morgen"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <ImageView

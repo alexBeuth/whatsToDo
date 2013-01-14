@@ -1,4 +1,4 @@
-package com.whatstodo.activities;
+package com.whatstodo.utils;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -9,11 +9,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 
 import com.whatstodo.R;
+import com.whatstodo.activities.TaskActivity;
 import com.whatstodo.models.List;
 import com.whatstodo.models.ListContainer;
 import com.whatstodo.models.Task;
 
-public class MyAlarmService extends Service {
+public class AlarmService extends Service {
 
 	private ListContainer container;
 	private List list;

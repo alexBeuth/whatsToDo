@@ -100,7 +100,7 @@ public class List implements Serializable, java.util.List<Task> {
         }
 	}
 	
-    private static void exch(Object[] a, int i, int j) {
+    private void exch(Object[] a, int i, int j) {
         Object swap = a[i];
         a[i] = a[j];
         a[j] = swap;

@@ -2,11 +2,7 @@ package com.whatstodo.models;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Locale;
 
-import android.location.Address;
-
-import com.whatstodo.persistence.ChangeListener;
 import com.whatstodo.utils.Priority;
 
 public class Task implements Serializable, Comparable<Task> {
@@ -109,6 +105,13 @@ public class Task implements Serializable, Comparable<Task> {
 
 	@Override
 	public int compareTo(Task another) {
+		
+		if(!isDone() && another.isDone()) {
+			return -1;
+		}
+		if(isDone() && !another.isDone()) {
+			return 1;
+		}
 
 		if (date == null && another.date == null)
 			return 0;

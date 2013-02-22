@@ -22,14 +22,14 @@ public class List implements Serializable, java.util.List<Task> {
 
 	private static final long serialVersionUID = -2889639373188534039L;
 
-	transient private int size;
-	transient private Task[] orderedTasks;
-	transient private Comparator<Task> comparator;
+	private int size;
+	private Task[] orderedTasks;
+	private Comparator<Task> comparator;
 	private long id;
 	private String name;
 
 	// Dont save if its a temp. list (like filter)
-	private boolean save;
+	private boolean isPersistent;
 
 	public List() {
 		orderedTasks = new Task[1];
@@ -47,7 +47,7 @@ public class List implements Serializable, java.util.List<Task> {
 			id = ListContainer.getNextListId();
 		}
 		this.name = name;
-		save = !dontSave;
+		isPersistent = !dontSave;
 		notifyListener();
 	}
 
@@ -87,6 +87,14 @@ public class List implements Serializable, java.util.List<Task> {
 			}
 		}
 		throw new NoSuchElementException("Cannot find task with ID: " + taskId);
+	}
+	
+	public void setPersistent(boolean isPersistent) {
+		this.isPersistent = isPersistent;
+	}
+	
+	public boolean isPersistent() {
+		return isPersistent;
 	}
 
 	// Insertion sort
@@ -142,7 +150,7 @@ public class List implements Serializable, java.util.List<Task> {
 		orderedTasks[i + 1] = task;
 		size++;
 
-		if (save) {
+		if (isPersistent) {
 			task.setListId(id);
 		}
 		notifyListener();
@@ -305,7 +313,7 @@ public class List implements Serializable, java.util.List<Task> {
 		for (Task task : this) {
 			toReturn[i++] = (T) task;
 		}
-		for(;i < toReturn.length; i++) {
+		for (; i < toReturn.length; i++) {
 			toReturn[i] = null;
 		}
 		return toReturn;
@@ -405,7 +413,7 @@ public class List implements Serializable, java.util.List<Task> {
 	}
 
 	protected void notifyListener() {
-		if (save)
+		if (isPersistent)
 			ChangeListener.onListChange(this);
 	}
 }

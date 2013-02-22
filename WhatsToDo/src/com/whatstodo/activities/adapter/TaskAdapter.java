@@ -1,4 +1,4 @@
-package com.whatstodo.activities;
+package com.whatstodo.activities.adapter;
 
 import java.util.Calendar;
 
@@ -26,7 +26,7 @@ public class TaskAdapter extends ArrayAdapter<Task> implements OnClickListener {
 
 	}
 
-	TaskAdapterListener mListener;
+	TaskAdapterListener listener;
 
 	private Context context;
 	private java.util.List<Task> tasks;
@@ -122,11 +122,11 @@ public class TaskAdapter extends ArrayAdapter<Task> implements OnClickListener {
 		switch (view.getId()) {
 		case R.id.clickTaskDone:
 			task.setDone(!task.isDone());
-			mListener.onTaskChange();
+			listener.onTaskChange();
 			break;
 		case R.id.clickTaskPriority:
 			task.setPriority(Priority.getNextPriority(task.getPriority()));
-			mListener.onTaskChange();
+			listener.onTaskChange();
 			break;
 
 		}
@@ -134,7 +134,7 @@ public class TaskAdapter extends ArrayAdapter<Task> implements OnClickListener {
 
 	public void registerListener(Activity activity) {
 		try {
-			mListener = (TaskAdapterListener) activity;
+			listener = (TaskAdapterListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement NoticeDialogListener");

@@ -1,4 +1,4 @@
-package com.whatstodo.activities;
+package com.whatstodo.activities.adapter;
 
 import com.whatstodo.models.List;
 

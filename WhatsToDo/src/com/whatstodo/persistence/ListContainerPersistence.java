@@ -41,7 +41,7 @@ public class ListContainerPersistence {
 		BufferedOutputStream listsStream = null;
 		try {
 			listsStream = new BufferedOutputStream(context.openFileOutput(
-					filename, Context.MODE_PRIVATE));
+					filename, Context.MODE_PRIVATE), toSave.getBytes().length);
 			listsStream.write(toSave.getBytes());
 
 		} catch (IOException e) {

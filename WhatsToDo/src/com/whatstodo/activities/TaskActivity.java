@@ -33,10 +33,10 @@ import android.widget.Toast;
 import com.whatstodo.R;
 import com.whatstodo.models.List;
 import com.whatstodo.models.ListContainer;
+import com.whatstodo.models.Priority;
 import com.whatstodo.models.Task;
 import com.whatstodo.utils.ActivityUtils;
 import com.whatstodo.utils.AlarmService;
-import com.whatstodo.utils.Priority;
 
 public class TaskActivity extends FragmentActivity implements OnClickListener,
 		AddressDialogFragment.NoticeDialogListener {

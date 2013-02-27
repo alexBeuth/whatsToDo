@@ -15,9 +15,9 @@ import android.widget.TextView;
 
 import com.whatstodo.R;
 import com.whatstodo.filter.Filter;
+import com.whatstodo.models.Priority;
 import com.whatstodo.models.Task;
 import com.whatstodo.utils.ActivityUtils;
-import com.whatstodo.utils.Priority;
 
 public class TaskAdapter extends ArrayAdapter<Task> implements OnClickListener {
 

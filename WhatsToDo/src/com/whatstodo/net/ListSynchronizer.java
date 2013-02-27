@@ -17,11 +17,17 @@ public class ListSynchronizer {
 
 		String jsonString = gson.toJson(list);
 
-//		String receivedJsonString = HttpClient.SendHttpPost("localhost",
-//				jsonString);
+		@SuppressWarnings("unused")
+		String receivedJsonString = HttpClient.SendHttpPost(
+				"http://10.0.2.2:8080/rest/message/listtestput", jsonString);
+		@SuppressWarnings("unused")
+		String get = HttpClient
+				.SendHttpGet("http://10.0.2.2:8080/rest/message/listtest");
+		
 
 		List synchronizedList = gson.fromJson(jsonString, List.class);
 
 		return synchronizedList;
 	}
+	
 }

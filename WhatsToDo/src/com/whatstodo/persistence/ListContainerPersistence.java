@@ -33,7 +33,9 @@ public class ListContainerPersistence {
 			listPersistence.saveList(list);
 		}
 
-		saveStringToFile(ids.toString(), FILENAME_LISTS);
+		if(ids.length() > 0) {
+			saveStringToFile(ids.toString(), FILENAME_LISTS);
+		}
 
 	}
 

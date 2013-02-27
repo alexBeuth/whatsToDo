@@ -1,7 +1,7 @@
 package com.whatstodo.filter;
 
+import com.whatstodo.models.Priority;
 import com.whatstodo.models.Task;
-import com.whatstodo.utils.Priority;
 
 public class PriorityLowFilter extends Filter {
 

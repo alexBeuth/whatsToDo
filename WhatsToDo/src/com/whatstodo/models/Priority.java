@@ -1,4 +1,4 @@
-package com.whatstodo.utils;
+package com.whatstodo.models;
 
 public enum Priority {
 	LOW, NORMAL, HIGH;

@@ -3,6 +3,7 @@ package com.whatstodo.models;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.whatstodo.dtos.TaskDTO;
 
 public class Task implements Serializable, Comparable<Task> {
 
@@ -16,7 +17,7 @@ public class Task implements Serializable, Comparable<Task> {
 	private boolean done;
 	private String address;
 	private boolean calendarCreated;
-	
+
 	// This is mainly for the listener to know which list was changed. Should
 	// only be set be the owner of this task
 	private long listId;
@@ -105,11 +106,11 @@ public class Task implements Serializable, Comparable<Task> {
 
 	@Override
 	public int compareTo(Task another) {
-		
-		if(!isDone() && another.isDone()) {
+
+		if (!isDone() && another.isDone()) {
 			return -1;
 		}
-		if(isDone() && !another.isDone()) {
+		if (isDone() && !another.isDone()) {
 			return 1;
 		}
 
@@ -124,14 +125,14 @@ public class Task implements Serializable, Comparable<Task> {
 		}
 		return 1;
 	}
-
+	
 	private void notifyListener() {
 		ListContainer.getInstance().getList(listId).notifyListener();
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
-		if(o instanceof Task) {
+		if (o instanceof Task) {
 			return id == ((Task) o).id;
 		}
 		return false;
@@ -140,8 +141,38 @@ public class Task implements Serializable, Comparable<Task> {
 	public void setCalendarCreated(boolean calendarCreated) {
 		this.calendarCreated = calendarCreated;
 	}
-	
+
 	public boolean isCalendarCreated() {
 		return calendarCreated;
+	}
+	
+	public static TaskDTO toDTO(Task task){
+		
+		TaskDTO taskDTO = new TaskDTO();
+		taskDTO.setId(task.id);
+		taskDTO.setName(task.name);
+		taskDTO.setNotice(task.notice);
+		taskDTO.setDate(task.date);
+		taskDTO.setReminder(task.reminder);
+		taskDTO.setPriority(task.priority);
+		taskDTO.setDone(task.done);
+		taskDTO.setAddress(task.address);
+		taskDTO.setCalendarCreated(task.calendarCreated);
+		taskDTO.setListId(task.listId);
+		return taskDTO;	
+	}
+	
+	public static Task fromDTO(TaskDTO taskDTO){
+		Task task = new Task(taskDTO.getName());
+		task.id = taskDTO.getId();
+		task.notice = taskDTO.getNotice();
+		task.date = taskDTO.getDate();
+		task.reminder = taskDTO.getReminder();
+		task.priority = taskDTO.getPriority();
+		task.done = taskDTO.isDone();
+		task.address = taskDTO.getAddress();
+		task.calendarCreated = taskDTO.isCalendarCreated();
+		task.listId = taskDTO.getListId();
+		return task;
 	}
 }

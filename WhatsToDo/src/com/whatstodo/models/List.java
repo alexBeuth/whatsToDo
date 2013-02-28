@@ -9,6 +9,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.whatstodo.dtos.ListDTO;
+import com.whatstodo.dtos.TaskDTO;
 import com.whatstodo.persistence.ChangeListener;
 
 /**
@@ -88,11 +90,11 @@ public class List implements Serializable, java.util.List<Task> {
 		}
 		throw new NoSuchElementException("Cannot find task with ID: " + taskId);
 	}
-	
+
 	public void setPersistent(boolean isPersistent) {
 		this.isPersistent = isPersistent;
 	}
-	
+
 	public boolean isPersistent() {
 		return isPersistent;
 	}
@@ -415,5 +417,34 @@ public class List implements Serializable, java.util.List<Task> {
 	protected void notifyListener() {
 		if (isPersistent)
 			ChangeListener.onListChange(this);
+	}
+	
+	public static ListDTO toDTO(List list){
+		ListDTO listDTO = new ListDTO();
+		listDTO.setId(list.id);
+		listDTO.setName(list.name);
+		listDTO.setSize(list.size);
+		TaskDTO[] tasks = new TaskDTO[list.size];
+		for (int i = 0; i < list.size; i++){
+			tasks[i] = Task.toDTO(list.orderedTasks[i]);
+		}
+		listDTO.setTasks(tasks);
+		
+		return listDTO;
+	}
+	
+	public static List fromDTO(ListDTO listDTO){
+		List list = new List();
+		list.id = listDTO.getId();
+		list.name = listDTO.getName();
+		list.size = listDTO.getSize();
+		TaskDTO[] tasksDTO = listDTO.getTasks();
+		list.orderedTasks = new Task[list.size]; 
+		for (int i = 0; i < list.size; i++){
+			list.orderedTasks[i] = Task.fromDTO(tasksDTO[i]);
+		}
+		list.sort();
+		list.isPersistent = true;
+		return list;
 	}
 }

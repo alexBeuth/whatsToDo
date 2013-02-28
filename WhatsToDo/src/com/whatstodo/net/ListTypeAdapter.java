@@ -29,9 +29,16 @@ public class ListTypeAdapter implements JsonDeserializer<List>, JsonSerializer<L
 		
 		List list = gson.fromJson(tasks, List.class);
 		
-		list.setName(jsonObject.get("name").getAsString());
-		list.setId(jsonObject.get("id").getAsLong());
-		list.setPersistent(jsonObject.get("isPersistent").getAsBoolean());
+		
+		if(!jsonObject.get("name").isJsonNull()) {
+			list.setName(jsonObject.get("name").getAsString());
+		}
+		if(!jsonObject.get("id").isJsonNull()) {
+			list.setId(jsonObject.get("id").getAsLong());
+		}
+		if(!jsonObject.get("isPersistent").isJsonNull()) {
+			list.setPersistent(jsonObject.get("isPersistent").getAsBoolean());
+		}
 		
 		return list;
 	}

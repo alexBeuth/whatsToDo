@@ -17,10 +17,11 @@ public class Task implements Serializable, Comparable<Task> {
 	private boolean done;
 	private String address;
 	private boolean calendarCreated;
-
-	// This is mainly for the listener to know which list was changed. Should
-	// only be set be the owner of this task
 	private long listId;
+	
+	public Task(){
+		
+	}
 
 	public Task(String name) {
 		this.id = ListContainer.getNextTaskId();
@@ -40,6 +41,10 @@ public class Task implements Serializable, Comparable<Task> {
 
 	public long getId() {
 		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public Priority getPriority() {
@@ -91,7 +96,7 @@ public class Task implements Serializable, Comparable<Task> {
 		return listId;
 	}
 
-	protected void setListId(long listId) {
+	public void setListId(long listId) {
 		this.listId = listId;
 	}
 
@@ -154,7 +159,7 @@ public class Task implements Serializable, Comparable<Task> {
 		taskDTO.setNotice(task.notice);
 		taskDTO.setDate(task.date);
 		taskDTO.setReminder(task.reminder);
-		taskDTO.setPriority(task.priority);
+		taskDTO.setPriority(Priority.toDTO(task.priority));
 		taskDTO.setDone(task.done);
 		taskDTO.setAddress(task.address);
 		taskDTO.setCalendarCreated(task.calendarCreated);
@@ -163,12 +168,13 @@ public class Task implements Serializable, Comparable<Task> {
 	}
 	
 	public static Task fromDTO(TaskDTO taskDTO){
-		Task task = new Task(taskDTO.getName());
+		Task task = new Task();
 		task.id = taskDTO.getId();
+		task.name = taskDTO.getName();
 		task.notice = taskDTO.getNotice();
 		task.date = taskDTO.getDate();
 		task.reminder = taskDTO.getReminder();
-		task.priority = taskDTO.getPriority();
+		task.priority = Priority.fromDTO(taskDTO.getPriority());
 		task.done = taskDTO.isDone();
 		task.address = taskDTO.getAddress();
 		task.calendarCreated = taskDTO.isCalendarCreated();

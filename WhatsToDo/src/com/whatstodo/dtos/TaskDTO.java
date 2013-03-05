@@ -3,8 +3,6 @@ package com.whatstodo.dtos;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.whatstodo.models.Priority;
-
 
 public class TaskDTO implements Serializable{
 
@@ -14,7 +12,7 @@ public class TaskDTO implements Serializable{
 	private String notice;
 	private Date date;
 	private Date reminder;
-	private Priority priority;
+	private PriorityDTO priority;
 	private boolean done;
 	private String address;
 	private boolean calendarCreated;
@@ -36,12 +34,12 @@ public class TaskDTO implements Serializable{
 		this.id = id;		
 	}
 
-	public Priority getPriority() {
+	public PriorityDTO getPriority() {
 		return priority;
 	}
 
-	public void setPriority(Priority priority) {
-		this.priority = priority;
+	public void setPriority(PriorityDTO priorityDTO) {
+		this.priority = priorityDTO;
 	}
 
 	public boolean isDone() {

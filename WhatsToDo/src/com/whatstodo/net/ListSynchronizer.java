@@ -5,17 +5,18 @@ import java.lang.reflect.Modifier;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.whatstodo.dtos.ListDTO;
 import com.whatstodo.models.List;
 
 public class ListSynchronizer {
 
-	// TODO
+	// TODO Implement preferences
 	private static final String BaseURL = "http://10.0.2.2:8080/rest/list";
 	private static final String user = "Testuser";
 
 	private Gson gson = new GsonBuilder()
 			.excludeFieldsWithModifiers(Modifier.STATIC).serializeNulls()
-			.registerTypeAdapter(List.class, new ListTypeAdapter()).create();
+			.create();
 
 	public List getList(long listId) {
 
@@ -28,7 +29,8 @@ public class ListSynchronizer {
 			List synchronizedList = null;
 			
 			if (!receivedJson.isJsonNull()) {
-				synchronizedList = gson.fromJson(receivedJson, List.class);
+				ListDTO dto = gson.fromJson(receivedJson, ListDTO.class);
+				List.fromDTO(dto);
 			}
 
 			return synchronizedList;
@@ -84,7 +86,8 @@ public class ListSynchronizer {
 			
 			
 			if (!receivedJson.isJsonNull()) {
-				synchronizedList = gson.fromJson(receivedJson, List.class);
+				ListDTO dto = gson.fromJson(receivedJson, ListDTO.class);
+				List.fromDTO(dto);
 			}
 
 			return synchronizedList;

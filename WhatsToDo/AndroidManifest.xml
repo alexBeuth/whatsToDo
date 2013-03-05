@@ -46,8 +46,6 @@
             android:label="@string/title_activity_list"
             android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.whatstodo.activities.AlarmActivity" >
-        </activity>
 
         <service android:name="com.whatstodo.utils.AlarmService" >
         </service>

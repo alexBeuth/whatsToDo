@@ -11,7 +11,6 @@ import java.util.NoSuchElementException;
 
 import com.whatstodo.dtos.ListDTO;
 import com.whatstodo.dtos.TaskDTO;
-import com.whatstodo.persistence.ChangeListener;
 
 /**
  * The list class represents a list of tasks. It is ordered in the natural order
@@ -25,32 +24,20 @@ public class List implements Serializable, java.util.List<Task> {
 	private static final long serialVersionUID = -2889639373188534039L;
 
 	private int size;
+	//TODO What can we do at lazy loading to display the correct size?
+	private int displayedSize;
 	private Task[] orderedTasks;
 	private Comparator<Task> comparator;
 	private long id;
 	private String name;
-
-	// Dont save if its a temp. list (like filter)
-	private boolean isPersistent;
 
 	public List() {
 		orderedTasks = new Task[1];
 	}
 
 	public List(String name) {
-
-		this(name, false);
-	}
-
-	public List(String name, boolean dontSave) {
-
 		this();
-		if (!dontSave) {
-			id = ListContainer.getNextListId();
-		}
 		this.name = name;
-		isPersistent = !dontSave;
-		notifyListener();
 	}
 
 	public List(String name, Comparator<Task> comparator) {
@@ -65,7 +52,6 @@ public class List implements Serializable, java.util.List<Task> {
 
 	public void setName(String name) {
 		this.name = name;
-		notifyListener();
 	}
 
 	public long getId() {
@@ -74,7 +60,6 @@ public class List implements Serializable, java.util.List<Task> {
 
 	public void setId(long id) {
 		this.id = id;
-		notifyListener();
 	}
 
 	public void addTask(String name) {
@@ -91,16 +76,15 @@ public class List implements Serializable, java.util.List<Task> {
 		throw new NoSuchElementException("Cannot find task with ID: " + taskId);
 	}
 
-	public void setPersistent(boolean isPersistent) {
-		this.isPersistent = isPersistent;
+	public int getDisplayedSize() {
+		return displayedSize;
 	}
 
-	public boolean isPersistent() {
-		return isPersistent;
+	public void setDisplayedSize(int displayedSize) {
+		this.displayedSize = displayedSize;
 	}
 
 	// Insertion sort
-	// Do not save in here. it will be called before saving!
 	public void sort() {
 		int N = size;
 		for (int i = 0; i < N; i++) {
@@ -139,6 +123,9 @@ public class List implements Serializable, java.util.List<Task> {
 
 	@Override
 	public boolean add(Task task) {
+		
+		task.setListId(id);
+		
 		// double size of array if necessary
 		if (size == orderedTasks.length - 1)
 			resize(2 * orderedTasks.length);
@@ -152,10 +139,6 @@ public class List implements Serializable, java.util.List<Task> {
 		orderedTasks[i + 1] = task;
 		size++;
 
-		if (isPersistent) {
-			task.setListId(id);
-		}
-		notifyListener();
 		return true;
 	}
 
@@ -179,7 +162,6 @@ public class List implements Serializable, java.util.List<Task> {
 			orderedTasks[i] = null;
 		}
 		size = 0;
-		notifyListener();
 	}
 
 	@Override
@@ -253,7 +235,6 @@ public class List implements Serializable, java.util.List<Task> {
 		if ((size > 0) && (size == (orderedTasks.length - 1) / 4))
 			resize(orderedTasks.length / 2);
 
-		notifyListener();
 		return toReturn;
 
 	}
@@ -414,11 +395,6 @@ public class List implements Serializable, java.util.List<Task> {
 			orderedTasks[i] = ((Task) s.readObject());
 	}
 
-	protected void notifyListener() {
-		if (isPersistent)
-			ChangeListener.onListChange(this);
-	}
-	
 	public static ListDTO toDTO(List list){
 		ListDTO listDTO = new ListDTO();
 		listDTO.setId(list.id);
@@ -444,7 +420,6 @@ public class List implements Serializable, java.util.List<Task> {
 			list.orderedTasks[i] = Task.fromDTO(tasksDTO[i]);
 		}
 		list.sort();
-		list.isPersistent = true;
 		return list;
 	}
 }

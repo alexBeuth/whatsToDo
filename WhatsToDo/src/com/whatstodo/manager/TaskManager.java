@@ -1,5 +1,7 @@
 package com.whatstodo.manager;
 
+import java.util.List;
+
 import android.content.Context;
 import android.database.SQLException;
 
@@ -30,8 +32,9 @@ public class TaskManager {
 	}
 
 	public Task save(Task taskToSave) {
-		
-		//We could offer two methods for saving and creating instead... Don't know yet
+
+		// We could offer two methods for saving and creating instead... Don't
+		// know yet
 
 		try {
 			taskDao.open();
@@ -39,17 +42,17 @@ public class TaskManager {
 			if (taskToReturn == null) {
 				taskToReturn = taskDao.create(taskToSave);
 			} else {
-				taskToReturn = taskDao.update(taskToReturn);
+				taskToReturn = taskDao.update(taskToSave);
 			}
 			return taskToReturn;
 		} catch (SQLException e) {
-			//TODO Define exception
+			// TODO Define exception
 			throw new RuntimeException(e);
-		}finally {
+		} finally {
 			taskDao.close();
 		}
 	}
-	
+
 	public Task load(long id) {
 		try {
 			taskDao.open();
@@ -61,7 +64,7 @@ public class TaskManager {
 			taskDao.close();
 		}
 	}
-	
+
 	public void delete(Task task) {
 		try {
 			taskDao.open();
@@ -73,5 +76,24 @@ public class TaskManager {
 			taskDao.close();
 		}
 	}
+	
+	public List<Task> findAll() {
+		try {
+			taskDao.open();
+			return taskDao.findAll();
+		} finally {
+			taskDao.close();
+		}
+	}
 
+	public List<Task> findByListId(long listId) {
+		try {
+			taskDao.open();
+			List<Task> byListId = taskDao.findByListId(listId);
+			
+			return byListId;
+		} finally {
+			taskDao.close();
+		}
+	}
 }

@@ -28,28 +28,27 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.whatstodo.R;
+import com.whatstodo.manager.TaskManager;
+import com.whatstodo.manager.TodoListManager;
 import com.whatstodo.models.List;
-import com.whatstodo.models.ListContainer;
 import com.whatstodo.models.Priority;
 import com.whatstodo.models.Task;
-import com.whatstodo.utils.ActivityUtils;
 import com.whatstodo.utils.AlarmService;
 
 public class TaskActivity extends FragmentActivity implements OnClickListener,
 		AddressDialogFragment.NoticeDialogListener {
 
-	private ListContainer container;
+//	private ListContainer container;
 	private List list;
-	private List userList;
 	private Task task;
-	private Priority userPriority;
-	private String userNotice;
-	private Date userDate;
-	private Date userReminder;
-	private String userAddress;
+//	private List userList;
+//	private Priority userPriority;
+//	private String userNotice;
+//	private Date userDate;
+//	private Date userReminder;
+//	private String userAddress;
 
 	private static final int DATE_DIALOG_ID = 0;
 	private static final int REMINDER_DATE_DIALOG_ID = 1;
@@ -69,18 +68,17 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 
 		Bundle bundle = getIntent().getExtras();
 
-		nm.cancel((int) bundle.getLong("TaskId"));
+		long taskId = bundle.getLong("TaskId");
+		nm.cancel((int) taskId);
 
-		container = ListContainer.getInstance();
-
-		task = ActivityUtils.getTaskForId(bundle.getLong("TaskId"));
-		list = container.getList(task.getListId());
-		userPriority = task.getPriority();
-		userNotice = (String) task.getNotice();
-		userDate = task.getDate();
-		userReminder = task.getReminder();
-		userList = list;
-		userAddress = task.getAddress();
+		task = TaskManager.getInstance().load(taskId);
+		list = TodoListManager.getInstance().load(task.getListId());
+//		userPriority = task.getPriority();
+//		userNotice = (String) task.getNotice();
+//		userDate = task.getDate();
+//		userReminder = task.getReminder();
+//		userList = list;
+//		userAddress = task.getAddress();
 
 		setTitle("WhatsToDo");
 
@@ -156,17 +154,8 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 			EditText editText = (EditText) findViewById(R.id.taskName);
 			task.setName(editText.getText().toString());
 			task.setDone(getCheckBox());
-			task.setNotice(userNotice);
-			task.setPriority(userPriority);
-			task.setDate(userDate);
-			task.setReminder(userReminder);
-			task.setAddress(userAddress);
-
-			if (list != userList) {
-				userList.add(task);
-				list.remove(task);
-				list = userList;
-			}
+			
+			TaskManager.getInstance().save(task);
 
 			setResult(Activity.RESULT_OK);
 			finish();
@@ -219,7 +208,7 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 
 		Calendar cal = Calendar.getInstance();
 		if (task.getDate() != null) {
-			cal.setTime(userDate);
+			cal.setTime(task.getDate());
 		}
 
 		EditText editText = (EditText) findViewById(R.id.taskName);
@@ -229,8 +218,8 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 		intent.putExtra("beginTime", cal.getTimeInMillis());
 		intent.putExtra("endTime", cal.getTimeInMillis() + 15 * 60 * 1000);
 		intent.putExtra("title", editText.getText().toString());
-		intent.putExtra("description", userNotice);
-		intent.putExtra("eventLocation", userAddress);
+		intent.putExtra("description", task.getNotice());
+		intent.putExtra("eventLocation", task.getAddress());
 		startActivity(intent);
 
 		task.setCalendarCreated(true);
@@ -248,7 +237,7 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 	private void changeNotice() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Notiz");
-		builder.setMessage(userNotice);
+		builder.setMessage(task.getNotice());
 
 		final EditText input = new EditText(this);
 		builder.setView(input);
@@ -256,10 +245,11 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 		builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 
-				userNotice = input.getText().toString();
+				String notice = input.getText().toString();
 				TextView taskNotice = (TextView) findViewById(R.id.textViewNotice);
-				if (userNotice != null) {
-					taskNotice.setText(userNotice);
+				if (notice != null) {
+					taskNotice.setText(notice);
+					task.setNotice(notice);
 				} else {
 					taskNotice.setText("Keine Notiz");
 				}
@@ -277,21 +267,9 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 	}
 
 	private void changePriority() {
-		switch (userPriority) {
-		case LOW:
-			userPriority = Priority.NORMAL;
-			break;
-		case NORMAL:
-			userPriority = Priority.HIGH;
-			break;
-		case HIGH:
-			userPriority = Priority.LOW;
-			break;
-		default:
-			Toast.makeText(getBaseContext(), "Priority not found",
-					Toast.LENGTH_LONG).show();
-		}
-		showPriority(userPriority);
+		
+		task.setPriority(Priority.getNextPriority(task.getPriority()));
+		showPriority(task.getPriority());
 	}
 
 	private void changeDate() {
@@ -314,7 +292,6 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_task, menu);
 		return true;
 	}
@@ -331,8 +308,8 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 
 							Calendar cal = Calendar.getInstance();
 							cal.set(year, monthOfYear, dayOfMonth);
-							userDate = cal.getTime();
-							showDate(userDate);
+							task.setDate(cal.getTime());
+							showDate(task.getDate());
 						}
 					}, 2011, 0, 1);
 
@@ -340,8 +317,8 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
 							if (which == DialogInterface.BUTTON_NEUTRAL) {
-								userDate = null;
-								showDate(userDate);
+								task.setDate(null);
+								showDate(task.getDate());
 								dialog.dismiss();
 							}
 						}
@@ -384,7 +361,7 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 
 							Calendar calendar = Calendar.getInstance();
 							calendar.set(year, monthOfYear, dayOfMonth);
-							userReminder = calendar.getTime();
+							task.setReminder(calendar.getTime());
 							showDialog(REMINDER_TIME_DIALOG_ID);
 						}
 					}, 2011, 0, 1);
@@ -394,8 +371,8 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 						public void onClick(DialogInterface dialog, int which) {
 							if (which == DialogInterface.BUTTON_NEUTRAL) {
 								cancelReminderAlarm((int) task.getId());
-								userReminder = null;
-								showReminder(userReminder);
+								task.setReminder(null);
+								showReminder(task.getReminder());
 								dialog.dismiss();
 							}
 						}
@@ -449,14 +426,14 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 						public void onTimeSet(TimePicker view, int hourOfDay,
 								int minute) {
 
-							userReminder.setHours(hourOfDay);
-							userReminder.setMinutes(minute);
-							userReminder.setSeconds(0);
-							showReminder(userReminder);
+							task.getReminder().setHours(hourOfDay);
+							task.getReminder().setMinutes(minute);
+							task.getReminder().setSeconds(0);
+							showReminder(task.getReminder());
 							Calendar calendar = Calendar.getInstance();
-							if (calendar.getTimeInMillis() < userReminder
+							if (calendar.getTimeInMillis() < task.getReminder()
 									.getTime()) {
-								setReminderAlarm(userReminder);
+								setReminderAlarm(task.getReminder());
 							}
 						}
 					}, 12, 0, true);
@@ -466,8 +443,8 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 						public void onClick(DialogInterface dialog, int which) {
 							if (which == DialogInterface.BUTTON_NEUTRAL) {
 								cancelReminderAlarm((int) task.getId());
-								userReminder = null;
-								showReminder(userReminder);
+								task.setReminder(null);
+								showReminder(task.getReminder());
 								dialog.dismiss();
 							}
 						}
@@ -513,10 +490,11 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 			return remTimeDialog;
 
 		case LIST_DIALOG_ID:
-			final String[] listNames = new String[container.getLists().size()];
+			final java.util.List<List> allLists = TodoListManager.getInstance().findAll();
+			final String[] listNames = new String[allLists.size()];
 			int listPos = 0,
 			i = 0;
-			for (List lists : container.getLists()) {
+			for (List lists : allLists) {
 				if (lists.getId() == list.getId()) {
 					listPos = i;
 				}
@@ -539,11 +517,12 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 							if (which == DialogInterface.BUTTON_POSITIVE) {
 								int checkedPosition = ((AlertDialog) dialog)
 										.getListView().getCheckedItemPosition();
-								userList = container
-										.getList(listNames[checkedPosition]
-												.toString());
+								
+								List checkedList = allLists.get(checkedPosition);
+								
+								task.setListId(checkedList.getId());
 								showTextView(R.id.textViewList,
-										userList.getName());
+										checkedList.getName());
 								dialog.dismiss();
 							}
 						}
@@ -677,7 +656,7 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 	private void setReminderAlarm(Date date) {
 
 		Intent intent = new Intent(this, AlarmService.class);
-		intent.putExtras(getBundle());
+		intent.putExtras(getBundleForAlarmSerive());
 		PendingIntent pendingIntent = PendingIntent.getService(this,
 				(int) task.getId(), intent, 0);
 
@@ -697,17 +676,16 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 		alarmManager.cancel(pendingIntent);
 	}
 
-	private Bundle getBundle() {
+	private Bundle getBundleForAlarmSerive() {
 		Bundle bundle = new Bundle();
-		bundle.putLong("ListId", list.getId());
 		bundle.putLong("TaskId", task.getId());
 		return bundle;
 	}
 
 	@Override
 	public void onAddressDialogPositiveClick(AddressDialogFragment dialog) {
-		userAddress = dialog.getAddress();
-		showTextView(R.id.textViewAdress, userAddress);
+		task.setAddress(dialog.getAddress());
+		showTextView(R.id.textViewAdress, task.getAddress());
 	}
 
 	@Override

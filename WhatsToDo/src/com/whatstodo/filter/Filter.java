@@ -3,8 +3,9 @@ package com.whatstodo.filter;
 import java.io.Serializable;
 import java.util.Calendar;
 
+import com.whatstodo.manager.TaskManager;
+import com.whatstodo.manager.TodoListManager;
 import com.whatstodo.models.List;
-import com.whatstodo.models.ListContainer;
 import com.whatstodo.models.Task;
 
 public abstract class Filter implements Serializable {
@@ -12,12 +13,13 @@ public abstract class Filter implements Serializable {
 	private static final long serialVersionUID = 2645671922210489484L;
 
 	public List getTask() {
-		ListContainer container = ListContainer.getInstance();
 
-		List result = new List(getFilterName(), true);
+		List result = new List(getFilterName());
 
-		for (List list : container.getLists()) {
-			for (Task task : list) {
+		//TODO do not load all lists but query the db!
+		for (List list : TodoListManager.getInstance().findAll()) {
+			
+			for (Task task : TaskManager.getInstance().findByListId(list.getId())) {
 				if (filter(task)) {
 					result.add(task);
 				}

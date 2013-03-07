@@ -10,14 +10,12 @@ import android.os.IBinder;
 
 import com.whatstodo.R;
 import com.whatstodo.activities.TaskActivity;
-import com.whatstodo.models.List;
-import com.whatstodo.models.ListContainer;
+import com.whatstodo.manager.TaskManager;
+import com.whatstodo.manager.TodoListManager;
 import com.whatstodo.models.Task;
 
 public class AlarmService extends Service {
 
-	private ListContainer container;
-	private List list;
 	private Task task;
 
 	@Override
@@ -25,9 +23,9 @@ public class AlarmService extends Service {
 		super.onStart(intent, startId);
 
 		Bundle bundle = intent.getExtras();
-		container = ListContainer.getInstance();
-		list = container.getList(bundle.getLong("ListId"));
-		task = list.getTask(bundle.getLong("TaskId"));
+		
+		TodoListManager.getInstance().load(bundle.getLong("ListId"));
+		task = TaskManager.getInstance().load(bundle.getLong("TaskId"));
 
 
 		if (task.getReminder() != null) {

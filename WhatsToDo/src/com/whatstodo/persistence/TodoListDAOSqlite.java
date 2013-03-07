@@ -9,19 +9,17 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.whatstodo.models.List;
-import com.whatstodo.models.Task;
 
+//TODO Exception handling and logging
 public class TodoListDAOSqlite implements TodoListDAO {
 	
-	private final String idClause = DatabaseHelper.TASK_COLUMN_ID + " = ?";
+	private final String idClause = DatabaseHelper.TODOLIST_COLUMN_ID + " = ?";
 	
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase db;
-	private Context context;
 
 	public TodoListDAOSqlite(Context context) {
 		dbHelper = new DatabaseHelper(context);
-		this.context = context;
 
 	}
 
@@ -39,9 +37,11 @@ public class TodoListDAOSqlite implements TodoListDAO {
 	public List getById(long id) {
 		
 		Cursor cursor = db.query(DatabaseHelper.TODOLIST_TABLE, null, idClause, new String[]{Long.toString(id)}, null, null, null);
-		cursor.moveToFirst();
 		
-		List list = cursorToTodoList(cursor);
+		List list = null;
+		if (cursor.moveToFirst()) {
+			list = cursorToTodoList(cursor);
+		}
 		
 		cursor.close();
 		return list;
@@ -50,7 +50,9 @@ public class TodoListDAOSqlite implements TodoListDAO {
 	@Override
 	public java.util.List<List> findAll() {
 		Cursor cursor = db.query(DatabaseHelper.TODOLIST_TABLE, null, null, null, null, null, null);
-		return cursorToList(cursor);
+		java.util.List<List> list = cursorToList(cursor);
+		cursor.close();
+		return list;
 	}
 
 	@Override
@@ -78,9 +80,12 @@ public class TodoListDAOSqlite implements TodoListDAO {
 	public List update(List entity) {
 		
 		ContentValues values = todoListToContentValues(entity);
-		int id = db.update(DatabaseHelper.TODOLIST_TABLE, values, idClause, new String[] {Long.toString(entity.getId())});
+		int updatedRows = db.update(DatabaseHelper.TODOLIST_TABLE, values, idClause, new String[] {Long.toString(entity.getId())});
+		if (updatedRows > 1) {
+			throw new SQLException("More than one row with the same _ID");
+		}
 		
-		return getById(id);
+		return getById(entity.getId());
 	}
 
 	@Override
@@ -104,14 +109,8 @@ public class TodoListDAOSqlite implements TodoListDAO {
 		List list = new List();
 		list.setId(cursor.getLong(cursor.getColumnIndex(DatabaseHelper.TODOLIST_COLUMN_ID)));
 		list.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TODOLIST_COLUMN_NAME)));
-		//TODO size
-		//TODO LAZY LOADING
-		//TODO get this via manager
-		TaskDAOSqlite taskDAO = new TaskDAOSqlite(context);
-		taskDAO.open();
-		java.util.List<Task> findByListId = taskDAO.findByListId(list.getId());
-		taskDAO.close();
-		list.addAll(findByListId);
+		list.setDisplayedSize(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.TODOLIST_COLUMN_SIZE)));
+		//TODO size and delete the displayed size
 		return list;
 	}
 }

@@ -30,15 +30,14 @@ import com.whatstodo.activities.adapter.ListAdapter;
 import com.whatstodo.filter.PriorityHighFilter;
 import com.whatstodo.filter.TodayFilter;
 import com.whatstodo.filter.TomorrowFilter;
+import com.whatstodo.manager.TodoListManager;
 import com.whatstodo.models.List;
-import com.whatstodo.models.ListContainer;
 import com.whatstodo.utils.ActivityUtils;
 
 public class ListContainerActivity extends Activity implements OnClickListener {
 
 	protected static final int LIST_ACTIVITY = 0;
 	protected static final int FILTER_ACTIVITY = 1;
-	ListContainer container;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +72,9 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if ((event.getAction() == KeyEvent.ACTION_DOWN)
 						&& (keyCode == KeyEvent.KEYCODE_ENTER)) {
-					container.addList(editText.getText().toString());
+					
+					String listName = editText.getText().toString();
+					TodoListManager.getInstance().save(new List(listName));
 					showLists();
 					InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 					inputMethodManager.hideSoftInputFromWindow(
@@ -85,7 +86,6 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			}
 		});
 
-		container = ListContainer.getInstance();
 		showLists();
 	}
 
@@ -130,9 +130,9 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 	private void showLists() {
 
 		ListView listList = (ListView) findViewById(R.id.list1);
-
+		
 		ListAdapter adapter = new ListAdapter(this, R.layout.listitem,
-				container.getLists());
+		TodoListManager.getInstance().findAll());
 
 		listList.setAdapter(adapter);
 		listList.setOnItemClickListener(new OnItemClickListener() {
@@ -163,7 +163,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			ContextMenuInfo menuInfo) {
 		if (view.getId() == R.id.list1) {
 			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-			List list = container.getLists().get(info.position);
+			final List list = TodoListManager.getInstance().findAll().get(info.position);
 			menu.setHeaderTitle(list.getName());
 			String[] menuItems = getResources().getStringArray(R.array.menu);
 			for (int i = 0; i < menuItems.length; i++) {
@@ -178,7 +178,8 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 				.getMenuInfo();
 		String[] menuItems = getResources().getStringArray(R.array.menu);
 		String menuItemName = menuItems[item.getItemId()];
-		final List list = container.getLists().get(info.position);
+		
+		final List list = TodoListManager.getInstance().findAll().get(info.position);
 
 		ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
@@ -196,6 +197,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 								int whichButton) {
 
 							list.setName(input.getText().toString());
+							TodoListManager.getInstance().save(list);
 							showLists();
 						}
 					});
@@ -211,7 +213,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			alert.show();
 
 		} else if (menuItemName.equals(menuItems[1])) { // Delete
-			container.deleteList(list.getId());
+			TodoListManager.getInstance().delete(list);
 			showLists();
 
 		} else if (menuItemName.equals(menuItems[2])) { // Copy
@@ -219,6 +221,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			showLists();
 		} else if (menuItemName.equals(menuItems[3])) { // Paste
 			list.setName(clipboard.getText().toString());
+			TodoListManager.getInstance().save(list);
 			showLists();
 		}
 

@@ -33,8 +33,9 @@ import com.whatstodo.filter.Filter;
 import com.whatstodo.filter.PriorityHighFilter;
 import com.whatstodo.filter.TodayFilter;
 import com.whatstodo.filter.TomorrowFilter;
+import com.whatstodo.manager.TaskManager;
+import com.whatstodo.manager.TodoListManager;
 import com.whatstodo.models.List;
-import com.whatstodo.models.ListContainer;
 import com.whatstodo.models.Task;
 import com.whatstodo.utils.ActivityUtils;
 
@@ -86,7 +87,7 @@ public class ListActivity extends Activity implements OnClickListener,
 		} else {
 
 			long listId = bundle.getLong("ListId");
-			list = ListContainer.getInstance().getList(listId);
+			list = TodoListManager.getInstance().load(listId, true);
 
 			editText.setOnKeyListener(new OnKeyListener() {
 				public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -94,7 +95,13 @@ public class ListActivity extends Activity implements OnClickListener,
 					// button
 					if ((event.getAction() == KeyEvent.ACTION_DOWN)
 							&& (keyCode == KeyEvent.KEYCODE_ENTER)) {
+						
+						
+						//TODO Do not eager save the list put save the task alone
 						list.addTask(editText.getText().toString());
+						
+						TodoListManager.getInstance().save(list, true);
+						
 						showTasks();
 						InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 						inputMethodManager.hideSoftInputFromWindow(
@@ -171,6 +178,7 @@ public class ListActivity extends Activity implements OnClickListener,
 
 		ListView listList = (ListView) findViewById(R.id.taskList);
 
+		list = TodoListManager.getInstance().load(list.getId(), true);
 		TaskAdapter adapter = new TaskAdapter(this, R.layout.taskitem, list);
 		adapter.registerListener(this);
 
@@ -250,6 +258,7 @@ public class ListActivity extends Activity implements OnClickListener,
 								int whichButton) {
 
 							task.setName(input.getText().toString());
+							TaskManager.getInstance().save(task);
 							showTasks();
 						}
 					});
@@ -265,6 +274,7 @@ public class ListActivity extends Activity implements OnClickListener,
 			alert.show();
 
 		} else if (menuItemName.equals(menuItems[1])) { // Delete
+			TaskManager.getInstance().delete(task);
 			list.remove(task);
 			showTasks();
 

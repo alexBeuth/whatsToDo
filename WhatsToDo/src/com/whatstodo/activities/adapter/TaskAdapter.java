@@ -15,9 +15,9 @@ import android.widget.TextView;
 
 import com.whatstodo.R;
 import com.whatstodo.filter.Filter;
+import com.whatstodo.manager.TaskManager;
 import com.whatstodo.models.Priority;
 import com.whatstodo.models.Task;
-import com.whatstodo.utils.ActivityUtils;
 
 public class TaskAdapter extends ArrayAdapter<Task> implements OnClickListener {
 
@@ -117,15 +117,17 @@ public class TaskAdapter extends ArrayAdapter<Task> implements OnClickListener {
 	public void onClick(View view) {
 
 		long taskId = (Long) ((FrameLayout) view.getParent()).getTag();
-		Task task = ActivityUtils.getTaskForId(taskId);
+		Task task = TaskManager.getInstance().load(taskId);
 		
 		switch (view.getId()) {
 		case R.id.clickTaskDone:
 			task.setDone(!task.isDone());
+			TaskManager.getInstance().save(task);
 			listener.onTaskChange();
 			break;
 		case R.id.clickTaskPriority:
 			task.setPriority(Priority.getNextPriority(task.getPriority()));
+			TaskManager.getInstance().save(task);
 			listener.onTaskChange();
 			break;
 

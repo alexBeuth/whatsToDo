@@ -21,10 +21,11 @@ public class Task implements Serializable, Comparable<Task> {
 	
 	public Task(){
 		
+		priority = Priority.NORMAL;
+		done = false;
 	}
 
 	public Task(String name) {
-		this.id = ListContainer.getNextTaskId();
 		this.name = name;
 		priority = Priority.NORMAL;
 		done = false;
@@ -132,7 +133,7 @@ public class Task implements Serializable, Comparable<Task> {
 	}
 	
 	private void notifyListener() {
-		ListContainer.getInstance().getList(listId).notifyListener();
+		//ListContainer.getInstance().getList(listId).notifyListener();
 	}
 
 	@Override

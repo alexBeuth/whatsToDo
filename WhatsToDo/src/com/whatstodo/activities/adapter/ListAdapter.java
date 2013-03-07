@@ -38,7 +38,7 @@ public class ListAdapter extends ArrayAdapter<List> {
 
 		listName.getInputExtras(true).putLong("id", list.getId());
 		listName.setText(list.getName());
-		numberOfTasks.setText(Integer.toString(list.size()));
+		numberOfTasks.setText(Integer.toString(list.getDisplayedSize()));
 
 		return element;
 	}

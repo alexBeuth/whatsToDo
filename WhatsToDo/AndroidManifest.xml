@@ -37,7 +37,12 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.whatstodo.activities.ListActivity"
+            android:name="com.whatstodo.activities.TodoActivity"
+            android:label="@string/title_activity_list"
+            android:screenOrientation="portrait" >
+        </activity>
+		<activity
+            android:name="com.whatstodo.activities.FilteredTodoActivity"
             android:label="@string/title_activity_list"
             android:screenOrientation="portrait" >
         </activity>

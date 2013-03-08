@@ -6,10 +6,10 @@
     tools:context=".ListActivity" >
 
     <EditText
-        android:id="@+id/task"
+        android:id="@+id/createTask"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/task"
+        android:layout_alignBottom="@+id/createTask"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
@@ -24,7 +24,7 @@
         android:id="@+id/synchronisationList"
         android:layout_width="45dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/task"
+        android:layout_alignBottom="@+id/createTask"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_margin="5dp"
@@ -34,7 +34,7 @@
         android:id="@+id/taskList"
         android:layout_width="match_parent"
         android:layout_height="315dp"
-        android:layout_below="@+id/task" >
+        android:layout_below="@+id/createTask" >
     </ListView>
 
     <FrameLayout

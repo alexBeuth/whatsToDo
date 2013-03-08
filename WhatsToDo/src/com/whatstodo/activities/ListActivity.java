@@ -2,21 +2,17 @@ package com.whatstodo.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -29,20 +25,18 @@ import android.widget.Toast;
 
 import com.whatstodo.R;
 import com.whatstodo.activities.adapter.TaskAdapter;
-import com.whatstodo.filter.Filter;
 import com.whatstodo.filter.PriorityHighFilter;
 import com.whatstodo.filter.TodayFilter;
 import com.whatstodo.filter.TomorrowFilter;
 import com.whatstodo.manager.TaskManager;
-import com.whatstodo.manager.TodoListManager;
 import com.whatstodo.models.List;
 import com.whatstodo.models.Task;
 import com.whatstodo.utils.ActivityUtils;
 
-public class ListActivity extends Activity implements OnClickListener,
+public abstract class ListActivity extends Activity implements OnClickListener,
 		TaskAdapter.TaskAdapterListener {
 
-	private List list;
+	protected List list;
 	protected static final int TASK_ACTIVITY = 0;
 
 	@Override
@@ -52,71 +46,19 @@ public class ListActivity extends Activity implements OnClickListener,
 
 		this.getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-		Bundle bundle = getIntent().getExtras();
-
-		Button createTask = (Button) findViewById(R.id.synchronisationList);
-		createTask.setOnClickListener(this);
-
-		initTextView(R.id.filterButton5, "Listen");
-		initTextView(R.id.filterButton5, "Listen");
-		TextView filterButton2 = initTextView(R.id.filterButton6, null);
-		TextView filterButton3 = initTextView(R.id.filterButton7, null);
-		initTextView(R.id.filterButton8, "Mehr");
-
-		final EditText editText = (EditText) findViewById(R.id.task);
-
-		filterButton2.setText("Heute");
-		filterButton3.setText("Priorität");
-
-		if (bundle.getBoolean("isFilter")) {
-			Filter filter = (Filter) bundle.getSerializable("filter");
-			list = filter.getTask();
-			editText.setText("Filteransicht");
-			editText.setKeyListener(null);
-			if (filter instanceof TodayFilter) {
-				filterButton2.setText("Morgen");
-				filterButton3.setText("Priorität");
-			} else if (filter instanceof TomorrowFilter) {
-				filterButton2.setText("Heute");
-				filterButton3.setText("Priorität");
-			} else if (filter instanceof PriorityHighFilter) {
-				filterButton2.setText("Heute");
-				filterButton3.setText("Morgen");
-			}
-		} else {
-
-			long listId = bundle.getLong("ListId");
-			list = TodoListManager.getInstance().load(listId, true);
-
-			editText.setOnKeyListener(new OnKeyListener() {
-				public boolean onKey(View v, int keyCode, KeyEvent event) {
-					// If the event is a key-down event on the "enter"
-					// button
-					if ((event.getAction() == KeyEvent.ACTION_DOWN)
-							&& (keyCode == KeyEvent.KEYCODE_ENTER)) {
-						
-						
-						//TODO Do not eager save the list put save the task alone
-						list.addTask(editText.getText().toString());
-						
-						TodoListManager.getInstance().save(list, true);
-						
-						showTasks();
-						InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-						inputMethodManager.hideSoftInputFromWindow(
-								editText.getWindowToken(), 0);
-						return true;
-					}
-					return false;
-				}
-			});
-		}
+		
+		list = getTodoData();
 		setTitle(list.getName());
-		showTasks();
+
+		Button syncButton = (Button) findViewById(R.id.synchronisationList);
+		syncButton.setOnClickListener(this);
+
+		initListView();
 	}
 
-	private TextView initTextView(int id, String text) {
+	protected abstract List getTodoData();
+
+	protected TextView initTextView(int id, String text) {
 		TextView textView = (TextView) findViewById(id);
 		if (text != null)
 			textView.setText(text);
@@ -174,38 +116,6 @@ public class ListActivity extends Activity implements OnClickListener,
 		}
 	}
 
-	private void showTasks() {
-
-		ListView listList = (ListView) findViewById(R.id.taskList);
-
-		list = TodoListManager.getInstance().load(list.getId(), true);
-		TaskAdapter adapter = new TaskAdapter(this, R.layout.taskitem, list);
-		adapter.registerListener(this);
-
-		listList.setAdapter(adapter);
-		listList.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-
-				long taskId = ((TextView) ((FrameLayout) ((FrameLayout) ((RelativeLayout) view)
-						.getChildAt(0)).getChildAt(0)).getChildAt(0))
-						.getInputExtras(false).getLong("id");
-
-				Intent intent = new Intent(view.getContext(),
-						TaskActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putLong("TaskId", taskId);
-				bundle.putLong("ListId", list.getId());
-				intent.putExtras(bundle);
-				startActivityForResult(intent, TASK_ACTIVITY);
-
-			}
-		});
-
-		registerForContextMenu(listList);
-	}
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View view,
@@ -217,7 +127,7 @@ public class ListActivity extends Activity implements OnClickListener,
 					.getChildAt(0)).getChildAt(0)).getChildAt(0))
 					.getInputExtras(false).getLong("id");
 
-			Task task = list.getTask(taskId);
+			Task task = TaskManager.getInstance().load(taskId);
 			menu.setHeaderTitle(task.getName());
 			String[] menuItems = getResources().getStringArray(R.array.menu);
 			for (int i = 0; i < menuItems.length; i++) {
@@ -259,7 +169,7 @@ public class ListActivity extends Activity implements OnClickListener,
 
 							task.setName(input.getText().toString());
 							TaskManager.getInstance().save(task);
-							showTasks();
+							refreshListView();
 						}
 					});
 
@@ -275,15 +185,14 @@ public class ListActivity extends Activity implements OnClickListener,
 
 		} else if (menuItemName.equals(menuItems[1])) { // Delete
 			TaskManager.getInstance().delete(task);
-			list.remove(task);
-			showTasks();
+			refreshListView();
 
 		} else if (menuItemName.equals(menuItems[2])) { // Copy
 			clipboard.setText(task.getName());
-			showTasks();
+			refreshListView();
 		} else if (menuItemName.equals(menuItems[3])) { // Paste
 			task.setName(clipboard.getText().toString());
-			showTasks();
+			refreshListView();
 		}
 
 		return true;
@@ -292,13 +201,55 @@ public class ListActivity extends Activity implements OnClickListener,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK) {
-			showTasks();
+			refreshListView();
 		}
 	}
 
 	@Override
 	public void onTaskChange() {
-		showTasks();
+		refreshListView();
+	}
+	
+	private void initListView() {
+
+		ListView taskListView = (ListView) findViewById(R.id.taskList);
+
+		list = getTodoData();
+		TaskAdapter adapter = new TaskAdapter(this, R.layout.taskitem, list);
+		adapter.registerListener(this);
+
+		taskListView.setAdapter(adapter);
+		taskListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				long taskId = ((TextView) ((FrameLayout) ((FrameLayout) ((RelativeLayout) view)
+						.getChildAt(0)).getChildAt(0)).getChildAt(0))
+						.getInputExtras(false).getLong("id");
+
+				Intent intent = new Intent(view.getContext(),
+						TaskActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putLong("TaskId", taskId);
+				bundle.putLong("ListId", list.getId());
+				intent.putExtras(bundle);
+				startActivityForResult(intent, TASK_ACTIVITY);
+			}
+		});
+
+		registerForContextMenu(taskListView);
+	}
+	
+	protected void refreshListView() {
+		
+		ListView taskListView = (ListView) findViewById(R.id.taskList);
+		list = getTodoData();
+		TaskAdapter adapter = new TaskAdapter(this, R.layout.taskitem, list);
+		adapter.registerListener(this);
+
+		taskListView.setAdapter(adapter);
 	}
 
 	private void startSynchronisation() {

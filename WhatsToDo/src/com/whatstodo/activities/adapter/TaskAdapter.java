@@ -1,6 +1,7 @@
 package com.whatstodo.activities.adapter;
 
 import java.util.Calendar;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,7 +30,7 @@ public class TaskAdapter extends ArrayAdapter<Task> implements OnClickListener {
 	TaskAdapterListener listener;
 
 	private Context context;
-	private java.util.List<Task> tasks;
+	private List<Task> tasks;
 
 	public TaskAdapter(Context ctx, int textViewResourceId,
 			java.util.List<Task> tasks) {
@@ -46,6 +47,7 @@ public class TaskAdapter extends ArrayAdapter<Task> implements OnClickListener {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			element = inflater.inflate(R.layout.taskitem, null);
 		}
+
 		Task task = tasks.get(position);
 		
 		//set on click listener to overlaying layouts
@@ -142,5 +144,4 @@ public class TaskAdapter extends ArrayAdapter<Task> implements OnClickListener {
 					+ " must implement NoticeDialogListener");
 		}
 	}
-
 }

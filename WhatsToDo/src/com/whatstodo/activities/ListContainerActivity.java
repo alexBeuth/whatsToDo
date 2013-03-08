@@ -146,7 +146,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 						.getInputExtras(false).getLong("id");
 
 				Intent intent = new Intent(view.getContext(),
-						ListActivity.class);
+						TodoActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putLong("ListId", listId); // List
 				intent.putExtras(bundle); // Put your id to your next Intent

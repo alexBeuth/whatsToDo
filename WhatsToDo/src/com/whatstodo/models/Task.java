@@ -37,7 +37,6 @@ public class Task implements Serializable, Comparable<Task> {
 
 	public void setName(String name) {
 		this.name = name;
-		notifyListener();
 	}
 
 	public long getId() {
@@ -54,7 +53,6 @@ public class Task implements Serializable, Comparable<Task> {
 
 	public void setPriority(Priority priority) {
 		this.priority = priority;
-		notifyListener();
 	}
 
 	public boolean isDone() {
@@ -63,7 +61,6 @@ public class Task implements Serializable, Comparable<Task> {
 
 	public void setDone(boolean done) {
 		this.done = done;
-		notifyListener();
 	}
 
 	public Date getDate() {
@@ -72,7 +69,6 @@ public class Task implements Serializable, Comparable<Task> {
 
 	public void setDate(Date date) {
 		this.date = date;
-		notifyListener();
 	}
 
 	public String getNotice() {
@@ -81,7 +77,6 @@ public class Task implements Serializable, Comparable<Task> {
 
 	public void setNotice(String notice) {
 		this.notice = notice;
-		notifyListener();
 	}
 
 	public Date getReminder() {
@@ -90,7 +85,6 @@ public class Task implements Serializable, Comparable<Task> {
 
 	public void setReminder(Date reminder) {
 		this.reminder = reminder;
-		notifyListener();
 	}
 
 	public long getListId() {
@@ -107,7 +101,6 @@ public class Task implements Serializable, Comparable<Task> {
 
 	public void setAddress(String address) {
 		this.address = address;
-		notifyListener();
 	}
 
 	@Override
@@ -129,13 +122,9 @@ public class Task implements Serializable, Comparable<Task> {
 			else
 				return -1;
 		}
-		return 1;
+		return 0;
 	}
 	
-	private void notifyListener() {
-		//ListContainer.getInstance().getList(listId).notifyListener();
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Task) {

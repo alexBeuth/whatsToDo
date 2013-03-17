@@ -2,12 +2,17 @@ package com.whatstodo.dtos;
 
 import java.io.Serializable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ListDTO implements Serializable {
 
 	private static final long serialVersionUID = 2718636838558619165L;
 	private int size;
 	private TaskDTO[] orderedTasks;
+	
+	@SerializedName("_id")
 	private long id;
+	
 	private String name;
 
 	public int getSize() {

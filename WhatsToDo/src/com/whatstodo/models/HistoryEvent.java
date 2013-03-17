@@ -2,6 +2,8 @@ package com.whatstodo.models;
 
 import java.util.Date;
 
+import com.google.gson.annotations.SerializedName;
+
 public class HistoryEvent implements Comparable<HistoryEvent>{
 
 	public enum Type {
@@ -12,6 +14,7 @@ public class HistoryEvent implements Comparable<HistoryEvent>{
 		Created, Read, Updated, Deleted
 	}
 
+	@SerializedName("_id")
 	private long id;
 	// The unique identifier for the object that was changed
 	private long entityUid;

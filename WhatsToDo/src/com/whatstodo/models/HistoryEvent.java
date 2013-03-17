@@ -12,12 +12,21 @@ public class HistoryEvent implements Comparable<HistoryEvent>{
 		Created, Read, Updated, Deleted
 	}
 
+	private long id;
 	// The unique identifier for the object that was changed
 	private long entityUid;
 	private Type type;
 	private Action action;
 	private Date timeOfChange;
 	private boolean isSynchronized;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	public long getEntityUid() {
 		return entityUid;

@@ -8,7 +8,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	//Database
 	private static final String DATABASE_NAME = "whatsToDo.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 3;
 
 	//TodoList Table
 	public static final String TODOLIST_TABLE = "todolist";
@@ -28,8 +28,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String TASK_COLUMN_PRIORITY = "priority";
 	public static final String TASK_COLUMN_ADDRESS = "address";
 	public static final String TASK_COLUMN_CALENDAR_CREATED = "calendarCreated";
-	public static final String[] TASK_ALL_COLUMNS = {};
 	
+	//HistoryEvent Table
+	public static final String HISTORY_TABLE = "history";
+	public static final String HISTORY_COLUMN_ID = "_id";
+	public static final String HISTORY_COLUMN_ACTION = "action";
+	public static final String HISTORY_COLUMN_TYPE = "type";
+	public static final String HISTORY_COLUMN_ENTITY_UID = "entityUid";
+	public static final String HISTORY_COLUMN_TIME_OF_CHANGE = "timeOfChange";
+	public static final String HISTORY_COLUMN_IS_SYNCHRONIZED = "isSynchronized";
 	
 	//SQL Statements
 	private static final String TODOLIST_CREATE = "CREATE TABLE "
@@ -55,6 +62,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ TASK_COLUMN_CALENDAR_CREATED + " integer,"
 			+ "FOREIGN KEY(" + TASK_COLUMN_LIST_ID + ") REFERENCES "+ TODOLIST_TABLE + "(" + TODOLIST_COLUMN_ID + ")"
 			+ ");";
+	
+	private static final String HISTORY_CREATE = "CREATE TABLE "
+			+ HISTORY_TABLE
+			+ "("
+			+ HISTORY_COLUMN_ID + " integer primary key autoincrement, "
+			+ HISTORY_COLUMN_ACTION + " text,"
+			+ HISTORY_COLUMN_TYPE + " text,"
+			+ HISTORY_COLUMN_ENTITY_UID + " integer,"
+			+ HISTORY_COLUMN_TIME_OF_CHANGE + " integer,"
+			+ HISTORY_COLUMN_IS_SYNCHRONIZED + " integer"
+			+ ");";
 
 	public DatabaseHelper(Context context) {
 
@@ -66,6 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		db.execSQL(TODOLIST_CREATE);
 		db.execSQL(TASK_CREATE);
+		db.execSQL(HISTORY_CREATE);
 	}
 
 	@Override
@@ -73,7 +92,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		//TODO save data on upgrade
 		db.execSQL("DROP TABLE IF EXISTS " + TODOLIST_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + TASK_CREATE);
+		db.execSQL("DROP TABLE IF EXISTS " + TASK_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS " + HISTORY_TABLE);
 		
 		onCreate(db);
 	}

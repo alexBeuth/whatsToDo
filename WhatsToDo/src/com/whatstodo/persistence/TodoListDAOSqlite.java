@@ -64,13 +64,6 @@ public class TodoListDAOSqlite implements TodoListDAO {
 		return getById(listId);
 	}
 
-	private ContentValues todoListToContentValues(List entity) {
-		ContentValues values = new ContentValues();
-		values.put(DatabaseHelper.TODOLIST_COLUMN_NAME, entity.getName());
-		values.put(DatabaseHelper.TODOLIST_COLUMN_SIZE, entity.size());
-		return values;
-	}
-
 	@Override
 	public List read(long id) {
 		return getById(id);
@@ -104,13 +97,19 @@ public class TodoListDAOSqlite implements TodoListDAO {
 		return resultList;
 	}
 	
+	private ContentValues todoListToContentValues(List entity) {
+		ContentValues values = new ContentValues();
+		values.put(DatabaseHelper.TODOLIST_COLUMN_NAME, entity.getName());
+		values.put(DatabaseHelper.TODOLIST_COLUMN_SIZE, entity.size());
+		return values;
+	}
+	
 	private List cursorToTodoList(Cursor cursor) {
 
 		List list = new List();
 		list.setId(cursor.getLong(cursor.getColumnIndex(DatabaseHelper.TODOLIST_COLUMN_ID)));
 		list.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TODOLIST_COLUMN_NAME)));
-		list.setDisplayedSize(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.TODOLIST_COLUMN_SIZE)));
-		//TODO size and delete the displayed size
+		list.setSize(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.TODOLIST_COLUMN_SIZE)));
 		return list;
 	}
 }

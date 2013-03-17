@@ -24,8 +24,6 @@ public class List implements Serializable, java.util.List<Task> {
 	private static final long serialVersionUID = -2889639373188534039L;
 
 	private int size;
-	//TODO What can we do at lazy loading to display the correct size?
-	private int displayedSize;
 	private Task[] orderedTasks;
 	private Comparator<Task> comparator;
 	private long id;
@@ -74,14 +72,6 @@ public class List implements Serializable, java.util.List<Task> {
 			}
 		}
 		throw new NoSuchElementException("Cannot find task with ID: " + taskId);
-	}
-
-	public int getDisplayedSize() {
-		return displayedSize;
-	}
-
-	public void setDisplayedSize(int displayedSize) {
-		this.displayedSize = displayedSize;
 	}
 
 	// Insertion sort
@@ -421,5 +411,9 @@ public class List implements Serializable, java.util.List<Task> {
 		}
 		list.sort();
 		return list;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
 	}
 }

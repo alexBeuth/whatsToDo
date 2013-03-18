@@ -91,7 +91,7 @@ public class HistoryEventDAOSqlite implements HistoryEventDAO {
 	}
 
 	@Override
-	public List<HistoryEvent> find(Type type, Date after, Long entityUid,
+	public List<HistoryEvent> find(Type type, Action action, Date after, Long entityUid,
 			Boolean isSynchronized) {
 		
 		List<String> selectionArgsList = new ArrayList<String>();
@@ -99,6 +99,13 @@ public class HistoryEventDAOSqlite implements HistoryEventDAO {
 		if(type != null) {
 			builder.append(DatabaseHelper.HISTORY_COLUMN_TYPE + " = ?");
 			selectionArgsList.add(type.toString());
+		}
+		if(action != null) {
+			if(builder.length() > 0) {
+				builder.append(" AND ");
+			}
+			builder.append(DatabaseHelper.HISTORY_COLUMN_ACTION + " = ?");
+			selectionArgsList.add(action.toString());
 		}
 		if(after != null) {
 			if(builder.length() > 0) {

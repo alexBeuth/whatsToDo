@@ -25,7 +25,6 @@ import android.util.Log;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
@@ -105,6 +104,11 @@ public class HttpClient {
 
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpContext localContext = new BasicHttpContext();
+			
+			StringEntity se;
+			se = new StringEntity(jsonString);
+
+			httpPut.setEntity(se);
 
 			setJsonHeader(httpPut);
 
@@ -185,14 +189,13 @@ public class HttpClient {
 			instream.close();
 
 			JsonParser parser = new JsonParser();
-			JsonObject jsonObjRecv = parser.parse(resultString)
-					.getAsJsonObject();
+			JsonElement jsonElement = parser.parse(resultString);
 
 			// Raw DEBUG output of our received JSON object:
-			Log.i(TAG, "<JSONObject>\n" + jsonObjRecv.toString()
+			Log.i(TAG, "<JSONObject>\n" + jsonElement.toString()
 					+ "\n</JSONObject>");
 
-			return jsonObjRecv;
+			return jsonElement;
 		} else {
 			return JsonNull.INSTANCE;
 
@@ -201,8 +204,14 @@ public class HttpClient {
 
 	private static String convertStreamToString(InputStream is) {
 
-		Scanner s = new Scanner(is).useDelimiter("\\A");
-		return s.hasNext() ? s.next() : "";
+		Scanner s = null;
+		try {
+			s = new Scanner(is).useDelimiter("\\A");
+			return s.hasNext() ? s.next() : "";
+		} finally {
+			if(s != null)
+				s.close();
+		}
 	}
 
 }

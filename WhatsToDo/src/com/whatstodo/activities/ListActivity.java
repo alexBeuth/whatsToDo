@@ -31,6 +31,7 @@ import com.whatstodo.filter.TomorrowFilter;
 import com.whatstodo.manager.TaskManager;
 import com.whatstodo.models.List;
 import com.whatstodo.models.Task;
+import com.whatstodo.net.ListSynchronizer;
 import com.whatstodo.utils.ActivityUtils;
 
 public abstract class ListActivity extends Activity implements OnClickListener,
@@ -253,7 +254,13 @@ public abstract class ListActivity extends Activity implements OnClickListener,
 	}
 
 	private void startSynchronisation() {
-		// TODO Auto-generated method stub
-
+		
+		ListSynchronizer synchronizer = new ListSynchronizer();
+		if(synchronizer.serverIsAvailble()) {
+			synchronizer.synchronizeList(list);
+		} else {
+			Toast toast = Toast.makeText(getApplicationContext(), "Server is not available",Toast.LENGTH_SHORT);
+			toast.show();
+		}
 	}
 }

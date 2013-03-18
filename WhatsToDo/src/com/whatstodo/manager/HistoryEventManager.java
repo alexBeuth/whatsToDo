@@ -10,6 +10,7 @@ import android.database.SQLException;
 
 import com.whatstodo.WhatsToDo;
 import com.whatstodo.models.HistoryEvent;
+import com.whatstodo.models.HistoryEvent.Action;
 import com.whatstodo.models.HistoryEvent.Type;
 import com.whatstodo.persistence.HistoryEventDAO;
 import com.whatstodo.persistence.HistoryEventDAOSqlite;
@@ -77,12 +78,12 @@ public class HistoryEventManager implements Observer {
 		}
 	}
 	
-	public List<HistoryEvent> find(Type type, Date after, Long entityUid,
+	public List<HistoryEvent> find(Type type, Action action, Date after, Long entityUid,
 			Boolean isSynchronized) {
 		
 		try {
 			historyEventDAO.open();
-			return historyEventDAO.find(type, after, entityUid, isSynchronized);
+			return historyEventDAO.find(type, action, after, entityUid, isSynchronized);
 		} finally {
 			historyEventDAO.close();
 		}
@@ -93,9 +94,11 @@ public class HistoryEventManager implements Observer {
 
 		if (data instanceof HistoryEvent) {
 			HistoryEvent event = (HistoryEvent) data;
+			List<HistoryEvent> find = find(event.getType(), event.getAction(), null, event.getEntityUid(), false);
+			if(!find.isEmpty()) {
+				event.setId(find.iterator().next().getId());
+			}
 			save(event);
 		}
-
 	}
-
 }

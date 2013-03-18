@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.whatstodo.R;
 import com.whatstodo.activities.adapter.ListAdapter;
@@ -32,6 +33,7 @@ import com.whatstodo.filter.TodayFilter;
 import com.whatstodo.filter.TomorrowFilter;
 import com.whatstodo.manager.TodoListManager;
 import com.whatstodo.models.List;
+import com.whatstodo.net.ListSynchronizer;
 import com.whatstodo.utils.ActivityUtils;
 
 public class ListContainerActivity extends Activity implements OnClickListener {
@@ -237,7 +239,14 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 	}
 
 	private void startSynchronisation() {
-		// TODO Auto-generated method stub
+		
+		ListSynchronizer synchronizer = new ListSynchronizer();
+		if(synchronizer.serverIsAvailble()) {
+			synchronizer.synchronizeAll();
+		} else {
+			Toast toast = Toast.makeText(getApplicationContext(), "Server is not available",Toast.LENGTH_SHORT);
+			toast.show();
+		}
 
 	}
 }

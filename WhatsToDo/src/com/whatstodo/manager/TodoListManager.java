@@ -96,10 +96,13 @@ public class TodoListManager extends Observable {
 		}
 	}
 
-	//TODO Should we delete all task automatically or let the client handle this?
 	public void delete(List list) {
 		try {
 			todoListDao.open();
+			
+			for(Task task : list) {
+				TaskManager.getInstance().delete(task);
+			}
 			todoListDao.delete(list);
 			addToHistory(Action.Deleted, list.getId());
 		} catch (SQLException e) {

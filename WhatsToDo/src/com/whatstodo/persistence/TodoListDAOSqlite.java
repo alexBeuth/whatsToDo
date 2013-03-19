@@ -88,6 +88,11 @@ public class TodoListDAOSqlite implements TodoListDAO {
 
 	}
 	
+	@Override
+	public void deleteAll(){
+		db.delete(DatabaseHelper.TODOLIST_TABLE, null, null);
+	}
+	
 	private java.util.List<List> cursorToList(Cursor cursor) {
 		java.util.List<List> resultList = new ArrayList<List>();
 		for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {

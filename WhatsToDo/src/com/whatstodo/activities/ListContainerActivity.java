@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.ClipboardManager;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -34,6 +35,7 @@ import com.whatstodo.filter.TomorrowFilter;
 import com.whatstodo.manager.TodoListManager;
 import com.whatstodo.models.List;
 import com.whatstodo.net.ListSynchronizer;
+import com.whatstodo.net.SynchronizationException;
 import com.whatstodo.utils.ActivityUtils;
 
 public class ListContainerActivity extends Activity implements OnClickListener {
@@ -74,7 +76,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if ((event.getAction() == KeyEvent.ACTION_DOWN)
 						&& (keyCode == KeyEvent.KEYCODE_ENTER)) {
-					
+
 					String listName = editText.getText().toString();
 					TodoListManager.getInstance().save(new List(listName));
 					showLists();
@@ -132,9 +134,9 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 	private void showLists() {
 
 		ListView listList = (ListView) findViewById(R.id.list1);
-		
+
 		ListAdapter adapter = new ListAdapter(this, R.layout.listitem,
-		TodoListManager.getInstance().findAll());
+				TodoListManager.getInstance().findAll());
 
 		listList.setAdapter(adapter);
 		listList.setOnItemClickListener(new OnItemClickListener() {
@@ -165,7 +167,8 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 			ContextMenuInfo menuInfo) {
 		if (view.getId() == R.id.list1) {
 			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-			final List list = TodoListManager.getInstance().findAll().get(info.position);
+			final List list = TodoListManager.getInstance().findAll()
+					.get(info.position);
 			menu.setHeaderTitle(list.getName());
 			String[] menuItems = getResources().getStringArray(R.array.menu);
 			for (int i = 0; i < menuItems.length; i++) {
@@ -180,8 +183,9 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 				.getMenuInfo();
 		String[] menuItems = getResources().getStringArray(R.array.menu);
 		String menuItemName = menuItems[item.getItemId()];
-		
-		final List list = TodoListManager.getInstance().findAll().get(info.position);
+
+		final List list = TodoListManager.getInstance().findAll()
+				.get(info.position);
 
 		ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
@@ -239,12 +243,27 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 	}
 
 	private void startSynchronisation() {
-		
-		ListSynchronizer synchronizer = new ListSynchronizer();
-		if(synchronizer.serverIsAvailble()) {
-			synchronizer.synchronizeAll();
-		} else {
-			Toast toast = Toast.makeText(getApplicationContext(), "Server is not available",Toast.LENGTH_SHORT);
+
+		try {
+			ListSynchronizer synchronizer = new ListSynchronizer();
+			if (synchronizer.serverIsAvailble()) {
+				java.util.List<List> synchronizedTodos = synchronizer.synchronizeAll();
+				
+				TodoListManager.getInstance().replaceAll(synchronizedTodos);
+				showLists();
+				
+			} else {
+				Toast toast = Toast.makeText(getApplicationContext(),
+						"Server is not available", Toast.LENGTH_SHORT);
+				toast.show();
+			}
+		} catch (SynchronizationException e) {
+			Log.e(ListContainerActivity.class.toString(),
+					"An error error occured during synchronization", e);
+
+			Toast toast = Toast.makeText(getApplicationContext(),
+					"An error error occured during synchronization",
+					Toast.LENGTH_SHORT);
 			toast.show();
 		}
 

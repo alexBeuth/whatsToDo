@@ -89,6 +89,11 @@ public class HistoryEventDAOSqlite implements HistoryEventDAO {
 		throw new UnsupportedOperationException("Cannot delete an important history event!");
 
 	}
+	
+	@Override
+	public void deleteAll() {
+		throw new UnsupportedOperationException("Cannot delete an important history event!");
+	}
 
 	@Override
 	public List<HistoryEvent> find(Type type, Action action, Date after, Long entityUid,

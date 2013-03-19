@@ -95,7 +95,7 @@ public class HttpClient {
 	}
 
 	// Used to create a new resource on the server side
-	public static void sendHttpPut(String URL, String jsonString)
+	public static JsonElement sendHttpPut(String URL, String jsonString)
 			throws SynchronizationException {
 
 		try {
@@ -113,15 +113,8 @@ public class HttpClient {
 			setJsonHeader(httpPut);
 
 			HttpResponse response = httpClient.execute(httpPut, localContext);
-			StatusLine statusLine = response.getStatusLine();
-
-			if (statusLine.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-
-				throw new SynchronizationException(
-						"Status Code of Put request was: "
-								+ statusLine.getStatusCode() + ". Reason: "
-								+ statusLine.getReasonPhrase());
-			}
+			
+			return getJsonFromResponse(response);
 
 		} catch (ClientProtocolException e) {
 			throw new SynchronizationException(e);

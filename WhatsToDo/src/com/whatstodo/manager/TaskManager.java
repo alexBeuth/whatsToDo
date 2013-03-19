@@ -1,5 +1,6 @@
 package com.whatstodo.manager;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Observable;
@@ -15,7 +16,7 @@ import com.whatstodo.models.Task;
 import com.whatstodo.persistence.TaskDAO;
 import com.whatstodo.persistence.TaskDAOSqlite;
 
-public class TaskManager extends Observable{
+public class TaskManager extends Observable {
 
 	private static TaskManager instance;
 
@@ -38,7 +39,6 @@ public class TaskManager extends Observable{
 	}
 
 	public Task save(Task taskToSave) {
-
 		try {
 			taskDao.open();
 			Task taskToReturn = taskDao.getById(taskToSave.getId());
@@ -56,6 +56,7 @@ public class TaskManager extends Observable{
 		} finally {
 			taskDao.close();
 		}
+
 	}
 
 	public Task load(long id) {
@@ -83,7 +84,7 @@ public class TaskManager extends Observable{
 			taskDao.close();
 		}
 	}
-	
+
 	public List<Task> findAll() {
 		try {
 			taskDao.open();
@@ -102,10 +103,57 @@ public class TaskManager extends Observable{
 			taskDao.close();
 		}
 	}
-	
-	
-	//TODO ATM we will save the listid into the event because we cannot sync only tasks on the server side
+
+	/**
+	 * This method will create a bunch of tasks without saving a history.
+	 * 
+	 * @param tasks
+	 * @return the newly inserted tasks
+	 */
+	protected List<Task> saveAll(List<Task> tasks) {
+
+		try {
+			taskDao.open();
+			List<Task> result = new ArrayList<Task>();
+			for (Task task : tasks) {
+
+				Task found = taskDao.getById(task.getId());
+				if (found == null) {
+					found = taskDao.create(task);
+				} else {
+					found = taskDao.update(task);
+				}
+				result.add(found);
+			}
+
+			return result;
+		} finally {
+			taskDao.close();
+		}
+	}
+
+	protected void deleteAll() {
+		try {
+			taskDao.open();
+			taskDao.deleteAll();
+		} finally {
+			taskDao.close();
+		}
+	}
+
+	protected void deleteByListId(long listId) {
+		try {
+			taskDao.open();
+			taskDao.deleteByListId(listId);
+		} finally {
+			taskDao.close();
+		}
+	}
+
+	// TODO ATM we will save the listid into the event because we cannot sync
+	// only tasks on the server side
 	private void addToHistory(Action action, long uid) {
+
 		HistoryEvent history = new HistoryEvent();
 		history.setTimeOfChange(new Date());
 		history.setType(Type.Task);

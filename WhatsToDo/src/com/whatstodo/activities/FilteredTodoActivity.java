@@ -2,6 +2,7 @@ package com.whatstodo.activities;
 
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.whatstodo.R;
 import com.whatstodo.filter.Filter;
@@ -41,6 +42,14 @@ public class FilteredTodoActivity extends ListActivity {
 		Bundle bundle = getIntent().getExtras();
 		filter = (Filter) bundle.getSerializable("filter");
 		return filter.getTask();
+	}
+
+	@Override
+	protected void startSynchronisation() {
+		Toast toast = Toast.makeText(getApplicationContext(),
+				"Cannot sync filtered list.", Toast.LENGTH_SHORT);
+		toast.show();
+		
 	}
 	
 	

@@ -2,15 +2,19 @@ package com.whatstodo.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.whatstodo.R;
 import com.whatstodo.manager.TodoListManager;
 import com.whatstodo.models.List;
+import com.whatstodo.net.ListSynchronizer;
+import com.whatstodo.net.SynchronizationException;
 
 public class TodoActivity extends ListActivity {
 	
@@ -53,6 +57,31 @@ public class TodoActivity extends ListActivity {
 		Bundle bundle = getIntent().getExtras();
 		long listId = bundle.getLong("ListId");
 		return TodoListManager.getInstance().load(listId, true);
+	}
+
+	@Override
+	protected void startSynchronisation() {
+		try {
+			ListSynchronizer synchronizer = new ListSynchronizer();
+			if (synchronizer.serverIsAvailble()) {
+				List syncedTodo = synchronizer.synchronizeList(list);
+				list = TodoListManager.getInstance().replace(syncedTodo);
+				refreshListView();
+			} else {
+				Toast toast = Toast.makeText(getApplicationContext(),
+						"Server is not available", Toast.LENGTH_SHORT);
+				toast.show();
+			}
+		} catch (SynchronizationException e) {
+			Log.e(ListActivity.class.toString(),
+					"An error error occured during synchronization", e);
+			
+			Toast toast = Toast.makeText(getApplicationContext(),
+					"An error error occured during synchronization",
+					Toast.LENGTH_SHORT);
+			toast.show();
+		}
+		
 	}
 	
 }

@@ -4,20 +4,22 @@ import java.util.List;
 
 public interface BaseDAO<T> {
 	
-	void open();
+	public void open();
 	
-	void close();
+	public void close();
 	
-	T getById(long id);
+	public T getById(long id);
 	
-	List<T> findAll();
+	public List<T> findAll();
 	
-	T create(T entity);
+	public T create(T entity);
 	
-	T read(long id);
+	public T read(long id);
 	
-	T update(T entity);
+	public T update(T entity);
 	
-	void delete(T entity);
+	public void delete(T entity);
+	
+	public void deleteAll();
 
 }

@@ -11,7 +11,6 @@ import com.whatstodo.models.HistoryEvent;
 import com.whatstodo.models.HistoryEvent.Action;
 import com.whatstodo.models.HistoryEvent.Type;
 import com.whatstodo.models.List;
-import com.whatstodo.models.Task;
 import com.whatstodo.persistence.TodoListDAO;
 import com.whatstodo.persistence.TodoListDAOSqlite;
 
@@ -37,14 +36,11 @@ public class TodoListManager extends Observable {
 		return instance;
 	}
 
-	public List save(List listToSave){
+	public List save(List listToSave) {
 		return save(listToSave, false);
 	}
-	
-	public List save(List listToSave, boolean eager) {
 
-		// We could offer two methods for saving and creating instead... Don't
-		// know yet
+	public List save(List listToSave, boolean eager) {
 
 		try {
 			todoListDao.open();
@@ -58,12 +54,11 @@ public class TodoListManager extends Observable {
 			}
 
 			if (eager) {
-				for (Task task : listToSave) {
-					TaskManager.getInstance().save(task);
-				}
-				//reset size because adding tasks will increase the size
+				TaskManager.getInstance().saveAll(listToSave);
+				// reset size because adding tasks will increase the size
 				listToReturn.setSize(0);
-				listToReturn.addAll(TaskManager.getInstance().findByListId(listToReturn.getId()));
+				listToReturn.addAll(TaskManager.getInstance().findByListId(
+						listToReturn.getId()));
 			}
 			return listToReturn;
 		} catch (SQLException e) {
@@ -73,8 +68,8 @@ public class TodoListManager extends Observable {
 			todoListDao.close();
 		}
 	}
-	
-	public List load(long id){
+
+	public List load(long id) {
 		return load(id, false);
 	}
 
@@ -83,7 +78,7 @@ public class TodoListManager extends Observable {
 			todoListDao.open();
 			List list = todoListDao.getById(id);
 			if (eager) {
-				//reset size because adding tasks will increase the size
+				// reset size because adding tasks will increase the size
 				list.setSize(0);
 				list.addAll(TaskManager.getInstance().findByListId(id));
 			}
@@ -99,11 +94,10 @@ public class TodoListManager extends Observable {
 	public void delete(List list) {
 		try {
 			todoListDao.open();
-			
-			for(Task task : list) {
-				TaskManager.getInstance().delete(task);
-			}
+
+			TaskManager.getInstance().deleteByListId(list.getId());
 			todoListDao.delete(list);
+
 			addToHistory(Action.Deleted, list.getId());
 		} catch (SQLException e) {
 			// TODO: handle exception
@@ -112,11 +106,62 @@ public class TodoListManager extends Observable {
 			todoListDao.close();
 		}
 	}
-	
+
 	public java.util.List<List> findAll() {
 		try {
 			todoListDao.open();
 			return todoListDao.findAll();
+		} finally {
+			todoListDao.close();
+		}
+	}
+
+	/**
+	 * This method will delete all Todos and Tasks entities from the database
+	 * and replace them with the new content. No history will be written.
+	 * 
+	 * @param todos
+	 * @return the newly inserted todos, lazy loaded (no tasks)
+	 */
+	public java.util.List<List> replaceAll(java.util.List<List> todos) {
+
+		try {
+			todoListDao.open();
+
+			TaskManager.getInstance().deleteAll();
+			todoListDao.deleteAll();
+
+			for (List todo : todos) {
+				todoListDao.create(todo);
+				TaskManager.getInstance().saveAll(todo);
+			}
+
+			return findAll();
+		} finally {
+			todoListDao.close();
+		}
+	}
+
+	/**
+	 * Will replace the todo with the one with the same id. No History will be
+	 * created. But otherwise it has the same effect as an eager save.
+	 * 
+	 * @param todo
+	 * @return An eager loaded todo
+	 */
+	public List replace(List todo) {
+
+		try {
+			todoListDao.open();
+
+			List oldTodo = todoListDao.getById(todo.getId());
+			todoListDao.delete(oldTodo);
+			TaskManager.getInstance().deleteByListId(oldTodo.getId());
+
+			todoListDao.create(todo);
+			TaskManager.getInstance().saveAll(todo);
+
+			return load(todo.getId(), true);
 		} finally {
 			todoListDao.close();
 		}

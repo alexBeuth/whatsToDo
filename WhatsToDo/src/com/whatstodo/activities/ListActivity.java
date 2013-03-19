@@ -31,7 +31,6 @@ import com.whatstodo.filter.TomorrowFilter;
 import com.whatstodo.manager.TaskManager;
 import com.whatstodo.models.List;
 import com.whatstodo.models.Task;
-import com.whatstodo.net.ListSynchronizer;
 import com.whatstodo.utils.ActivityUtils;
 
 public abstract class ListActivity extends Activity implements OnClickListener,
@@ -47,7 +46,7 @@ public abstract class ListActivity extends Activity implements OnClickListener,
 
 		this.getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		
+
 		list = getTodoData();
 		setTitle(list.getName());
 
@@ -116,7 +115,6 @@ public abstract class ListActivity extends Activity implements OnClickListener,
 					new PriorityHighFilter());
 		}
 	}
-
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View view,
@@ -210,7 +208,7 @@ public abstract class ListActivity extends Activity implements OnClickListener,
 	public void onTaskChange() {
 		refreshListView();
 	}
-	
+
 	private void initListView() {
 
 		ListView taskListView = (ListView) findViewById(R.id.taskList);
@@ -242,9 +240,9 @@ public abstract class ListActivity extends Activity implements OnClickListener,
 
 		registerForContextMenu(taskListView);
 	}
-	
+
 	protected void refreshListView() {
-		
+
 		ListView taskListView = (ListView) findViewById(R.id.taskList);
 		list = getTodoData();
 		TaskAdapter adapter = new TaskAdapter(this, R.layout.taskitem, list);
@@ -253,14 +251,6 @@ public abstract class ListActivity extends Activity implements OnClickListener,
 		taskListView.setAdapter(adapter);
 	}
 
-	private void startSynchronisation() {
-		
-		ListSynchronizer synchronizer = new ListSynchronizer();
-		if(synchronizer.serverIsAvailble()) {
-			synchronizer.synchronizeList(list);
-		} else {
-			Toast toast = Toast.makeText(getApplicationContext(), "Server is not available",Toast.LENGTH_SHORT);
-			toast.show();
-		}
-	}
+	abstract protected void startSynchronisation();
+	
 }

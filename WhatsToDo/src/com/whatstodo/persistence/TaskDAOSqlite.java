@@ -104,9 +104,19 @@ public class TaskDAOSqlite implements TaskDAO {
 			throw new RuntimeException("Deleted more than one row with id: "
 					+ entity.getId());
 		}
-
 	}
 
+	@Override
+	public void deleteAll(){
+		db.delete(DatabaseHelper.TASK_TABLE, null, null);
+	}
+	
+	@Override
+	public void deleteByListId(long id) {
+		db.delete(DatabaseHelper.TASK_TABLE, listIdClause,
+				new String[] { Long.toString(id) });
+	}
+	
 	@Override
 	public List<Task> findByListId(long listId) {
 

@@ -27,19 +27,19 @@ public class ListSynchronizer {
 			.create();
 
 	public boolean serverIsAvailble() {
-		
+
 		String URL = BaseURL + "/" + "serverinfo";
-		
+
 		try {
 			HttpClient.sendHttpGet(URL);
 			return true;
-		} catch (SynchronizationException e) {
+		} catch (Exception e) {
 			return false;
 		}
-		
+
 	}
-	
-	public List getList(long listId) {
+
+	public List getList(long listId) throws SynchronizationException {
 
 		try {
 
@@ -56,30 +56,27 @@ public class ListSynchronizer {
 
 			return list;
 
-		} catch (SynchronizationException e) {
-			// TODO
-			throw new RuntimeException(e);
+		} catch (Exception e) {
+			throw new SynchronizationException(e);
 		}
 
 	}
 
-	public void saveList(List list) {
-
-		String jsonString = gson.toJson(list);
+	public void saveList(List list) throws SynchronizationException {
 
 		try {
+			String jsonString = gson.toJson(list);
 
 			String URL = BaseURL + "/" + user + "/" + list.getId();
 
 			HttpClient.sendHttpPut(URL, jsonString);
 
 		} catch (SynchronizationException e) {
-			// TODO
-			throw new RuntimeException(e);
+			throw new SynchronizationException(e);
 		}
 	}
 
-	public void deleteList(List list) {
+	public void deleteList(List list) throws SynchronizationException {
 
 		try {
 
@@ -87,84 +84,94 @@ public class ListSynchronizer {
 
 			HttpClient.sendHttpDelete(URL);
 
-		} catch (SynchronizationException e) {
-			// TODO
-			throw new RuntimeException(e);
+		} catch (Exception e) {
+			throw new SynchronizationException(e);
 		}
 	}
 
-	public List synchronizeList(List list) {
-		
-		java.util.List<HistoryEvent> history = HistoryEventManager
-				.getInstance().find(null, null, null, list.getId(), false);
+	public List synchronizeList(List list) throws SynchronizationException {
 
-
-		SyncTodoRequest todoRequest = new SyncTodoRequest();
-		todoRequest.setTodo(List.toDTO(list));
-		todoRequest.setHistory(history);
-		
-		String json = gson.toJson(todoRequest);
-		
 		try {
-
+			java.util.List<HistoryEvent> history = HistoryEventManager
+					.getInstance().find(null, null, null, list.getId(), false);
+	
+			SyncTodoRequest todoRequest = new SyncTodoRequest();
+			todoRequest.setTodo(List.toDTO(list));
+			todoRequest.setHistory(history);
+	
+			String json = gson.toJson(todoRequest);
+	
 			String URL = BaseURL + "/" + user + "/" + list.getId();
-
+	
 			JsonElement receivedJson = HttpClient.sendHttpPost(URL, json);
-
+	
 			List synchronizedList = null;
-
+	
 			if (!receivedJson.isJsonNull()) {
 				ListDTO dto = gson.fromJson(receivedJson, ListDTO.class);
 				synchronizedList = List.fromDTO(dto);
 			}
-
-			return synchronizedList;
-
-		} catch (SynchronizationException e) {
-			// TODO
-			throw new RuntimeException(e);
-		}
-	}
+			
+			updateHistory(history);
 	
-	public List synchronizeAll() {
-		
-		java.util.List<HistoryEvent> history = HistoryEventManager
-				.getInstance().find(null, null, null, null, false);
-		
-		java.util.List<List> all = TodoListManager.getInstance().findAll();
-		java.util.List<ListDTO> todos = new ArrayList<ListDTO>();
-		
-		for(List list : all) {
-			todos.add(List.toDTO(list));
+			return synchronizedList;
+		} catch (Exception e) {
+			throw new SynchronizationException(e);
 		}
 
+	}
 
-		SyncAllRequest request = new SyncAllRequest();
-		request.setHistory(history);
-		request.setTodos(todos);
-		
-		String json = gson.toJson(request);
-		
+	public java.util.List<List> synchronizeAll() throws SynchronizationException {
+
 		try {
+			java.util.List<HistoryEvent> history = HistoryEventManager
+					.getInstance().find(null, null, null, null, false);
+	
+			java.util.List<List> all = TodoListManager.getInstance().findAll();
+			java.util.List<ListDTO> todos = new ArrayList<ListDTO>();
+	
+			for (List list : all) {
+				todos.add(List.toDTO(list));
+			}
+	
+			SyncAllRequest request = new SyncAllRequest();
+			request.setHistory(history);
+			request.setTodos(todos);
+	
+			String json = gson.toJson(request);
 
 			String URL = BaseURL + "/" + user;
 
 			JsonElement receivedJson = HttpClient.sendHttpPost(URL, json);
 
-			List synchronizedList = null;
+			java.util.List<List> synchronizedTodos = new ArrayList<List>();
 
 			if (!receivedJson.isJsonNull()) {
+
+				Type typeOfT = new TypeToken<java.util.List<ListDTO>>() {
+				}.getType();
+
+				java.util.List<ListDTO> dtos = gson.fromJson(receivedJson,
+						typeOfT);
 				
-				Type typeOfT = new TypeToken<java.util.List<ListDTO>>(){}.getType();
-				
-				java.util.List<ListDTO> dtos = gson.fromJson(receivedJson, typeOfT);
+				for(ListDTO dto : dtos) {
+					synchronizedTodos.add(List.fromDTO(dto));
+				}
 			}
+			
+			updateHistory(history);
 
-			return synchronizedList;
+			return synchronizedTodos;
 
-		} catch (SynchronizationException e) {
-			// TODO
-			throw new RuntimeException(e);
+		} catch (Exception e) {
+			throw new SynchronizationException(e);
+		}
+	}
+	
+	private void updateHistory(java.util.List<HistoryEvent> history) {
+		for (HistoryEvent event : history) {
+			event.setSynchronized(true);
+			HistoryEventManager.getInstance().save(event);
 		}
 	}
 

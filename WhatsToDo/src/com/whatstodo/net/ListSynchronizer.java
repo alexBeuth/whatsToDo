@@ -20,7 +20,7 @@ public class ListSynchronizer {
 
 	// TODO Implement preferences
 	private static final String BaseURL = "http://10.0.2.2:8080/rest/list";
-	private static final String user = "Testuser";
+	private static final String user = "Testuser2";
 
 	private Gson gson = new GsonBuilder()
 			.excludeFieldsWithModifiers(Modifier.STATIC).serializeNulls()

@@ -1,7 +1,5 @@
 package com.whatstodo.models;
 
-import java.util.Date;
-
 import com.google.gson.annotations.SerializedName;
 
 public class HistoryEvent implements Comparable<HistoryEvent> {
@@ -21,7 +19,7 @@ public class HistoryEvent implements Comparable<HistoryEvent> {
 	private long parentEntityUid;
 	private Type type;
 	private Action action;
-	private Date timeOfChange;
+	private Long timeOfChange;
 	private boolean isSynchronized;
 
 	public long getId() {
@@ -64,11 +62,11 @@ public class HistoryEvent implements Comparable<HistoryEvent> {
 		this.action = action;
 	}
 
-	public Date getTimeOfChange() {
+	public Long getTimeOfChange() {
 		return timeOfChange;
 	}
 
-	public void setTimeOfChange(Date timeOfChange) {
+	public void setTimeOfChange(Long timeOfChange) {
 		this.timeOfChange = timeOfChange;
 	}
 

@@ -153,7 +153,7 @@ public class TaskManager extends Observable {
 	private void addToHistory(Action action, long uid, long parentUid) {
 
 		HistoryEvent history = new HistoryEvent();
-		history.setTimeOfChange(new Date());
+		history.setTimeOfChange(new Date().getTime());
 		history.setType(Type.Task);
 		history.setAction(action);
 		history.setEntityUid(uid);

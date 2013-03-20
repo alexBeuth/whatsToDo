@@ -171,7 +171,7 @@ public class TodoListManager extends Observable {
 
 	private void addToHistory(Action action, long uid) {
 		HistoryEvent change = new HistoryEvent();
-		change.setTimeOfChange(new Date());
+		change.setTimeOfChange(new Date().getTime());
 		change.setType(Type.Todo);
 		change.setAction(action);
 		change.setEntityUid(uid);

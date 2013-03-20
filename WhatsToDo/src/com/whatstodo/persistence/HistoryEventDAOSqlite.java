@@ -172,7 +172,7 @@ public class HistoryEventDAOSqlite implements HistoryEventDAO {
 		values.put(DatabaseHelper.HISTORY_COLUMN_IS_SYNCHRONIZED,
 				entity.isSynchronized());
 		values.put(DatabaseHelper.HISTORY_COLUMN_TIME_OF_CHANGE, entity
-				.getTimeOfChange().getTime());
+				.getTimeOfChange());
 		return values;
 	}
 
@@ -199,8 +199,8 @@ public class HistoryEventDAOSqlite implements HistoryEventDAO {
 				.getColumnIndex(DatabaseHelper.HISTORY_COLUMN_PARENT_ENTITY_UID)));
 		event.setSynchronized(cursor.getLong(cursor
 				.getColumnIndex(DatabaseHelper.HISTORY_COLUMN_IS_SYNCHRONIZED)) > 0);
-		event.setTimeOfChange(new Date(cursor.getLong(cursor
-				.getColumnIndex(DatabaseHelper.HISTORY_COLUMN_TIME_OF_CHANGE))));
+		event.setTimeOfChange(cursor.getLong(cursor
+				.getColumnIndex(DatabaseHelper.HISTORY_COLUMN_TIME_OF_CHANGE)));
 		return event;
 	}
 

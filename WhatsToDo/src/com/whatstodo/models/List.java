@@ -312,7 +312,7 @@ public class List implements Serializable, java.util.List<Task> {
 	private void resize(int capacity) {
 		assert capacity > size;
 		Task[] temp = new Task[capacity];
-		for (int i = 0; i <= size; i++)
+		for (int i = 0; i < size; i++)
 			temp[i] = orderedTasks[i];
 		orderedTasks = temp;
 	}

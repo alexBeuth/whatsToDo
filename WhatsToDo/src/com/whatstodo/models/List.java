@@ -60,8 +60,11 @@ public class List implements Serializable, java.util.List<Task> {
 		this.id = id;
 	}
 
-	public void addTask(String name) {
-		add(new Task(name));
+	public Task addTask(String name) {
+		Task task = new Task(name);
+		add(task);
+		//adding the task should give it the list id
+		return task;
 	}
 
 	public Task getTask(long taskId) {
@@ -117,7 +120,7 @@ public class List implements Serializable, java.util.List<Task> {
 		task.setListId(id);
 		
 		// double size of array if necessary
-		if (size == orderedTasks.length - 1)
+		if (size == orderedTasks.length)
 			resize(2 * orderedTasks.length);
 
 		// Add item
@@ -156,7 +159,7 @@ public class List implements Serializable, java.util.List<Task> {
 
 	@Override
 	public boolean contains(Object object) {
-		return indexOf(object) > 0;
+		return indexOf(object) >= 0;
 	}
 
 	@Override

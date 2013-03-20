@@ -11,8 +11,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.whatstodo.R;
+import com.whatstodo.manager.TaskManager;
 import com.whatstodo.manager.TodoListManager;
 import com.whatstodo.models.List;
+import com.whatstodo.models.Task;
 import com.whatstodo.net.ListSynchronizer;
 import com.whatstodo.net.SynchronizationException;
 
@@ -38,8 +40,9 @@ public class TodoActivity extends ListActivity {
 						&& (keyCode == KeyEvent.KEYCODE_ENTER)) {
 					
 					String taskName = createTask.getText().toString();
-					list.addTask(taskName);
-					TodoListManager.getInstance().save(list, true);
+					Task addTask = list.addTask(taskName);
+					TodoListManager.getInstance().save(list);
+					TaskManager.getInstance().save(addTask);
 					refreshListView();
 					
 					InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

@@ -44,10 +44,10 @@ public class TaskManager extends Observable {
 			Task taskToReturn = taskDao.getById(taskToSave.getId());
 			if (taskToReturn == null) {
 				taskToReturn = taskDao.create(taskToSave);
-				addToHistory(Action.Created, taskToReturn.getListId());
+				addToHistory(Action.Created, taskToReturn.getId(), taskToReturn.getListId());
 			} else {
 				taskToReturn = taskDao.update(taskToSave);
-				addToHistory(Action.Updated, taskToReturn.getListId());
+				addToHistory(Action.Updated, taskToReturn.getId(), taskToReturn.getListId());
 			}
 			return taskToReturn;
 		} catch (SQLException e) {
@@ -76,7 +76,7 @@ public class TaskManager extends Observable {
 		try {
 			taskDao.open();
 			taskDao.delete(task);
-			addToHistory(Action.Read, task.getListId());
+			addToHistory(Action.Read, task.getId(), task.getListId());
 		} catch (SQLException e) {
 			// TODO: handle exception
 			throw new RuntimeException(e);
@@ -150,15 +150,14 @@ public class TaskManager extends Observable {
 		}
 	}
 
-	// TODO ATM we will save the listid into the event because we cannot sync
-	// only tasks on the server side
-	private void addToHistory(Action action, long uid) {
+	private void addToHistory(Action action, long uid, long parentUid) {
 
 		HistoryEvent history = new HistoryEvent();
 		history.setTimeOfChange(new Date());
 		history.setType(Type.Task);
 		history.setAction(action);
 		history.setEntityUid(uid);
+		history.setParentEntityUid(parentUid);
 		setChanged();
 		notifyObservers(history);
 	}

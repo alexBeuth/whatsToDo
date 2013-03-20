@@ -131,6 +131,10 @@ public class TaskDAOSqlite implements TaskDAO {
 
 	private ContentValues taskToContentValues(Task entity) {
 		ContentValues values = new ContentValues();
+		
+		if(entity.getId() != 0) {
+			values.put(DatabaseHelper.TASK_COLUMN_ID, entity.getId());
+		}
 		values.put(DatabaseHelper.TASK_COLUMN_ADDRESS, entity.getAddress());
 		values.put(DatabaseHelper.TASK_COLUMN_CALENDAR_CREATED,
 				entity.isCalendarCreated());

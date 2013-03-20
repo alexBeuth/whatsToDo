@@ -78,9 +78,11 @@ public class TodoListManager extends Observable {
 			todoListDao.open();
 			List list = todoListDao.getById(id);
 			if (eager) {
-				// reset size because adding tasks will increase the size
-				list.setSize(0);
-				list.addAll(TaskManager.getInstance().findByListId(id));
+				if (list != null) {
+					// reset size because adding tasks will increase the size
+					list.setSize(0);
+					list.addAll(TaskManager.getInstance().findByListId(id));
+				}
 			}
 			return list;
 		} catch (SQLException e) {

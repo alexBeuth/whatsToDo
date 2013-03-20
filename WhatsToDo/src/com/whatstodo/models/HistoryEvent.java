@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.google.gson.annotations.SerializedName;
 
-public class HistoryEvent implements Comparable<HistoryEvent>{
+public class HistoryEvent implements Comparable<HistoryEvent> {
 
 	public enum Type {
 		Task, Todo
@@ -18,6 +18,7 @@ public class HistoryEvent implements Comparable<HistoryEvent>{
 	private long id;
 	// The unique identifier for the object that was changed
 	private long entityUid;
+	private long parentEntityUid;
 	private Type type;
 	private Action action;
 	private Date timeOfChange;
@@ -37,6 +38,14 @@ public class HistoryEvent implements Comparable<HistoryEvent>{
 
 	public void setEntityUid(long objectUid) {
 		this.entityUid = objectUid;
+	}
+
+	public long getParentEntityUid() {
+		return parentEntityUid;
+	}
+
+	public void setParentEntityUid(long parentEntityUid) {
+		this.parentEntityUid = parentEntityUid;
 	}
 
 	public Type getType() {

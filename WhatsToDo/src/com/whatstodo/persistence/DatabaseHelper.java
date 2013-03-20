@@ -8,7 +8,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	//Database
 	private static final String DATABASE_NAME = "whatsToDo.db";
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 4;
 
 	//TodoList Table
 	public static final String TODOLIST_TABLE = "todolist";
@@ -35,6 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String HISTORY_COLUMN_ACTION = "action";
 	public static final String HISTORY_COLUMN_TYPE = "type";
 	public static final String HISTORY_COLUMN_ENTITY_UID = "entityUid";
+	public static final String HISTORY_COLUMN_PARENT_ENTITY_UID = "parentEntityUid";
 	public static final String HISTORY_COLUMN_TIME_OF_CHANGE = "timeOfChange";
 	public static final String HISTORY_COLUMN_IS_SYNCHRONIZED = "isSynchronized";
 	
@@ -70,6 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ HISTORY_COLUMN_ACTION + " text,"
 			+ HISTORY_COLUMN_TYPE + " text,"
 			+ HISTORY_COLUMN_ENTITY_UID + " integer,"
+			+ HISTORY_COLUMN_PARENT_ENTITY_UID + " intgeger,"
 			+ HISTORY_COLUMN_TIME_OF_CHANGE + " integer,"
 			+ HISTORY_COLUMN_IS_SYNCHRONIZED + " integer"
 			+ ");";

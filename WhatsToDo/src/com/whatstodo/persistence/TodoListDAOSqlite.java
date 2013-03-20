@@ -104,6 +104,10 @@ public class TodoListDAOSqlite implements TodoListDAO {
 	
 	private ContentValues todoListToContentValues(List entity) {
 		ContentValues values = new ContentValues();
+		
+		if(entity.getId() != 0) {
+			values.put(DatabaseHelper.TODOLIST_COLUMN_ID, entity.getId());
+		}
 		values.put(DatabaseHelper.TODOLIST_COLUMN_NAME, entity.getName());
 		values.put(DatabaseHelper.TODOLIST_COLUMN_SIZE, entity.size());
 		return values;

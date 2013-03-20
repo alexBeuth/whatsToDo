@@ -92,8 +92,17 @@ public class ListSynchronizer {
 	public List synchronizeList(List list) throws SynchronizationException {
 
 		try {
-			java.util.List<HistoryEvent> history = HistoryEventManager
-					.getInstance().find(null, null, null, list.getId(), false);
+			
+			//Find all events for the todo
+			java.util.List<HistoryEvent> todoHistory = HistoryEventManager
+					.getInstance().find(null, null, null, list.getId(), null, false);
+			
+			//Find all events for the tasks
+			java.util.List<HistoryEvent> taskHistory = HistoryEventManager
+					.getInstance().find(null, null, null, null, list.getId(), false);
+			
+			java.util.List<HistoryEvent> history = todoHistory;
+			history.addAll(taskHistory);
 	
 			SyncTodoRequest todoRequest = new SyncTodoRequest();
 			todoRequest.setTodo(List.toDTO(list));
@@ -101,7 +110,7 @@ public class ListSynchronizer {
 	
 			String json = gson.toJson(todoRequest);
 	
-			String URL = BaseURL + "/" + user + "/" + list.getId();
+			String URL = BaseURL + "/sync" + "/" + user + "/" + list.getId();
 	
 			JsonElement receivedJson = HttpClient.sendHttpPost(URL, json);
 	
@@ -125,12 +134,14 @@ public class ListSynchronizer {
 
 		try {
 			java.util.List<HistoryEvent> history = HistoryEventManager
-					.getInstance().find(null, null, null, null, false);
+					.getInstance().find(null, null, null, null, null, false);
 	
 			java.util.List<List> all = TodoListManager.getInstance().findAll();
 			java.util.List<ListDTO> todos = new ArrayList<ListDTO>();
 	
 			for (List list : all) {
+				//eager load every list
+				list = TodoListManager.getInstance().load(list.getId(), true);
 				todos.add(List.toDTO(list));
 			}
 	
@@ -140,7 +151,7 @@ public class ListSynchronizer {
 	
 			String json = gson.toJson(request);
 
-			String URL = BaseURL + "/" + user;
+			String URL = BaseURL + "/sync" + "/" + user;
 
 			JsonElement receivedJson = HttpClient.sendHttpPost(URL, json);
 

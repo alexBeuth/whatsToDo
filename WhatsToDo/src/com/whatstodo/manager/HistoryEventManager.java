@@ -78,12 +78,12 @@ public class HistoryEventManager implements Observer {
 		}
 	}
 	
-	public List<HistoryEvent> find(Type type, Action action, Date after, Long entityUid,
+	public List<HistoryEvent> find(Type type, Action action, Date after, Long entityUid, Long parentEntityUid,
 			Boolean isSynchronized) {
 		
 		try {
 			historyEventDAO.open();
-			return historyEventDAO.find(type, action, after, entityUid, isSynchronized);
+			return historyEventDAO.find(type, action, after, entityUid, parentEntityUid, isSynchronized);
 		} finally {
 			historyEventDAO.close();
 		}
@@ -94,7 +94,7 @@ public class HistoryEventManager implements Observer {
 
 		if (data instanceof HistoryEvent) {
 			HistoryEvent event = (HistoryEvent) data;
-			List<HistoryEvent> find = find(event.getType(), event.getAction(), null, event.getEntityUid(), false);
+			List<HistoryEvent> find = find(event.getType(), event.getAction(), null, event.getEntityUid(), null, false);
 			if(!find.isEmpty()) {
 				event.setId(find.iterator().next().getId());
 			}

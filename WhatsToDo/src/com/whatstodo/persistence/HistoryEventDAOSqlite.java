@@ -160,7 +160,11 @@ public class HistoryEventDAOSqlite implements HistoryEventDAO {
 
 	private ContentValues historyEventToContentValues(HistoryEvent entity) {
 		ContentValues values = new ContentValues();
-
+		
+		
+		if(entity.getId() != 0) {
+			values.put(DatabaseHelper.HISTORY_COLUMN_ID, entity.getId());
+		}
 		values.put(DatabaseHelper.HISTORY_COLUMN_ACTION, entity.getAction()
 				.toString());
 		values.put(DatabaseHelper.HISTORY_COLUMN_TYPE, entity.getType()

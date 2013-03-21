@@ -2,6 +2,7 @@ package com.whatstodo.models;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Random;
 
 import com.whatstodo.dtos.TaskDTO;
 
@@ -21,14 +22,14 @@ public class Task implements Serializable, Comparable<Task> {
 	
 	public Task(){
 		
+		id = Math.abs(new Random().nextLong());
 		priority = Priority.NORMAL;
 		done = false;
 	}
 
 	public Task(String name) {
+		this();
 		this.name = name;
-		priority = Priority.NORMAL;
-		done = false;
 	}
 
 	public String getName() {

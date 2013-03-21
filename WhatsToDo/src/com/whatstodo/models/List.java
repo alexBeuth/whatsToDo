@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 import com.whatstodo.dtos.ListDTO;
 import com.whatstodo.dtos.TaskDTO;
@@ -30,6 +31,8 @@ public class List implements Serializable, java.util.List<Task> {
 	private String name;
 
 	public List() {
+		
+		id = Math.abs(new Random().nextLong());
 		orderedTasks = new Task[1];
 	}
 
@@ -120,7 +123,7 @@ public class List implements Serializable, java.util.List<Task> {
 		task.setListId(id);
 		
 		// double size of array if necessary
-		if (size == orderedTasks.length)
+		if (size == orderedTasks.length - 1)
 			resize(2 * orderedTasks.length);
 
 		// Add item
@@ -312,7 +315,7 @@ public class List implements Serializable, java.util.List<Task> {
 	private void resize(int capacity) {
 		assert capacity > size;
 		Task[] temp = new Task[capacity];
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i <= size; i++)
 			temp[i] = orderedTasks[i];
 		orderedTasks = temp;
 	}
@@ -406,11 +409,10 @@ public class List implements Serializable, java.util.List<Task> {
 		List list = new List();
 		list.id = listDTO.getId();
 		list.name = listDTO.getName();
-		list.size = listDTO.getSize();
 		TaskDTO[] tasksDTO = listDTO.getTasks();
-		list.orderedTasks = new Task[list.size]; 
-		for (int i = 0; i < list.size; i++){
-			list.orderedTasks[i] = Task.fromDTO(tasksDTO[i]);
+		//list.orderedTasks = new Task[list.size]; 
+		for (int i = 0; i < listDTO.getSize(); i++){
+			list.add(Task.fromDTO(tasksDTO[i]));
 		}
 		list.sort();
 		return list;

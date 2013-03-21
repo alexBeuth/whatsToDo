@@ -1,5 +1,7 @@
 package com.whatstodo.models;
 
+import java.util.Random;
+
 import com.google.gson.annotations.SerializedName;
 
 public class HistoryEvent implements Comparable<HistoryEvent> {
@@ -21,6 +23,10 @@ public class HistoryEvent implements Comparable<HistoryEvent> {
 	private Action action;
 	private Long timeOfChange;
 	private boolean isSynchronized;
+	
+	public HistoryEvent() {
+		id = Math.abs(new Random().nextLong());
+	}
 
 	public long getId() {
 		return id;

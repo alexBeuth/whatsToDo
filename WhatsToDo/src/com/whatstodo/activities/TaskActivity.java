@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 import android.util.TypedValue;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -55,6 +56,7 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 	private static final int REMINDER_TIME_DIALOG_ID = 2;
 	private static final int LIST_DIALOG_ID = 3;
 	private static final int CALENDAR_DIALOG_ID = 4;
+	protected static final int SYNC_ACTIVITY = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -294,6 +296,16 @@ public class TaskActivity extends FragmentActivity implements OnClickListener,
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_task, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_settings:
+			startActivityForResult((new Intent(getApplicationContext(), SyncSettingsActivity.class)), SYNC_ACTIVITY);
+			return true;
+		}
+		return false;
 	}
 
 	@Override

@@ -42,6 +42,7 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 
 	protected static final int LIST_ACTIVITY = 0;
 	protected static final int FILTER_ACTIVITY = 1;
+	protected static final int SYNC_ACTIVITY = 2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +99,16 @@ public class ListContainerActivity extends Activity implements OnClickListener {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_list, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_settings:
+			startActivityForResult((new Intent(getApplicationContext(), SyncSettingsActivity.class)), SYNC_ACTIVITY);
+			return true;
+		}
+		return false;
 	}
 
 	// @Override

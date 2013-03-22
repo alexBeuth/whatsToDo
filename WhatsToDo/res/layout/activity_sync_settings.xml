@@ -1,0 +1,136 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SyncSettingsActivity" >
+
+    <FrameLayout
+        android:id="@+id/taskButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" >
+
+        <Button
+            android:id="@+id/settingCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="170dp"
+            android:text="@string/cancel"
+            android:width="140dp" />
+
+        <Button
+            android:id="@+id/settingSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="@string/save"
+            android:width="140dp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/flSettingsUserName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/settingsUserName"
+        android:background="@color/WhiteTransparent"
+        android:minHeight="60dp" >
+
+        <EditText
+            android:id="@+id/editUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginTop="2dp"
+            android:ems="10"
+            android:inputType="text"
+            android:singleLine="true" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/flSettingsIP"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/settingsIP"
+        android:background="@color/WhiteTransparent"
+        android:minHeight="60dp" >
+
+        <EditText
+            android:id="@+id/editIP"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginTop="2dp"
+            android:ems="10"
+            android:inputType="text"
+            android:singleLine="true" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/settingsPort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/flSettingsIP"
+        android:background="@color/Gray"
+        android:gravity="center_vertical"
+        android:height="20dp"
+        android:text="@string/settingsServerPort"
+        android:textColor="@color/White" />
+
+    <FrameLayout
+        android:id="@+id/flSettingsPort"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/settingsPort"
+        android:background="@color/WhiteTransparent"
+        android:minHeight="60dp" >
+
+        <EditText
+            android:id="@+id/editPort"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginTop="2dp"
+            android:ems="10"
+            android:inputType="text"
+            android:singleLine="true" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/settingsUserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/Gray"
+        android:gravity="center_vertical"
+        android:height="20dp"
+        android:text="@string/settingsUserName"
+        android:textColor="@color/White" />
+
+    <TextView
+        android:id="@+id/settingsIP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/flSettingsUserName"
+        android:background="@color/Gray"
+        android:gravity="center_vertical"
+        android:height="20dp"
+        android:text="@string/settingsServerIP"
+        android:textColor="@color/White" />
+
+</RelativeLayout>

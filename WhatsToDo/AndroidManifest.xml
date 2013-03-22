@@ -41,7 +41,7 @@
             android:label="@string/title_activity_list"
             android:screenOrientation="portrait" >
         </activity>
-		<activity
+        <activity
             android:name="com.whatstodo.activities.FilteredTodoActivity"
             android:label="@string/title_activity_list"
             android:screenOrientation="portrait" >
@@ -56,6 +56,11 @@
         </service>
         <service android:name="com.whatstodo.utils.LocationService" >
         </service>
+
+        <activity
+            android:name="com.whatstodo.activities.SyncSettingsActivity"
+            android:label="@string/title_activity_sync_settings" >
+        </activity>
     </application>
 
 </manifest>

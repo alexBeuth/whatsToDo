@@ -44,5 +44,9 @@
     <string name="highPriority">Hohe Priorität</string>
     <string name="normalPriority">Normale Priorität</string>
     <string name="lowPriority">Niedrige Priorität</string>
+    <string name="title_activity_sync_settings">SyncSettingsActivity</string>
+    <string name="settingsUserName">Username</string>
+    <string name="settingsServerIP">Server-IP</string>
+    <string name="settingsServerPort">Server-Port</string>
 
 </resources>

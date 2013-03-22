@@ -100,4 +100,12 @@ public class TaskDTO implements Serializable{
 	public boolean isCalendarCreated() {
 		return calendarCreated;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof TaskDTO) {
+			return id == ((TaskDTO) o).id;
+		}
+		return false;
+	}
 }

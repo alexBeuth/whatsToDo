@@ -76,7 +76,7 @@ public class TaskManager extends Observable {
 		try {
 			taskDao.open();
 			taskDao.delete(task);
-			addToHistory(Action.Read, task.getId(), task.getListId());
+			addToHistory(Action.Deleted, task.getId(), task.getListId());
 		} catch (SQLException e) {
 			// TODO: handle exception
 			throw new RuntimeException(e);
@@ -160,5 +160,13 @@ public class TaskManager extends Observable {
 		history.setParentEntityUid(parentUid);
 		setChanged();
 		notifyObservers(history);
+		
+		HistoryEvent todoChange = new HistoryEvent();
+		todoChange.setTimeOfChange(new Date().getTime());
+		todoChange.setType(Type.Todo);
+		todoChange.setAction(Action.Updated);
+		todoChange.setEntityUid(parentUid);
+		setChanged();
+		notifyObservers(todoChange);
 	}
 }

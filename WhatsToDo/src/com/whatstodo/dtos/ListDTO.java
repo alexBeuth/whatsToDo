@@ -46,4 +46,12 @@ public class ListDTO implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof ListDTO) {
+			return id == ((ListDTO) o).id;
+		}
+		return false;
+	}
 }

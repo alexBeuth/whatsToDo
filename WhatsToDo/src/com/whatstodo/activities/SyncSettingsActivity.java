@@ -23,13 +23,13 @@ public class SyncSettingsActivity extends Activity implements OnClickListener {
 		SharedPreferences settings = getSharedPreferences(PREFERENCES_NAME, 0);
 
 		EditText editUsername = (EditText) findViewById(R.id.editUsername);
-		editUsername.setText(settings.getString("Username", "Type in your Username"));
+		editUsername.setText(settings.getString("Username", ""));
 
 		EditText editIP = (EditText) findViewById(R.id.editIP);
-		editIP.setText(settings.getString("IP", "Type in the Server-IP"));
+		editIP.setText(settings.getString("IP", ""));
 
 		EditText editPort = (EditText) findViewById(R.id.editPort);
-		editPort.setText(settings.getString("Port", "Type in the Server-Port"));
+		editPort.setText(settings.getString("Port", ""));
 
 		Button save = (Button) findViewById(R.id.settingSave);
 		save.setOnClickListener(this);
